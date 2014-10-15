@@ -154,10 +154,10 @@ let b = (ref 1) in
 printf("%d\n") ((! b));
 );;
 reference(());;
-let closure = (fun ( ()) -> let block = (fun ( sp) -> (fun ( f) -> printf("{\n");
+let closure = (fun ( ()) -> let block = (fun ( sp) ( f) -> printf("{\n");
 f((sp ^ "  "));
 printf("%s}\n") (sp);
-)) in
+) in
 let p = printf in
 p("def %s() ") ("a");
 block("")((fun ( sp) -> p("%sdef %s() ") (sp) ("b");
@@ -203,15 +203,15 @@ endl(());
 ;;
 type e = EInt of (int)|EFun of ((string * (string) list) * e);;
 let format = let pp = (Format . fprintf) in
-let fmt = (Format . std_formatter) in
-let pp_block = (fun ( sp) ( pp_f) ( e) -> pp(fmt) ("{\n");
+let fp = (Format . std_formatter) in
+let pp_block = (fun ( sp) ( pp_f) ( e) -> pp(fp) ("{\n");
 pp_f((sp ^ "  ")) (e);
-pp(fmt) ("\n%s}\n@?") (sp);
+pp(fp) ("\n%s}\n") (sp);
 ) in
-let rec pp_e = (fun ( sp) -> (function | ( EInt(i)) -> (pp(fmt) ("%s%d@?") (sp) (i);
-)| ( EFun(((s , _) , e))) -> (pp(fmt) ("function %s()") (s);
+let rec pp_e = (fun ( sp) -> (function | ( EInt(i)) -> (pp(fp) ("%s%d@?") (sp) (i);
+)| ( EFun(((s , _) , e))) -> (pp(fp) ("function %s()") (s);
 pp_block(sp) (pp_e) (e);
-pp(fmt) ("@?");
+pp(fp) ("@?");
 ))) in
 pp_e("") (EFun((("tes" , []) , EInt(1))));
 ;;
