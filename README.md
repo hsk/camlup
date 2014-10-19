@@ -8,11 +8,11 @@ Scalaライクな文法をOCamlに導入します。
 Scalaには似ていますが、OCamlに合わせてカスタマイズしており、
 C言語風に記述出来てより使いやすくする事を目標としています。
 
-## インストール
+## ビルド
 
-OCamlとOMakeがある環境で、
+ocamlとUnix環境のmakeがある環境で以下のコマンドを実行します。
 
-    $ omake
+    $ make
 
 と入力します。
 
@@ -25,8 +25,7 @@ printf("hello world!\n")
 hello.nml
 
 ```
-$ newmlc hello.nml hello.ml
-$ ocaml hello.ml
+$ ./nmlc -run examples/hello.nml
 hello world!
 ```
 
