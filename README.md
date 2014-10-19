@@ -10,13 +10,11 @@ C言語風に記述出来てより使いやすくする事を目標としてい�
 
 ## インストール
 
+OCamlとOMakeがある環境で、
 
-    $ make
+    $ omake
 
 と入力します。
-windowsのコマンドプロンプトからは、以下のように入力します。
-
-    $ make -f Makefile.nt
 
 ## Hello World
 

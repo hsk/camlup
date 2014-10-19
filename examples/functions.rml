@@ -1,0 +1,9 @@
+open Printf
+
+def functions()
+
+  printf("test\n")
+
+end
+
+functions()

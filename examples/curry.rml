@@ -1,0 +1,100 @@
+open Printf
+
+curry_function := begin
+
+  def f1(a)
+  	a
+  end
+
+  printf("%d\n"; f1(1))
+
+  def f0()
+  	0
+  end
+
+  printf("%d\n")(f0())
+
+  f0 := { 0 }
+
+  printf("%d\n"; f0())
+
+
+  f1 := { |a| b:=a * 2 a|b }
+
+  printf("%d\n")(f1(1))
+  printf("%d\n"; f1(1));
+  printf("%d\n"; f1(1))
+
+  def f1(b:int):int
+  	b
+  end
+
+  printf("%d\n"; f1(1))
+
+
+
+  f2:={ |a b| a + b }
+  
+  printf("%d\n"; f2(1; 21111))
+
+/*
+  f2(a:int):(int)=>int={ b => a + b }
+  f2(a:int)(b:int):int={a + b}
+  f2(a:int; b:int):int= a + b
+  f2(a:int b:int):= a + b
+
+*/
+  printf("%d\n"; f2(1; 2))
+  printf("%d\n" f2(1 2))
+
+  f3:={|a b c| a + b + c}
+  printf("%d\n"; f3(1; 2; 3))
+
+/*
+  f3:int(int int int)={ |a b c| a + b + c }
+
+  f3(a:int):int(int int)={ |b c| a + b + c}
+  f3(a:int)(b:int):int(int)={|c| a + b + c}
+  f3(a:int)(b:int)(c:int):int={a + b + c}
+  f3(a:int; b:int; c:int):int= a + b + c
+  f3(a:int b:int c:int):= a + b + c
+*/
+  printf("%d\n")(f3(1)(2)(3))
+  printf("%d\n"; f3(1; 2; 3))
+  printf("%d\n" f3(1 2 3))
+
+  printf
+    ("%d %d %d %d\n")
+    (f0())
+    (f1(1))
+    (f2(1)(2))
+    (f3(1)(2)(3))
+
+  printf(
+    "%d %d %d %d\n";
+    f0();
+    f1(1);
+    f2(1; 2);
+    f3(1; 2; 3)
+  )
+
+  printf(
+    "%d %d %d %d\n"
+    f0()
+    f1(1)
+    f2(1 2)
+    f3(1 2 3)
+  )
+
+  printf("%d\n")(f3(-1)(-2)(-3))
+  printf("%d\n"; f3(-1; -2; -3))
+  printf("%d\n" f3(-1; -2; -3))
+
+  a:=1
+  b:=2
+
+  printf("%d+%d=%d\n")(a)(b)(a+b)
+  printf("%d+%d=%d\n"; a; b; a + b)
+  printf("%d+%d=%d\n"; a; b; a + b)
+
+end

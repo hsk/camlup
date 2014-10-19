@@ -1,0 +1,16 @@
+open Printf
+open List
+
+variable : int = 2
+a := 1
+b := 2
+_ := 3
+
+block : unit = begin
+  printf("test 1\n")
+end
+
+block := begin
+  printf("test 2\n");
+  printf("test 2\n")
+end

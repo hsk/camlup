@@ -24,9 +24,7 @@ type e =
   | ELetRec of string * t * e
   | EUnit 
   | EBlock of e list
-  | ETypeRec of string * (string * t) list
   | ERecord of (string * e) list
-  | ETypeVariant of string * (string * t) list
 
 (*  | ETuple of e list *)
 
@@ -35,7 +33,10 @@ type s =
   | SLet of string * t * e
   | SLetRec of string * t * e
   | SExp of e
-  
+  | SModule of string * s list
+  | STypeRec of string * (string * t) list
+  | STypeVariant of string * (string * t) list
+
 type prog =
   | Prog of s list
 

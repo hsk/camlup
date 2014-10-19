@@ -1,9 +1,0 @@
-all:
-	ocamlyacc parser.mly
-	del parser.mli
-	ocamllex lexer.mll
-	@rem ocamlc ast.ml parser.ml lexer.ml gen_ml.ml main.ml
-	@rem ocamlopt -ccopt "-L c:\tools\MinGW\lib" -ccopt "-L c:\tools\MinGW\lib\gcc\mingw32\4.8.1" ast.ml parser.ml lexer.ml gen_ml.ml main.ml
-	ocamlopt ast.ml parser.ml lexer.ml gen_ml.ml main.ml -o newmlc
-clean:
-	del *.obj *.o *.cm* parser.ml lexer.ml parser.mli *~
