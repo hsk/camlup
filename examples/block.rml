@@ -11,6 +11,6 @@ block : unit = begin
 end
 
 block := begin
-  printf("test 2\n");
+  printf("test 2\n")
   printf("test 2\n")
 end

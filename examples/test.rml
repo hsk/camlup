@@ -15,7 +15,7 @@ block := begin
   printf("test 2\n")
 end
 
-functions() := begin
+functions() := do
 
   printf("test")
 
@@ -23,26 +23,24 @@ end functions()
 
 curry_function := begin
 
-  f0:()=>int= { () => 0 }
-  f0():int= begin 0 end
-  f0():int= 0 
-  f0():= 0 
+  f0:()=>int = {|| 0 }
+  def f0():int 0 end
+  def f0() 0 end
 
   printf("%d\n")(f0())
   printf("%d\n"; f0())
   printf("%d\n" f0())
 
-  f1:(int)=>int={ a => a }
-  f1(a:int):int={ a }
-  f1(a:int):int= a
-  f1(a:int):= a
+  f1:(int)=>int= {|a| a }
+  def f1(a:int):int a end
+  def f1(a:int) a end
 
   printf("%d\n")(f1(1))
   printf("%d\n"; f1(1))
   printf("%d\n" f1(1))
 
-  f2:int(int)(int)={ a b => a + b }
-  f2(a:int):(int)=>int={ b => a + b }
+  f2:int(int)(int)={|a b| a + b }
+  f2(a:int):(int)=>int={|b| a + b }
   f2(a:int)(b:int):int={a + b}
   f2(a:int; b:int):int= a + b
   f2(a:int b:int):= a + b
@@ -51,9 +49,9 @@ curry_function := begin
   printf("%d\n"; f2(1; 2))
   printf("%d\n" f2(1 2))
 
-  f3:int(int int int)={ a b c => a + b + c }
-  f3(a:int):int(int int)={ b c => a + b + c}
-  f3(a:int)(b:int):int(int)={ c => a + b + c}
+  f3:int(int int int)={|a b c| a + b + c }
+  f3(a:int):int(int int)={|b c| a + b + c}
+  f3(a:int)(b:int):int(int)={|c| a + b + c}
   f3(a:int)(b:int)(c:int):int={a + b + c}
   f3(a:int; b:int; c:int):int= a + b + c
   f3(a:int b:int c:int):= a + b + c
@@ -93,45 +91,46 @@ curry_function := begin
   printf("%d+%d=%d\n"; a; b; a + b)
   printf("%d+%d=%d\n" a b a + b)
   
-}
+end
 
-if_else() := {
+if_else() := do
 
-  if (a < 10) printf("b1\n")
-  if (a < 10) { printf("b2\n") }
-  if (a < 10) { printf("b2\n") printf("b3\n") }
-  if (a > 10) printf("a\n") else printf("b3\n")
+  if a < 10 then printf("b1\n") end
+  if a < 10 then printf("b2\n") end
+  if a < 10 then printf("b2\n") printf("b3\n") end
+  if a > 10 then printf("a\n") else printf("b3\n") end
 
-  printf(if (a < 1) "a\n" else "b1\n")
+  printf(if a < 1 then "a\n" else "b1\n" end)
 
-} if_else()
+end if_else()
 
 
-recursive_function() := {
+def recursive_function()
 
   /* (let rec) */
-  def fib:(int)=>int = { n=>
-    if (n == 0) 0
-    else if (n == 1) 1
+  def fib:(int)=>int = { |n|
+    if   n == 0 then 0
+    elif n == 1 then 1
     else fib(n-2) + fib(n -1)
-
+    end
   }
 
   /*
-  def fib(n:int):int = {
-    if (n == 0) 0
-    else (if (n == 1) 1
+  def fib(n:int):int
+    if   n == 0 then 0
+    elif n == 1 then 1
     else fib(n-2) + fib(n-1))
-  }
+    end
+  end
   */
 
   printf("fib 10 %d\n" fib(10))  
 
-} recursive_function()
+end recursive_function()
 
-tuple() := {
+def tuple()
 
-  addt:(int,int)=>int={ (a,b) =>
+  addt:(int,int)=>int={ |a,b|
     a + b
   }
   /*
@@ -204,9 +203,9 @@ tuple() := {
   printf("%d\n")(f2(1,2)(3,4))
   printf("%d\n" f2(1,2 3,4))
 
-} tuple ()
+end tuple ()
 
-pattern_match() := {
+def pattern_match()
 
   def fib:(int)=>int={ n =>
     n match {
@@ -225,10 +224,10 @@ pattern_match() := {
     }
   }
   */
-} pattern_match()
+end pattern_match()
 
 
-parcial_function() := {
+def parcial_function()
 
   def fib:(int)=>int={
     case 0 => 0
@@ -246,9 +245,9 @@ parcial_function() := {
   }
 
   printf("llor %d\n" llor(1,2))
-} parcial_function()
+end parcial_function()
 
-list() := {
+def list()
 
   iter({x => printf("%d\n")(x)})([1; 2; 3; 4])
   iter({x => printf("%d\n"; x)})([1; 2; 3; 4])
@@ -277,12 +276,12 @@ list() := {
   ps(xs)
   */
 
-} list ()
+end list ()
 
 
 a type {x:int y:int}
 
-record() := {
+def record()
 
   a :a= {:x=1 y=2}
 
@@ -292,12 +291,12 @@ record() := {
 
   aa := {{:x}=>printf("%d\n" x)}
   
-} record()
+end record()
 
 
 e type  | EUnit | EInt(int) | EAdd(e, e)
 
-variant() := {
+def variant()
 
   def eval:e=>int={
     case EUnit => 0
@@ -306,9 +305,9 @@ variant() := {
   }
 
   printf("1+2=%d\n" eval(EAdd(EInt(1), EInt(2))))
-} variant()
+end variant()
 
-reference() := {
+def reference()
 
   a := & 1;
 
@@ -322,9 +321,9 @@ reference() := {
 
   printf("%d\n"; *b);
 
-} reference()
+end reference()
 
-closure() := begin
+def closure()
 
   block(sp)(f):={
     printf("{\n")

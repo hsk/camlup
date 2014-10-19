@@ -295,7 +295,7 @@ record() := {
 } record()
 
 
-e type  | EUnit | EInt(int) | EAdd(e, e)
+type e | EUnit | EInt(int) | EAdd(e, e)
 
 variant() := {
 

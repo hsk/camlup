@@ -103,9 +103,21 @@ let rec print_e sp ppf = function
       (print_e_block sp "\n") e
       sp
   | EPFun (ls) ->
-    fprintf ppf "(function\n";
+    fprintf ppf "(fun ";
     ls|>List.iter begin function
       | EFun(its, t, e) ->
+        let _ = List.fold_left(fun n b ->
+            fprintf ppf "t%d' " n;
+            n + 1
+          ) 1 its
+        in
+        fprintf ppf " -> match ";
+        let sp = sp ^ "  " in
+        let rec f n ppf = function
+          | [] -> ()
+          | [a] -> fprintf ppf "t%d'" n
+          | a::b -> fprintf ppf "t%d',%a" n (f (n+1)) b
+        in f 1 ppf its;
         let rec print_ls sp sep p ppf = function
           | [] -> ()
           | [x] -> fprintf ppf "(%a)" (p sp) x
@@ -115,10 +127,9 @@ let rec print_e sp ppf = function
               sep
               (print_ls sp sep p) xs
         in
-        let sp = sp ^ "  " in
-        fprintf ppf "%s| %a%a -> (\n%a%s)\n"
+        fprintf ppf " with\n%s| %a%a -> (\n%a%s)\n"
           sp
-          (print_ls "" " " print_e) its
+          (print_ls "" "," print_e) its
           (print_t (if t=TEmpty then "" else ":") "") t
           (print_e_block sp "\n") e
           sp
