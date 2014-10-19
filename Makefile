@@ -12,30 +12,23 @@ all:
 		r_parser.ml r_lexer.ml \
 		gen_ml.ml utils.ml main.ml -o ../nmlc
 
-
 hello:
-	./nmlc examples/hello.nml
-	ocaml examples/hello.ml
+	./nmlc -run examples/hello.nml
 
 fib:
-	./nmlc examples/fib.nml
-	ocaml examples/fib.ml
+	./nmlc -run examples/fib.nml
 
 test:
-	./nmlc examples/test.nml
-	ocaml examples/test.ml
+	./nmlc -run examples/test.nml
 
 r_hello:
-	./nmlc examples/hello.rml
-	ocaml examples/hello.ml
+	./nmlc -run examples/hello.rml
 
 r_fib:
-	./nmlc examples/fib.rml
-	ocaml examples/fib.ml
+	./nmlc -run examples/fib.rml
 
 r_test:
-	./nmlc examples/test.rml
-	ocaml examples/test.ml
+	./nmlc -run examples/test.rml
 
 clean:
-	rm -rf nmlc nmlc.opt examples/*.ml examples/*.class src/.omakedb src/*.cm* src/*parser.ml src/*lexer.ml src/*.o
+	rm -rf nmlc.opt examples/*.class src/.omakedb src/*.cm* src/*parser.ml src/*lexer.ml src/*.o
