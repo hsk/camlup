@@ -1,3 +1,8 @@
+/*
+
+./nmlc -run -to examples/test.dexp
+
+*/
 open Printf
 
 printf("%s\n" "hoge")
