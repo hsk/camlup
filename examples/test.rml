@@ -203,7 +203,7 @@ def tuple()
   printf("%d\n")(f2(1,2)(3,4))
   printf("%d\n" f2(1,2 3,4))
 
-end tuple ()
+end tuple()
 
 def pattern_match()
 

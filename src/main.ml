@@ -27,6 +27,35 @@ let r_trans input output =
   Gen_ml.print_prog (Format.formatter_of_out_channel out) ast;
   close_out out
 
+let dexp_parse input =
+  let inp = open_in input in
+  let lexbuf = Lexing.from_channel inp in
+  let ast = Dexp_parser.prog Dexp_lexer.token lexbuf in
+  close_in inp;
+  ast  
+
+let transc = ref false
+let transo = ref false
+
+let dexp_trans input output =
+  let ast = dexp_parse input in
+  (
+    if !transo then (
+      let c = Compact_parse.parse(ast) in
+      if !transc then Compact.print c;
+      let ast = Compact_to_ml.f(c) in
+      let out = open_out output in
+      Gen_ml.print_prog (Format.formatter_of_out_channel out) ast;
+      close_out out
+
+    )else if !transc then
+      let c = Compact_parse.parse(ast) in
+      Compact.print c
+    else
+      Dexp.print ast
+  );
+  Printf.printf "\n"
+
 let get_ext name =
   if Str.string_match (Str.regexp ".*\\.\\([^.]*\\)$") name 0 then
     Str.matched_group 1 name
@@ -36,11 +65,16 @@ let get_ext name =
 let replace_ext name ext =
   Str.global_replace (Str.regexp "\\(\\.[^.]*$\\)") ext name
 
+
 let _ =
   let files: string list ref = ref [] in
   let run = ref false in
   Arg.parse
-    [("-run", Arg.Unit(fun()->run:=true), "run")]
+    [
+      "-run", Arg.Unit(fun()->run:=true), "run";
+      "-tc", Arg.Unit(fun()->transc:=true), "transc";
+      "-to", Arg.Unit(fun()->transo:=true), "trans ocaml";
+    ]
     (fun s -> files := !files @ [s])
     ("Newml Compiler (C) Hiroshi Sakurai\n" ^
      Printf.sprintf "usage: %s [-run] ...filenames" Sys.argv.(0));
@@ -49,6 +83,7 @@ let _ =
     match ext with
     | "nml" -> trans name (replace_ext name ".ml")
     | "rml" -> r_trans name (replace_ext name ".ml")
+    | "dexp" -> dexp_trans name (replace_ext name ".ml")
     | _ -> failwith "bad filetype."
   ) !files;
   if !run then

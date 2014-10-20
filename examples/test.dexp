@@ -1,0 +1,19 @@
+open Printf
+
+printf("%s\n" "hoge")
+
+a:=1+1
+
+printf("a=%d\n" a)
+
+block := {
+	printf("test\n")
+	printf("test\n")
+	printf("test\n")
+	printf("test\n")
+	
+	a:=1+1
+
+	printf("a=%d\n" a)
+
+}

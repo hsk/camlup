@@ -2,6 +2,7 @@ open Printf
 
 
 def pattern_match()
+
   def fib(n)
     case n when
     |0| 0;
@@ -9,8 +10,10 @@ def pattern_match()
     |n| fib(n-2) + fib(n-1)
     end
   end
+
   printf("%d\n" fib(10))
 end
+
 pattern_match()
 
 def parcial_function()
@@ -42,11 +45,11 @@ def parcial_function()
   /* tuple parcual function */
   /*
   llor:= {
-    |0,0| a:=1 b:=2; a | b
+    |0,0| a:=1 b:=2 a | b;
     |a,b| a | b
   }
-
   printf("llor %d\n" llor(1,2))
   */
+  
 end
 parcial_function()

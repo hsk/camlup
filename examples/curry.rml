@@ -6,7 +6,7 @@ curry_function := begin
   	a
   end
 
-  printf("%d\n"; f1(1))
+  printf("%d\n" f1(1))
 
   def f0()
   	0
@@ -16,26 +16,22 @@ curry_function := begin
 
   f0 := { 0 }
 
-  printf("%d\n"; f0())
+  printf("%d\n" f0())
 
 
   f1 := { |a| b:=a * 2 a|b }
 
   printf("%d\n")(f1(1))
-  printf("%d\n"; f1(1));
   printf("%d\n"; f1(1))
+  printf("%d\n" f1(1))
 
   def f1(b:int):int
   	b
   end
 
-  printf("%d\n"; f1(1))
-
-
+  printf("%d\n" f1(1))
 
   f2:={ |a b| a + b }
-  
-  printf("%d\n"; f2(1; 21111))
 
   /*
   f2(a:int):(int)=>int={ b => a + b }
@@ -47,7 +43,6 @@ curry_function := begin
   printf("%d\n" f2(1 2))
 
   f3:={|a b c| a + b + c}
-  printf("%d\n"; f3(1; 2; 3))
 
   /*
   f3:int(int int int)={ |a b c| a + b + c }
@@ -94,6 +89,6 @@ curry_function := begin
 
   printf("%d+%d=%d\n")(a)(b)(a+b)
   printf("%d+%d=%d\n"; a; b; a + b)
-  printf("%d+%d=%d\n"; a; b; a + b)
+  printf("%d+%d=%d\n" a b a + b)
 
 end

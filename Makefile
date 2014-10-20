@@ -7,9 +7,16 @@ all:
 	rm src/r_parser.mli
 	cd src; ocamllex r_lexer.mll
 
+	cd src; ocamlyacc dexp_parser.mly
+	rm src/dexp_parser.mli
+	cd src; ocamllex dexp_lexer.mll
+
 	cd src; ocamlc str.cma unix.cma ast.ml \
 		parser.ml lexer.ml \
 		r_parser.ml r_lexer.ml \
+		dexp.ml dexp_parser.ml dexp_lexer.ml \
+		compact.ml compact_parse.ml \
+		compact_to_ml.ml \
 		gen_ml.ml utils.ml main.ml -o ../nmlc
 
 hello:
