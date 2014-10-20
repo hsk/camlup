@@ -1,4 +1,4 @@
-open Compact
+open Cexp
 open Ast
 
 let rec exp = function
@@ -11,6 +11,7 @@ let rec exp = function
 	| COp(";") -> EVar("")
 	| CPrn("{",ls,"}") -> EBlock(exps ls) 
 	| _ -> EVar("error")
+
 and exps = function
 	| CList ls -> List.map exp ls
 	| _ -> assert false

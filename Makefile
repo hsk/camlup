@@ -15,8 +15,8 @@ all:
 		parser.ml lexer.ml \
 		r_parser.ml r_lexer.ml \
 		dexp.ml dexp_parser.ml dexp_lexer.ml \
-		compact.ml compact_parse.ml \
-		compact_to_ml.ml \
+		cexp.ml cexp_parse.ml \
+		cexp_to_ml.ml \
 		gen_ml.ml utils.ml main.ml -o ../nmlc
 
 hello:
