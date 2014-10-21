@@ -42,15 +42,15 @@ let dexp_trans input output =
   (
     if !transo then (
       let c = Cexp_parse.parse(ast) in
-      if !transc then Cexp.print c;
-      let ast = Cexp_to_ml.f(c) in
+      if !transc then Cexp.print Format.std_formatter c;
+      let ast = Cexp_to_ml.prog(c) in
       let out = open_out output in
       Gen_ml.print_prog (Format.formatter_of_out_channel out) ast;
       close_out out
 
     )else if !transc then
       let c = Cexp_parse.parse(ast) in
-      Cexp.print c
+      Cexp.print Format.std_formatter c
     else
       Dexp.print ast
   );

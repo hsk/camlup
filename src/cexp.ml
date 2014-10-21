@@ -1,4 +1,4 @@
-open Printf
+open Format
 
 type c =
     (* 識別子 *)
@@ -17,65 +17,67 @@ type c =
     | CUnit
     | CList of c list
 
-let rec print = function
-  | CId(id) -> printf "CId(\"%s\")" id
-  | COp(id) -> printf "COp(\"%s\")" id
-  | CInt(i) -> printf "CInt(%d)" i
-  | CStr(s) -> printf "CStr(%s)" s
+let rec print fp c =
+  (match c with
+  | CId(id) -> fprintf fp "CId(\"%s\")" id
+  | COp(id) -> fprintf fp "COp(\"%s\")" id
+  | CInt(i) -> fprintf fp "CInt(%d)" i
+  | CStr(s) -> fprintf fp "CStr(%s)" s
   | CPrn(l,d,r) ->
-    printf "CPrn(\"%s\"," l;
-    print d;
-    printf ",\"%s\")" r
+    fprintf fp "CPrn(\"%s\"," l;
+    print fp d;
+    fprintf fp ",\"%s\")" r
   | CList(ls) ->
-    printf "CList(";
-    print_ls ls;
-    printf ")"
+    fprintf fp "CList(";
+    print_ls fp ls;
+    fprintf fp ")"
   | CPre(op,e) ->
-    printf "CPre(";
-    print op;
-    printf ",";
-    print e;
-    printf ")"
+    fprintf fp "CPre(";
+    print fp op;
+    fprintf fp ",";
+    print fp e;
+    fprintf fp ")"
   | CPst(e,op) ->
-    printf "CPst(";
-    print e;
-    printf ",";
-    print op;
-    printf ")"
+    fprintf fp "CPst(";
+    print fp e;
+    fprintf fp ",";
+    print fp op;
+    fprintf fp ")"
   | CBin(e1,op,e) ->
-    printf "CBin(";
-    print e1;
-    printf ",";
-    print op;
-    printf ",";
-    print e;
-    printf ")"
+    fprintf fp "CBin(";
+    print fp e1;
+    fprintf fp ",";
+    print fp op;
+    fprintf fp ",";
+    print fp e;
+    fprintf fp ")"
   | CMsg(op,l,e,r) ->
-    printf "CMsg(";
-    print op;
-    printf ",";
-    printf "%s," l;
-    print e;
-    printf ",%s" r;
-    printf ")"
+    fprintf fp "CMsg(";
+    print fp op;
+    fprintf fp ",";
+    fprintf fp "%s," l;
+    print fp e;
+    fprintf fp ",%s" r;
+    fprintf fp ")"
   | CSt(i,l,e,r,e2) ->
-    printf "CSt(";
-    print i;
-    printf ",%s," l;
-    print e;
-    printf ",%s," r;
-    print e2;
-    printf ")"
+    fprintf fp "CSt(";
+    print fp i;
+    fprintf fp ",%s," l;
+    print fp e;
+    fprintf fp ",%s," r;
+    print fp e2;
+    fprintf fp ")"
   | CUnit ->
-    printf "CUnit"
+    fprintf fp "CUnit"
+  ); fprintf fp "@?"
 
-and print_ls ls = 
+and print_ls fp ls = 
   
-  let rec print_ls = function
+  let rec print_ls fp = function
     | [] -> ()
-    | [x] -> print x
-    | x::xs -> print x; printf ";"; print_ls xs
+    | [x] -> print fp x
+    | x::xs -> print fp x; fprintf fp ";"; print_ls fp xs
   in
-  printf "[";
-  print_ls ls;
-  printf "]"
+  fprintf fp "[";
+  print_ls fp ls;
+  fprintf fp "]@?"

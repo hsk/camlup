@@ -22,3 +22,50 @@ block := {
 	printf("a=%d\n" a)
 
 }
+
+functions(a b) := {
+
+  printf("test %d\n" a+b)
+
+  fib(n) :=
+  	if (n == 0) 0
+  	else if (n == 1) 1
+  	else fib(n-2)+fib(n-1)
+
+  printf("fib %d %d\n" a+b fib(a+b))
+
+} functions(10 11)
+
+pattern_match() := {
+
+  fib(n) := {
+    n match {
+    case (0) 0
+    case (1) 1
+    case (n) fib(n-2) + fib(n-1)
+    }
+    
+  }
+
+  printf("fib 21 %d\n" fib(21))
+} pattern_match()
+
+
+parcial_function() := {
+
+  def fib := {
+    case(0) a:=1 a
+    case(1) 1
+    case(n) fib(n-2) + fib(n-1)
+  }
+  
+  printf("fib 10 = %d\n" fib(10))
+  
+  llor := {
+    case(0,0) a:=1 b:=2 a + b
+    case(a,b) a + b
+  }
+
+  printf("llor %d\n" llor(1,2))
+  
+} parcial_function()

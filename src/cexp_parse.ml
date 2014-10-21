@@ -6,7 +6,10 @@ module M = Map.Make (String)
 let infixs =
   List.fold_left (fun m (k,prec,left) -> M.add k (prec,left) m) M.empty
     [
-      ".",  0, true;
+      ".",  1, true;
+      "=>", 1, true;
+      ",",  1, true;
+      "match", 1, true;
       "=",  1, false;
       ":=",  1, false;
       "==", 2, true;
@@ -26,6 +29,7 @@ let infixs =
 let prefixs =
   List.fold_left (fun m (k,prec,left) -> M.add k (prec,left) m ) M.empty
     [
+      "def", 9, false;
       "open", 8, false;
       ("new"), 8, false;
       ("!"),   8, false;
@@ -42,7 +46,8 @@ let postfixs =
 let sts =
   List.fold_left (fun m (k,prec,left) -> M.add k (prec,left) m ) M.empty
     [
-      ("if"), 9, true
+      ("if"), 9, true;
+      ("case"), 9, true;
     ]
 
 let _p = ref 0
@@ -54,6 +59,12 @@ let prec k m p =
     p1 > p || (not left && p1 == p)
   else
     false
+
+let prec2 k =
+  match k with
+  | COp(k)
+  | CId(k) when M.mem k postfixs || M.mem k infixs -> false
+  | _ -> true
 
 let rec exp p = function
 
@@ -94,7 +105,7 @@ let rec exp p = function
     exp p (CPst(x, COp(op)), xs)
 
   (* msg *)
-  | (x, DPrn(l, d, r)::xs) ->
+  | (x, DPrn(l, d, r)::xs) when prec2 x ->
     exp p (CMsg(x, l, parse d, r), xs)
 
   | (x,ys) -> (x,ys)
