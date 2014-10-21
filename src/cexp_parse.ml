@@ -6,48 +6,48 @@ module M = Map.Make (String)
 let infixs =
   List.fold_left (fun m (k,prec,left) -> M.add k (prec,left) m) M.empty
     [
-      ".",  1, true;
-      "=>", 1, true;
-      ",",  1, true;
-      "match", 1, true;
-      "=",  1, false;
-      ":=",  1, false;
-      "==", 2, true;
-      "!=", 2, true;
-      "<",  3, true;
-      ">",  3, true;
-      "<=", 4, true;
-      ">=", 5, true;
-      "+",  6, true;
-      "-",  6, true;
+      ".",  2, true;
+      "=>", 2, true;
+      ",",  2, true;
+      "match", 2, true;
+      "=",  2, false;
+      ":=",  2, false;
+      "==", 3, true;
+      "!=", 3, true;
+      "<",  4, true;
+      ">",  4, true;
+      "<=", 5, true;
+      ">=", 6, true;
+      "+",  7, true;
+      "-",  7, true;
 
-      "/",  7, true;
-      "*",  7, true;
-      "else", 1, true
+      "/",  8, true;
+      "*",  8, true;
+      "else", 2, true
     ]
 
 let prefixs =
   List.fold_left (fun m (k,prec,left) -> M.add k (prec,left) m ) M.empty
     [
-      "def", 9, false;
-      "open", 8, false;
-      ("new"), 8, false;
-      ("!"),   8, false;
-      ("-"),   8, false
+      "def", 10, false;
+      "open", 9, false;
+      ("new"), 9, false;
+      ("!"),   9, false;
+      ("-"),   9, false;
+      ("|"), 1, false;
     ]
 
 let postfixs =
   List.fold_left (fun m (k,prec,left) -> M.add k (prec,left) m ) M.empty
     [
-      ("++"), 9, true;
-      ("--"), 9, true
+      ("++"), 10, true;
+      ("--"), 10, true
     ]
 
 let sts =
   List.fold_left (fun m (k,prec,left) -> M.add k (prec,left) m ) M.empty
     [
-      ("if"), 9, true;
-      ("case"), 9, true;
+      ("if"), 10, true;
     ]
 
 let _p = ref 0
@@ -76,14 +76,18 @@ let rec exp p = function
 
   (* token *)
   | (CUnit, DId(x):: xs) -> exp p (CId(x), xs)
+  | (CUnit, DOp(";"):: xs) -> exp p (CUnit, xs)
   | (CUnit, DOp(x):: xs) -> exp p (COp(x), xs)
+
   | (CUnit, DInt(x):: xs) -> exp p (CInt(x), xs)
   | (CUnit, DStr(x):: xs) -> exp p (CStr(x), xs)
   | (CUnit, DPrn(l,d,r):: xs) -> exp p (CPrn(l,parse d,r), xs)
   | (CUnit, DList(ls)::xs) ->
     let rec exps cs ls =
       match exp 0 (CUnit, ls) with
+      | CUnit,[] -> (CList(List.rev cs), xs) 
       | x,[] -> (CList(List.rev (x::cs)), xs)
+      | CUnit,ls -> exps (cs) ls
       | x,ls -> exps (x::cs) ls
     in 
     exps [] ls

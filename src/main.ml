@@ -39,22 +39,24 @@ let transo = ref false
 
 let dexp_trans input output =
   let ast = dexp_parse input in
-  (
-    if !transo then (
-      let c = Cexp_parse.parse(ast) in
-      if !transc then Cexp.print Format.std_formatter c;
-      let ast = Cexp_to_ml.prog(c) in
-      let out = open_out output in
-      Gen_ml.print_prog (Format.formatter_of_out_channel out) ast;
-      close_out out
+  if !transo then (
+    let c = Cexp_parse.parse(ast) in
+    if !transc then (
+      Cexp.print Format.std_formatter c;
+      Printf.printf "\n"
+    );
+    let ast = Cexp_to_ml.prog(c) in
+    let out = open_out output in
+    Gen_ml.print_prog (Format.formatter_of_out_channel out) ast;
+    close_out out
 
-    )else if !transc then
-      let c = Cexp_parse.parse(ast) in
-      Cexp.print Format.std_formatter c
-    else
-      Dexp.print ast
-  );
-  Printf.printf "\n"
+  )else if !transc then(
+    let c = Cexp_parse.parse(ast) in
+    Cexp.print Format.std_formatter c;
+    Printf.printf "\n"
+  )else
+    Dexp.print ast
+  
 
 let get_ext name =
   if Str.string_match (Str.regexp ".*\\.\\([^.]*\\)$") name 0 then

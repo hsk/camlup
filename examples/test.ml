@@ -18,9 +18,15 @@ let rec functions = (fun (a) (b) ->
 functions  (10) (11);;
 let rec pattern_match = (fun () -> 
   let rec fib = (fun (n) -> 
-    (match n with | (0) -> (0    
-)| (1) -> (1    
-)| (n) -> ((fib ((n - 2)) + fib ((n - 1)))    
+    (match n with | (0) -> (
+      0;
+    
+)| (1) -> (
+      (- 1);
+    
+)| (n) -> (
+      (fib ((n - 2)) + fib ((n - 1)));
+    
 ));
   ) in
   printf  ("fib 21 %d\n") (fib (21));
@@ -34,9 +40,13 @@ let rec parcial_function = (fun () ->
       a;
     )
     | (1) -> (
-1    )
+
+      1;
+    )
     | (n) -> (
-(fib ((n - 2)) + fib ((n - 1)))    )
+
+      (fib ((n - 2)) + fib ((n - 1)));
+    )
    end  in
   printf  ("fib 10 = %d\n") (fib (10));
   let llor = begin fun t1'  -> match t1' with
@@ -47,7 +57,9 @@ let rec parcial_function = (fun () ->
     (a + b);
   )
   | ((a , b)) -> (
-(a + b)  )
+
+    (a + b);
+  )
  end  in
   printf  ("llor %d\n") (llor ((1 , 2)));
 );;

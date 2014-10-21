@@ -163,7 +163,9 @@ let rec print_e sp ppf = function
           (print_t (if t=TEmpty then "" else ":") "") t
           (print_e_block sp "\n") e
           sp
-      | _ -> assert false
+      | e ->
+        fprintf std_formatter "%a\n" (print_e " ") e;
+        assert false
     end;
     fprintf ppf ")"
   | ERecord(ls) ->
