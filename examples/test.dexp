@@ -2,6 +2,75 @@
 
 ./nmlc -run -to examples/test.dexp
 
+
+a = (
+  a = f(a; b; -c)
+  a
+)
+
+b = (
+  c = (
+    d = 5
+    d + 2
+  )
+  e = 1
+  c + e
+)
+
+レコード
+
+トップレベルはレコードの値宣言リストと考える。
+
+Main module {
+
+  add(a b) = (
+    a + b
+  )
+  mul(a b) = (
+    a * b
+  )
+
+  addt(a,b) = (
+    a + b
+  )
+
+  fib(n) = (
+    if (n == 0) 0 else
+    if (n == 1) 1 else
+    fib(n-2)+fib(n-1)
+  )
+
+  fib = (
+    0 ?
+      a = 0
+      a
+    1 ?
+      b = 1
+      b
+    n ?
+      a = fib(n-2)
+      b = fib(n-1)
+      a + b
+  )
+
+  printf("test%d"; fib(10))
+
+  eval(e) =
+    e match (
+      Int(a)   ? k = a k
+      Add(a,b) ? add(eval(a) eval(b))
+      Mul(a,b) ? mul(eval(a) eval(b))
+    )
+
+  printf("1+2*3=%d" eval(Add(Int(1),Mul(Int(2),Int(3)))))
+
+}
+
+パターンマッチは式が含まれた関数の実行 レコードはほとんどオブジェクト
+
+a()
+
+
 */
 open Printf
 
@@ -11,7 +80,7 @@ a=1+1
 
 printf("a=%d\n" a)
 
-block = {
+block = (
   printf("test\n")
   printf("test\n")
   printf("test\n")
@@ -21,7 +90,7 @@ block = {
 
   printf("a=%d\n" a)
 
-}
+)
 
 functions(a b) = {
 
@@ -40,9 +109,9 @@ pattern_match() = {
 
   fib(n) = {
     n match {
-    | 0 ; 0;
-    | 1 ; -1;
-    | n ; fib(n-2) + fib(n-1);
+      0 ? 0
+      1 ? -1
+      n ? fib(n-2) + fib(n-1)
     }
   }
 
@@ -53,16 +122,16 @@ pattern_match() = {
 parcial_function() = {
 
   def fib = {
-    | 0; a=1 a;
-    | 1; 1;
-    | n; fib(n-2) + fib(n-1);
+    0 ? a=1 a
+    1 ? 1
+    n ? fib(n-2) + fib(n-1)
   }
   
   printf("fib 10 = %d\n" fib(10))
   
   llor = {
-    | 0,0 ; a=1 b=2 a + b;
-    | a,b ; a + b
+    0,0 ? a=1 b=2 a + b
+    a,b ? a + b
   }
 
   printf("llor %d\n" llor(1,2))

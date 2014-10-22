@@ -11,7 +11,7 @@ let infixs =
       ",",  2, true;
       "match", 2, true;
       "=",  2, false;
-      ":=",  2, false;
+      ":=", 2, false;
       "==", 3, true;
       "!=", 3, true;
       "<",  4, true;
@@ -31,23 +31,23 @@ let prefixs =
     [
       "def", 10, false;
       "open", 9, false;
-      ("new"), 9, false;
-      ("!"),   9, false;
-      ("-"),   9, false;
-      ("|"), 1, false;
+      "new",  9, false;
+      "!",    9, false;
+      "-",    9, false;
+      "|",    1, false;
     ]
 
 let postfixs =
   List.fold_left (fun m (k,prec,left) -> M.add k (prec,left) m ) M.empty
     [
-      ("++"), 10, true;
-      ("--"), 10, true
+      "++", 10, true;
+      "--", 10, true
     ]
 
 let sts =
   List.fold_left (fun m (k,prec,left) -> M.add k (prec,left) m ) M.empty
     [
-      ("if"), 10, true;
+      "if", 10, true;
     ]
 
 let _p = ref 0

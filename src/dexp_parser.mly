@@ -1,6 +1,5 @@
 %{
 open Dexp
-
 %}
 
 %token <int> INT
@@ -12,10 +11,6 @@ open Dexp
 %token EOF
 
 %right LIST
-
-%left prec_app
-%left LPAREN RPAREN
-%left CALL
 
 %type <Dexp.d> prog
 %start prog
