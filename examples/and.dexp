@@ -1,0 +1,9 @@
+open Printf
+
+b(x) = c(x)
+and c(x) = x
+
+
+_ = (
+	printf("%d\n" b(10))
+)
