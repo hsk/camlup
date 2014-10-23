@@ -76,40 +76,43 @@ and exps = {
   }
 
 /*
-and typ = function
-  | 
-and types = function
-  | [] -> []
-  | c::cs -> typ c :: types cs
+and typ = {
+  
+}
+and types = {
+  
+  ; [] ? []
+  ; c::cs ? typ(c) :: types(cs)
+}
 */
 
-/*
-and stmt = function
-  | CPre(COp("open"),CId(id)) -> SOpen id
-  | CBin(CId id,COp("type"),CPrn(_, CList(cs) ,_)) ->
-    let cs = List.map(function
-      | CId i -> (i, TEmpty)
-      | (CMsg(CId(i),_,CList[c],_)) ->
-        let rec f = function
-        | CId a -> [Ty a]
-        | CBin(a,COp(","),b) -> (f a) @ (f b) 
-        | _ -> assert false
-        in
-        (i, TTuple (f c))
-      | e ->
-        Cexp.print Format.std_formatter e;
-        ("error", TEmpty)
-      
-    ) cs in
+and stmt = {
+  ; CPre(COp("open"),CId(id)) ? SOpen(id)
+  ; CBin(CId(id),COp("type"),CPrn(_, CList(cs),_)) ?
+    cs = List.map{
+      ; CId(i) ? i, TEmpty
+      ; CMsg(CId(i),_,CList[c],_) ?
+        def f = {
+        ; CId(a) ? Ty(a)::[]
+        ; CBin(a,COp(","),b) ? f(a) @ f(b) 
+        ; _ ? assert(false)
+        }
+        i, TTuple(f(c))
+      ; e ?
+        Cexp.print (Format.std_formatter e)
+        "error", TEmpty
+    } (cs)
+
     STypeVariant(id, cs)
-  | ast -> SExp(exp ast)
-
-and stmts = function
-  | CList ls -> List.map stmt ls
-  | _ -> assert false
-
-and prog = function
-  | ast -> Prog(stmts ast)
+  ; ast ? SExp(exp(ast))
+}
 
 
-*/
+and stmts = {
+  ; CList (ls) ? List.map (stmt ls)
+  ; _ ? assert (false)
+}
+
+and prog = {
+  ; ast ? Prog(stmts(ast))
+}

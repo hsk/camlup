@@ -142,3 +142,65 @@ and exps = begin fun t1'  -> match t1' with
       assert (false);
     )
    end 
+
+and stmt = begin fun t1'  -> match t1' with
+    | (CPre ((COp ("open") , CId (id)))) -> (
+
+      SOpen (id);
+    )
+    | (CBin (((CId (id) , COp ("type")) , CPrn (((_ , CList (cs)) , _))))) -> (
+
+      let cs = (List . map (begin fun t1'  -> match t1' with
+  | (CId (i)) -> (
+
+    (i , TEmpty);
+  )
+  | (CMsg ((((CId (i) , _) , CList ([c])) , _))) -> (
+
+    let rec f = begin fun t1'  -> match t1' with
+      | (CId (a)) -> (
+
+        (Ty (a) :: []);
+      )
+      | (CBin (((a , COp (",")) , b))) -> (
+
+        (f (a) @ f (b));
+      )
+      | (_) -> (
+
+        assert (false);
+      )
+     end  in
+    (i , TTuple (f (c)));
+  )
+  | (e) -> (
+
+    (Cexp . print  ((Format . std_formatter)) (e));
+    ("error" , TEmpty);
+  )
+ end ) (cs)) in
+      STypeVariant ((id , cs));
+    )
+    | (ast) -> (
+
+      SExp (exp (ast));
+    )
+   end 
+
+and stmts = begin fun t1'  -> match t1' with
+    | (CList (ls)) -> (
+
+      (List . map  (stmt) (ls));
+    )
+    | (_) -> (
+
+      assert (false);
+    )
+   end 
+
+and prog = begin fun t1'  -> match t1' with
+    | (ast) -> (
+
+      Prog (stmts (ast));
+    )
+   end 
