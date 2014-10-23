@@ -10,7 +10,7 @@
 - [x] typeのレコード
 - [x] typeのヴァリアント
 - [ ] モジュール
-- [ ] リファレンス
+- [x] リファレンス
 - [x] 型定義
 
 
@@ -126,23 +126,22 @@ def eval = {
 
 printf("10+2=%d\n" eval(EAdd(EInt(10), EInt(2))))
 
-/*
-reference() := {
 
-  a := & 1;
+reference() = (
 
-  *a = 2;
+  a = & 1
 
-  printf("%d\n"; *a);
+  a := 2
 
-  b #= 1;
+  printf("%d\n"; *a)
 
-  *b = 3;
+  b #= 1
+  b := 3
 
-  printf("%d\n"; *b);
+  printf("%d\n" ;*b)
 
-} reference()
-*/
+) reference()
+
 a type {x:int y:int}
 
 record() = (
@@ -153,7 +152,11 @@ record() = (
 
   printf("%d\n"; {x=1+2*3 y=(a=1 a)}.x)
 
-  aa = {{x}?printf("%d\n" x)}
+  px = {{x}?printf("x=%d\n" x)}
+  py = {{y}?printf("y=%d\n" y)}
+
+  px(a)
+  py(a)
 
 ) record()
 

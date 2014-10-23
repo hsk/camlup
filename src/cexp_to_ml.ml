@@ -9,6 +9,7 @@ let rec exp = function
     ELetRec(f, TEmpty, EFun(addEmpty (exps prm),TEmpty,exp e))
 
   | CBin(CId(i),COp("="),b) -> ELet(i, TEmpty, exp b)
+  | CBin(CId(i),COp("#="),b) -> ELet(i, TEmpty, EPre("ref", exp b))
   | CBin(CPre(COp("def"),CId(i)),COp("="),b) -> ELetRec(i, TEmpty, exp b)
   | CBin(e,COp("match"),b) ->
     begin match exp b with
@@ -25,7 +26,8 @@ let rec exp = function
   | CPst(CPrn("(",es,")"),COp("?")) -> EFun(exps es, TEmpty, EBlock[])
   | CPst(e,COp("?")) -> EFun([exp e], TEmpty, EBlock[])
 
-
+  | CPre(COp("&"),b) -> EPre("ref", exp b)
+  | CPre(COp("*"),b) -> EPre("!", exp b)
   | CPre(COp(op),b) -> EPre(op, exp b)
   | CMsg(i,"(",CList(ls), ")") -> ECall(exp i, addEmpty(List.map exp ls))
 

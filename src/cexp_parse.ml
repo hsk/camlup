@@ -10,6 +10,7 @@ let infixs =
       ",",  2, true;
       "=",  2, false;
       ":=", 2, false;
+      "#=", 2, false;
       "match", 3, true;
       ".",  3, true;
       "==", 4, true;
@@ -39,6 +40,8 @@ let prefixs =
       "new",  10, false;
       "!",    10, false;
       "-",    10, false;
+      "&",    10, false;
+      "*",    10, false;
       "|",    1, false;
     ]
 

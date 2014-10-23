@@ -129,6 +129,15 @@ let rec eval = begin fun t1'  -> match t1' with
   )
  end ;;
 printf  ("10+2=%d\n") (eval (EAdd ((EInt (10) , EInt (2)))));;
+let rec reference = (fun () -> 
+  let a = (ref 1) in
+  (a := 2);
+  printf  ("%d\n") ((! a));
+  let b = (ref 1) in
+  (b := 3);
+  printf  ("%d\n") ((! b));
+);;
+reference ();;
 type a = {x:int;y:int};;
 let rec record = (fun () -> 
   let a = {x=1;y=2} in
@@ -137,11 +146,19 @@ let rec record = (fun () ->
 let a = 1 in
 a;
 } . x));
-  let aa = begin fun t1'  -> match t1' with
+  let px = begin fun t1'  -> match t1' with
   | ({x}) -> (
 
-    printf  ("%d\n") (x);
+    printf  ("x=%d\n") (x);
   )
- end  in ()
+ end  in
+  let py = begin fun t1'  -> match t1' with
+  | ({y}) -> (
+
+    printf  ("y=%d\n") (y);
+  )
+ end  in
+  px (a);
+  py (a);
 );;
 record ()
