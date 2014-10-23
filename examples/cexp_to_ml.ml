@@ -125,7 +125,7 @@ let rec exp = begin fun t1'  -> match t1' with
  end 
 
 and addEmpty = (fun (e) -> (match e with | ([]) -> (
-      (EEmpty :: []);
+      [EEmpty];
     
 )| (prm) -> (
       prm;
@@ -160,7 +160,7 @@ and stmt = begin fun t1'  -> match t1' with
     let rec f = begin fun t1'  -> match t1' with
       | (CId (a)) -> (
 
-        (Ty (a) :: []);
+        [Ty (a)];
       )
       | (CBin (((a , COp (",")) , b))) -> (
 

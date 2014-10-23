@@ -39,14 +39,19 @@ let rec exp = function
 
   | CPrn("{",cs,"}") ->
     begin match cs with
-      | CList((CPst(_,COp("?")))::xs) ->
+      | CList((_::COp("?")::_) as xs) ->
+        let rec exps2 = function
+          | [] -> []
+          | x::(COp("?"))::xs -> exp(CPst(x,COp("?")))::(exps2 xs)
+          | x::xs -> exp x :: exps2 xs
+        in
         let ls = List.fold_left(fun ls e ->
           match (ls,e) with
           | ls,EFun _ -> e :: ls
           | EFun(p,t, EBlock(xs))::ls, e -> EFun(p,t, EBlock(xs@[e]))::ls
           | ls,e -> e::ls
 
-        ) [] (exps cs) in
+        ) [] (exps2 xs) in
 
         EPFun(List.rev ls)
       | _ -> EBlock(exps cs)

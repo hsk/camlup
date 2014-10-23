@@ -65,14 +65,14 @@ def exp = {
 
 and addEmpty(e) =
   e match {
-  ; [] ? EEmpty::[]
+  ; [] ? [EEmpty]
   ; prm ? prm
   }
 
 
 and exps = {
-  ; CList(ls)? List.map( exp ls)
-  ; _ ? assert( false)
+  ; CList(ls)? List.map(exp ls)
+  ; _ ? assert(false)
   }
 
 /*
@@ -93,7 +93,7 @@ and stmt = {
       ; CId(i) ? i, TEmpty
       ; CMsg(CId(i),_,CList[c],_) ?
         def f = {
-        ; CId(a) ? Ty(a)::[]
+        ; CId(a) ? [Ty(a)]
         ; CBin(a,COp(","),b) ? f(a) @ f(b) 
         ; _ ? assert(false)
         }

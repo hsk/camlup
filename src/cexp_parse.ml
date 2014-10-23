@@ -46,7 +46,6 @@ let postfixs =
     [
       "++", 11, true;
       "--", 11, true;
-      "?", 0, false
     ]
 
 let sts =
@@ -65,29 +64,33 @@ let prec k m p =
   else
     false
 
+let connect = ref true
+
 let prec2 k =
   match k with
   | COp(k)
   | CId(k) when M.mem k postfixs || M.mem k infixs -> false
   | _ -> true
 
+
 let rec exp p = function
 
   (* prefix *)
   | (CUnit, DId(op)::xs)
-  | (CUnit, DOp(op)::xs) when prec op prefixs p ->
+  | (CUnit, DOp(op)::xs) when prec op prefixs p ->  
     let (y, ys) = exp !_p (CUnit, xs) in
     exp p (CPre(COp(op), y), ys)
 
   (* token *)
-  | (CUnit, DId(x):: xs) -> exp p (CId(x), xs)
-  | (CUnit, DOp(";"):: xs) -> exp p (CUnit, xs)
-  | (CUnit, DOp(x):: xs) -> exp p (COp(x), xs)
+  | (CUnit, DId(x):: xs) -> connect := true; exp p (CId(x), xs)
+  | (CUnit, DOp(";"):: xs) -> connect := false; exp p (CUnit, xs)
+  | (CUnit, DOp("?"):: xs) -> connect := false; exp p (COp("?"), xs)
+  | (CUnit, DOp(x):: xs) -> connect := true;exp p (COp(x), xs)
 
-  | (CUnit, DInt(x):: xs) -> exp p (CInt(x), xs)
-  | (CUnit, DStr(x):: xs) -> exp p (CStr(x), xs)
-  | (CUnit, DPrn(l,d,r):: xs) -> exp p (CPrn(l,parse d,r), xs)
-  | (CUnit, DList(ls)::xs) ->
+  | (CUnit, DInt(x):: xs) -> connect := true;exp p (CInt(x), xs)
+  | (CUnit, DStr(x):: xs) -> connect := true;exp p (CStr(x), xs)
+  | (CUnit, DPrn(l,d,r):: xs) -> connect := true;exp p (CPrn(l,parse d,r), xs)
+  | (CUnit, DList(ls)::xs) ->connect := true;
     let rec exps cs ls =
       match exp 0 (CUnit, ls) with
       | CUnit,[] -> (CList(List.rev cs), xs) 
@@ -104,17 +107,17 @@ let rec exp p = function
 
   (* infixs *)
   | (x, DId(op)::xs)
-  | (x, DOp(op)::xs) when prec op infixs p ->
+  | (x, DOp(op)::xs) when !connect && prec op infixs p ->
     let (y, ys) = exp !_p (CUnit, xs) in
     exp p (CBin(x, COp(op), y), ys)
 
   (* postfix *)
   | (x, DId(op)::xs)
-  | (x, DOp(op)::xs) when prec op postfixs p ->
+  | (x, DOp(op)::xs) when !connect && prec op postfixs p ->
     exp p (CPst(x, COp(op)), xs)
 
   (* msg *)
-  | (x, DPrn(l, d, r)::xs) when prec2 x ->
+  | (x, DPrn(l, d, r)::xs) when !connect && prec2 x ->
     exp p (CMsg(x, l, parse d, r), xs)
 
   | (x,ys) -> (x,ys)
