@@ -10,10 +10,10 @@ let rec print_ls sp sep p ppf = function
 let rec print_t pp sp ppf = function
   | TEmpty -> ()
   | Ty(s) ->
-    fprintf ppf "%s%s" <|_2(
-      sp,
+    fprintf ppf "%s%s"
+      sp
       s
-    )
+    
   | TTuple(ls) ->
     fprintf ppf "%s(%a)" 
       sp
@@ -54,6 +54,11 @@ let rec print_e sp ppf = function
       (print_e sp) e1
       ","
       (print_e sp) e2
+
+  | ETuple(ls) ->
+
+    fprintf ppf "(%a)"
+      (print_ls "" ", " print_e) ls
 
   | EBin(e1,op,e2) ->
     fprintf ppf "(%a %s %a)"
@@ -127,7 +132,7 @@ let rec print_e sp ppf = function
       | _ -> assert false
     end;
     fprintf ppf " with\n";
-    ls|>List.iter begin function
+    List.iter begin function
       | EFun(its, t, e) ->
         let rec print_ls sp sep p ppf = function
           | [] -> ()
@@ -147,13 +152,13 @@ let rec print_e sp ppf = function
           sp
 
       | _ -> assert false
-    end;
+    end ls;
     fprintf ppf "%s end " sp
   | EMatch (e,ls) ->
     fprintf ppf "(match %a with "
       (print_e "") e
       ;
-    ls|>List.iter begin function
+    List.iter begin function
       | EFun(its, t, e) ->
         let rec print_ls sep p ppf = function
           | [] -> ()
@@ -172,7 +177,7 @@ let rec print_e sp ppf = function
       | e ->
         fprintf std_formatter "%a\n" (print_e " ") e;
         assert false
-    end;
+    end ls;
     fprintf ppf ")"
   | ERecord(ls) ->
     fprintf ppf "{%a}"

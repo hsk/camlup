@@ -27,6 +27,12 @@ let rec exp = function
       Cexp.print Format.std_formatter b;
       assert false
     end
+
+  | CBin(a,COp(","),b) ->
+    begin match (exp b) with
+      | ETuple(bs) -> ETuple((exp a) :: bs)
+      | b -> ETuple([exp a; b])
+    end
   | CBin(a,COp(op),b) ->
     EBin(exp a, op, exp b)
 

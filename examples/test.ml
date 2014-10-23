@@ -51,25 +51,36 @@ let rec parcial_function = (fun () ->
    end  in
   printf  ("fib 10 = %d\n") (fib (10));
   let llor = begin fun t1'  -> match t1' with
-  | (0 , 0) -> (
+  | ((0, 0)) -> (
 
     let a = 1 in
     let b = 2 in
     (a + b)
   )
-  | (a , b) -> (
+  | ((a, b)) -> (
 
     (a + b)
   )
  end  in
-  printf  ("llor %d\n") (llor (1 , 2))
+  printf  ("llor %d\n") (llor ((1, 2)))
 );;
 parcial_function ();;
 let rec tuple = (fun () -> 
-  let rec add = (fun (a , b) -> (a + b)  ) in
-  printf  ("1+2=%d\n") (add (1 , 2));
-  let rec add = (fun (a , b , c) -> ((a + b) + c)  ) in
-  printf  ("1+2+3=%d\n") (add (1 , 2 , 3))
+  let rec add = (fun ((a, b)) -> (a + b)  ) in
+  printf  ("1+2=%d\n") (add ((1, 2)));
+  let rec add = (fun ((a, b, c)) -> ((a + b) + c)  ) in
+  printf  ("1+2+3=%d\n") (add ((1, 2, 3)));
+  let rec add = (fun ((
+(a, b)
+, c)) -> ((a + b) + c)  ) in
+  let x = 
+(1, 2)
+ in
+  printf  ("1+2+3=%d\n") (add ((x, 3)));
+  let rec add = (fun ((a, 
+(b, c)
+)) -> ((a + b) + c)  ) in
+  printf  ("1+2+3=%d\n") (add ((3, x)))
 );;
 tuple ();;
 open List;;
@@ -92,7 +103,18 @@ let rec list = (fun () ->
 
       printf  ("%d\n") (x)
     )
-   end ) ([1; 2; 3])
+   end ) ([1; 2; 3]);
+  let rec sum = begin fun t1' t2'  -> match t1',t2' with
+    | (n),([]) -> (
+
+      n
+    )
+    | (n),((x :: xs)) -> (
+
+      sum  ((n + x)) (xs)
+    )
+   end  in
+  printf  ("%d") (sum (0) ([1; 2; 3]))
 );;
 list ();;
 type e = EUnit|EInt of (int)|EAdd of (e * e);;
@@ -106,12 +128,12 @@ let rec variant = (fun () ->
 
       i
     )
-    | (EAdd (a , b)) -> (
+    | (EAdd ((a, b))) -> (
 
       (eval (a) + eval (b))
     )
    end  in
-  printf  ("10+2=%d\n") (eval (EAdd (EInt (10) , EInt (2))))
+  printf  ("10+2=%d\n") (eval (EAdd ((EInt (10), EInt (2)))))
 );;
 variant ();;
 let rec eval = begin fun t1'  -> match t1' with
@@ -123,12 +145,12 @@ let rec eval = begin fun t1'  -> match t1' with
 
     i
   )
-  | (EAdd (a , b)) -> (
+  | (EAdd ((a, b))) -> (
 
     (eval (a) + eval (b))
   )
  end ;;
-printf  ("10+2=%d\n") (eval (EAdd (EInt (10) , EInt (2))));;
+printf  ("10+2=%d\n") (eval (EAdd ((EInt (10), EInt (2)))));;
 let rec reference = (fun () -> 
   let a = (ref 1) in
   (a := 2);

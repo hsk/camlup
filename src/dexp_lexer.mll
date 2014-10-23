@@ -2,11 +2,13 @@
 open Dexp_parser
 }
 
-let space = [' ' '\t' '\n' '\r']
+let space = [' ' '\t']
 let digit = ['0'-'9']
 
 rule token = parse
   | space+ { token lexbuf }
+  | ['\n' '\r' ' ' '\t'] + { OP(";") }
+
   | "/*" { comment lexbuf }
   | "//" [^ '\n' '\r']* ['\n' '\r'] { token lexbuf }
   | '(' { LPAREN(Lexing.lexeme lexbuf) }

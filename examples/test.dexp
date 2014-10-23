@@ -40,10 +40,13 @@ functions(a b) = (
   printf("test %d\n" a+b)
 
   fib(n) =
-    if (n == 0) 0
-    else if (n == 1) 1
-    else fib(n-2)+fib(n-1)
-
+    if (n == 0)
+      0
+    else if (n == 1)
+      1
+    else
+      fib(n-2)+fib(n-1)
+    
   printf("fib %d %d\n" a+b fib(a+b))
 
 ) functions(10 11)
@@ -52,9 +55,9 @@ pattern_match() = (
 
   fib(n) = (
     n match {
-      ; 0 ? a = 0 a
-      ; 1 ? 1
-      ; n ? fib(n-2) + fib(n-1)
+      (0) ? a = 0 a
+      (1) ? 1
+      (n) ? fib(n-2) + fib(n-1)
     }
   )
 
@@ -65,16 +68,16 @@ pattern_match() = (
 parcial_function() = (
 
   def fib = {
-    ; 0 ? a=1 a
-    ; 1 ? 1
-    ; n ? fib(n-2) + fib(n-1)
+    0 ? a=1 a
+    1 ? 1
+    n ? fib(n-2) + fib(n-1)
   }
   
   printf("fib 10 = %d\n" fib(10))
   
   llor = {
-    ; 0,0 ? a=1 b=2 a + b
-    ; a,b ? a + b
+    0,0 ? a=1 b=2 a + b
+    a,b ? a + b
   }
 
   printf("llor %d\n" llor(1,2))
@@ -90,6 +93,14 @@ tuple() = (
 
   printf("1+2+3=%d\n" add(1,2,3))  
 
+  
+  add((a,b),c) = a + b + c
+  x = (1,2)
+  printf("1+2+3=%d\n" add(x,3))
+
+  add(a,(b,c)) = a + b + c
+  printf("1+2+3=%d\n" add(3,x))
+  
 ) tuple()
 
 open List
@@ -99,6 +110,13 @@ list() = (
   iter({x? printf("%d\n" x) })([1 2 3])
   iter({x? printf("%d\n" x) })[1 2 3]
   iter{x? printf("%d\n" x) }[1 2 3]
+
+  def sum = {
+    (n; []  ) ? n
+    (n x::xs) ? sum(n + x xs)
+  }
+  printf("%d" sum(0)[1 2 3])
+
 ) list()
 
 e type (
@@ -110,18 +128,18 @@ e type (
 variant() = (
 
   def eval = {
-    ; EUnit      ? 0
-    ; EInt(i)    ? i
-    ; EAdd(a, b) ? eval(a) + eval(b)
+    EUnit      ? 0
+    EInt(i)    ? i
+    EAdd(a, b) ? eval(a) + eval(b)
   }
 
   printf("10+2=%d\n" eval(EAdd(EInt(10), EInt(2))))
 ) variant()
 
 def eval = {
-  ; EUnit      ? 0
-  ; EInt(i)    ? i
-  ; EAdd(a, b) ? eval(a) + eval(b)
+  EUnit      ? 0
+  EInt(i)    ? i
+  EAdd(a, b) ? eval(a) + eval(b)
 }
 
 printf("10+2=%d\n" eval(EAdd(EInt(10), EInt(2))))
@@ -150,7 +168,8 @@ record() = (
 
   printf("%d\n" a.x)
 
-  printf("%d\n"; {x=1+2*3 y=(a=1 a)}.x)
+  printf("%d\n"
+    {x=1+2*3 y=(a=1 a)}.x)
 
   px = {{x}?printf("x=%d\n" x)}
   py = {{y}?printf("y=%d\n" y)}
@@ -159,5 +178,3 @@ record() = (
   py(a)
 
 ) record()
-
-

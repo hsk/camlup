@@ -2,164 +2,164 @@ open Cexp
 open Ast
 
 def exp = {
-  ; CInt(s) ?
+  CInt(s) ?
     EInt(s)
-  ; CStr(s) ?
+  CStr(s) ?
     EString(s)
-  ; CId(id) ?
+  CId(id) ?
     EVar(id)
 
-  ; CBin(CMsg(CId(f),"(",prm,")"),COp("="), e) ?
+  CBin(CMsg(CId(f),"(",prm,")"),COp("="), e) ?
     ELetRec(f, TEmpty, EFun(addEmpty(exps(prm)),TEmpty,exp(e)))
-  ; CBin(CId(i),COp("="),b) ?
+  CBin(CId(i),COp("="),b) ?
     ELet(i, TEmpty, exp(b))
-  ; CBin(CId(i),COp("#="),b) ?
+  CBin(CId(i),COp("#="),b) ?
     ELet(i, TEmpty, EPre("ref", exp(b)))    
-  ; CBin(CPre(COp("def"),CId(i)),COp("="),b) ?
+  CBin(CPre(COp("def"),CId(i)),COp("="),b) ?
     ELetRec(i, TEmpty, exp(b))
-  ; CBin(e,COp("match"),b) ?
+  CBin(e,COp("match"),b) ?
     exp(b) match {
-      ; EPFun(ls) ?
+      EPFun(ls) ?
         EMatch(exp(e), ls)
-      ; EBlock(ls) ?
+      EBlock(ls) ?
         EMatch(exp(e), ls)
-      ; _ ?
+      _ ?
         Cexp.print(Format.std_formatter b)
         assert(false)
     }
-  ; CBin(a,COp(op),b) ?
+  CBin(a,COp(op),b) ?
     EBin(exp(a), op, exp(b))
 
-  ; CPst(CPrn("(",es,")"),COp("?")) ?
+  CPst(CPrn("(",es,")"),COp("?")) ?
     EFun(exps(es), TEmpty, EBlock[])
-  ; CPst(e,COp("?")) ?
+  CPst(e,COp("?")) ?
     EFun([exp(e)], TEmpty, EBlock[])
 
-  ; CPre(COp("&"),b) ?
+  CPre(COp("&"),b) ?
     EPre("ref", exp(b))
-  ; CPre(COp("*"),b) ?
+  CPre(COp("*"),b) ?
     EPre("!", exp(b))
-  ; CPre(COp(op),b) ?
+  CPre(COp(op),b) ?
     EPre(op, exp(b))
 
-  ; CMsg(i,"(",CList(ls), ")") ?
+  CMsg(i,"(",CList(ls), ")") ?
     ECall(exp(i), addEmpty(List.map(exp ls)))
-  ; CMsg(i,"[",ls, "]") ?
+  CMsg(i,"[",ls, "]") ?
     ECall(exp(i), [EList(exps(ls))])
-  ; CMsg(i,"{",ls, "}") ?
+  CMsg(i,"{",ls, "}") ?
     ECall(exp(i), [exp(CPrn("{",ls,"}"))])
 
-  ; CSt(COp("if"),"(",CList[e],")",CBin(e2,COp("else"),e3)) ?
+  CSt(COp("if"),"(",CList[e],")",CBin(e2,COp("else"),e3)) ?
     EIf(exp(e), exp(e2), exp(e3))
-  ; CSt(COp("if"),"(",e,")",e2) ?
+  CSt(COp("if"),"(",e,")",e2) ?
     EIf(exp(e), exp(e2), EEmpty)
 
-  ; CPrn("(",cs,")") ?
+  CPrn("(",cs,")") ?
     EBlock(exps(cs))
-  ; CPrn("[",cs,"]") ?
+  CPrn("[",cs,"]") ?
     EList(exps(cs))
-  ; CPrn("{",cs,"}") ?
+  CPrn("{",cs,"}") ?
     cs match {
-      ; CList((_::COp("?")::_) as xs) ?
+      CList((_::COp("?")::_) as xs) ?
         def exps2 = {
-          ; [] ? []
-          ; x::(COp("?"))::xs ? exp(CPst(x,COp("?")))::(exps2(xs))
-          ; x::xs ? exp(x) :: exps2 (xs)
+          [] ? []
+          x::(COp("?"))::xs ? exp(CPst(x,COp("?")))::(exps2(xs))
+          x::xs ? exp(x) :: exps2 (xs)
         }
         ls = List.fold_left{(ls e) ?
           ls,e match {
-            ; ls,EFun(_) ?
+            ls,EFun(_) ?
               e :: ls
-            ; EFun(p,t, EBlock(xs))::ls, e ?
+            EFun(p,t, EBlock(xs))::ls, e ?
               EFun(p,t, EBlock(xs @ [e]))::ls          
-            ; ls,e ?
+            ls,e ?
               e::ls
           }
         } [] (exps2(xs))
         EPFun(List.rev(ls))
-      ; CList(cs) ?
+      CList(cs) ?
         cs = List.map{
-          ; CBin(CId(x),COp("="), c) ? (x, exp(c))
-          ; CId(x) ? x, EEmpty
-          ; e ?
+          CBin(CId(x),COp("="), c) ? (x, exp(c))
+          CId(x) ? x, EEmpty
+          e ?
             Cexp.print(Format.std_formatter e)
             assert(false)
         }(cs)
         ERecord(cs)
-      ; _ ?
+      _ ?
         EBlock(exps(cs))
     }
 
-  ; CList(ls) ?
+  CList(ls) ?
     EList(List.map(exp ls))
 
-  ; CUnit ?
+  CUnit ?
     EEmpty
 
-  ; e ?
+  e ?
     Cexp.print(Format.str_formatter e)
     EVar(Format.flush_str_formatter())  
 }
 and addEmpty(e) =
   e match {
-    ; []  ? [EEmpty]
-    ; prm ? prm
+    []  ? [EEmpty]
+    prm ? prm
   }
 and exps = {
-  ; CList(ls) ? List.map(exp ls)
-  ; _         ? assert(false)
+  CList(ls) ? List.map(exp ls)
+  _         ? assert(false)
 }
 and typ = {
-  ; CId(id) ? Ty(id)
-  ; _       ? assert(false)  
+  CId(id) ? Ty(id)
+  _       ? assert(false)  
 }
 and types = {
-  ; []    ? []
-  ; c::cs ? typ(c) :: types(cs)
+  []    ? []
+  c::cs ? typ(c) :: types(cs)
 }
 and stmt = {
-  ; CPre(COp("open"),CId(id)) ?
+  CPre(COp("open"),CId(id)) ?
     SOpen(id)
-  ; CBin(CId(id),COp("type"),CPrn("(", CList(cs),")")) ?
+  CBin(CId(id),COp("type"),CPrn("(", CList(cs),")")) ?
     cs = List.map{
-      ; CId(i) ?
+      CId(i) ?
         (i, TEmpty)
-      ; CMsg(CId(i),_,CList[c],_) ?
+      CMsg(CId(i),_,CList[c],_) ?
         def f = {
-          ; CId(a) ?
+          CId(a) ?
             [Ty(a)]
-          ; CBin(a,COp(","),b) ?
+          CBin(a,COp(","),b) ?
             f(a) @ f(b) 
-          ; _ ?
+          _ ?
             assert(false)
-        };
+        }
         (i, TTuple(f(c)))
-      ; e ?
-        Cexp.print(Format.std_formatter e);
+      e ?
+        Cexp.print(Format.std_formatter e)
         ("error", TEmpty)
     }(cs)
     STypeVariant(id, cs)
-  ; CBin(CId(id), COp("type"), CPrn("{", CList(cs), "}")) ?
+  CBin(CId(id), COp("type"), CPrn("{", CList(cs), "}")) ?
     cs = List.map{
-      ; CBin(CId(i),COp(":"),c) ?
+      CBin(CId(i),COp(":"),c) ?
         (i, typ(c))
-      ; e ?
-        Cexp.print(Format.std_formatter e);
+      e ?
+        Cexp.print(Format.std_formatter e)
         ("error", TEmpty)
     }(cs)
     STypeRec(id, cs)
-  ; CBin(a, COp("and"), b) ?
+  CBin(a, COp("and"), b) ?
     SAnd(stmt(a), stmt(b))
-  ; ast ?
+  ast ?
     SExp(exp(ast))
 }
 and stmts = {
-  ; CList(ls) ?
+  CList(ls) ?
     List.map(stmt ls)
-  ; _ ?
+  _ ?
     assert (false)
 }
 and prog = {
-  ; ast ?
+  ast ?
     Prog(stmts(ast))
 }

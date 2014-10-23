@@ -1,7 +1,7 @@
 open Printf
 
-b(x) = c(x)
-and c(x) = x
+b(x) = c(x) and
+c(x) = x
 
 
 _ = (

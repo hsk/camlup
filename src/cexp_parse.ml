@@ -7,7 +7,7 @@ let infixs =
   List.fold_left (fun m (k,prec,left) -> M.add k (prec,left) m) M.empty
     [
       "=>", 2, true;
-      ",",  3, true;
+      ",",  3, false;
       "=",  2, false;
       ":=", 2, false;
       "#=", 2, false;
@@ -46,13 +46,6 @@ let prefixs =
       "|",    1, false;
     ]
 
-let postfixs =
-  List.fold_left (fun m (k,prec,left) -> M.add k (prec,left) m ) M.empty
-    [
-      "++", 11, true;
-      "--", 11, true;
-    ]
-
 let sts =
   List.fold_left (fun m (k,prec,left) -> M.add k (prec,left) m ) M.empty
     [
@@ -71,10 +64,19 @@ let prec k m p =
 
 let connect = ref true
 
+let precinfix k m p =
+  if M.mem k m then
+    let (p1, left) = M.find k m in
+    _p := p1;
+    (p1 > p || (not left && p1 == p)) && (!connect || (p1 < 3))
+  else
+    false
+
+
 let prec2 k =
   match k with
   | COp(k)
-  | CId(k) when M.mem k postfixs || M.mem k infixs -> false
+  | CId(k) when M.mem k infixs -> false
   | _ -> true
 
 
@@ -88,13 +90,17 @@ let rec exp p = function
 
   (* token *)
   | (CUnit, DId(x):: xs) -> connect := true; exp p (CId(x), xs)
-  | (CUnit, DOp(";"):: xs) -> connect := false; exp p (CUnit, xs)
+  | (k, DOp(";"):: xs) -> connect := false; exp p (k, xs)
   | (CUnit, DOp("?"):: xs) -> connect := false; exp p (COp("?"), xs)
   | (CUnit, DOp(x):: xs) -> connect := true;exp p (COp(x), xs)
 
   | (CUnit, DInt(x):: xs) -> connect := true;exp p (CInt(x), xs)
   | (CUnit, DStr(x):: xs) -> connect := true;exp p (CStr(x), xs)
-  | (CUnit, DPrn(l,d,r):: xs) -> connect := true;exp p (CPrn(l,parse d,r), xs)
+  | (CUnit, DPrn(l,d,r):: xs) ->
+    connect := true;
+    let prn = CPrn(l,parse d,r) in
+    connect := true;
+    exp p (prn, xs)
   | (CUnit, DList(ls)::xs) ->connect := true;
     let rec exps cs ls =
       match exp 0 (CUnit, ls) with
@@ -108,18 +114,14 @@ let rec exp p = function
   (* sts *)
   | (CId(op), DPrn(l, d, r)::xs) when prec op sts p ->
     let (y, xs) = exp 0 (CUnit, xs) in
+    print Format.std_formatter y;
     exp p (CSt(COp(op), l, parse d, r, y), xs)
 
   (* infixs *)
   | (x, DId(op)::xs)
-  | (x, DOp(op)::xs) when !connect && prec op infixs p ->
+  | (x, DOp(op)::xs) when (precinfix op infixs p) ->
     let (y, ys) = exp !_p (CUnit, xs) in
     exp p (CBin(x, COp(op), y), ys)
-
-  (* postfix *)
-  | (x, DId(op)::xs)
-  | (x, DOp(op)::xs) when !connect && prec op postfixs p ->
-    exp p (CPst(x, COp(op)), xs)
 
   (* msg *)
   | (x, DPrn(l, d, r)::xs) when !connect && prec2 x ->
