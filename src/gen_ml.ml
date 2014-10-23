@@ -185,6 +185,8 @@ let rec print_e sp ppf = function
       | (ELetRec _ as e)::xs | (ELet _ as e)::xs ->
         fprintf ppf "%s%a in@." sp (print_e sp) e;
         loop xs
+      | [e] ->
+        fprintf ppf "%s%a@." sp (print_e sp) e
       | e::xs ->
         fprintf ppf "%s%a;@." sp (print_e sp) e;
         loop xs

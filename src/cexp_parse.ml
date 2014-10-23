@@ -30,6 +30,7 @@ let infixs =
       "else", 2, true;
       "type", 1, true;
       ":", 1, true;
+      "as", 1, true 
     ]
 
 let prefixs =
