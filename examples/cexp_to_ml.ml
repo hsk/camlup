@@ -1,6 +1,6 @@
 open Cexp;;
 open Ast;;
-let exp = begin fun t1'  -> match t1' with
+let rec exp = begin fun t1'  -> match t1' with
   | (CInt (s)) -> (
 
     EInt (s);
@@ -87,11 +87,10 @@ let exp = begin fun t1'  -> match t1' with
   | (CPrn ((("{" , cs) , "}"))) -> (
 
     (match cs with | (CList ((CPst ((_ , COp ("?"))) :: xs))) -> (
-      let ls = 
-(List . fold_left (begin fun t1' t2'  -> match t1',t2' with
+      let ls = (List . fold_left (begin fun t1' t2'  -> match t1',t2' with
   | (ls),(e) -> (
 
-    (match (ls , e) with | ((ls , EFun (_))) -> (
+    (ls , (match e with | ((ls , EFun (_))) -> (
       (e :: ls);
     
 )| (((EFun (((p , t) , EBlock (xs))) :: ls) , e)) -> (
@@ -100,10 +99,9 @@ let exp = begin fun t1'  -> match t1' with
 )| ((ls , e)) -> (
       (e :: ls);
     
-));
+)));
   )
- end ) ([]) (exps (cs)));
- in
+ end ) ([]) (exps (cs))) in
       EPFun ((List . rev (ls)));
     
 )| (_) -> (
@@ -125,3 +123,22 @@ let exp = begin fun t1'  -> match t1' with
     EVar ((Format . flush_str_formatter ()));
   )
  end 
+
+and addEmpty = (fun (e) -> (match e with | ([]) -> (
+      (EEmpty :: []);
+    
+)| (prm) -> (
+      prm;
+    
+))  )
+
+and exps = begin fun t1'  -> match t1' with
+    | (CList (ls)) -> (
+
+      (List . map  (exp) (ls));
+    )
+    | (_) -> (
+
+      assert (false);
+    )
+   end 

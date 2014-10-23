@@ -1,7 +1,7 @@
 open Cexp
 open Ast
 
-exp = {
+def exp = {
   ; CInt(s) ? EInt(s)
   
   ; CStr(s) ? EString(s)
@@ -40,7 +40,7 @@ exp = {
   ; CPrn("{",cs,"}") ?
     cs match {
       ; CList(CPst(_, COp("?"))::xs) ?
-        ls = (List.fold_left{(ls e) ?
+        ls = List.fold_left{(ls e) ?
           ls,e match {
           ; ls,EFun(_) ? e :: ls
 
@@ -48,7 +48,7 @@ exp = {
           
           ; ls,e ? e::ls
           }
-        } [] (exps(cs)))
+        } [] (exps(cs))
 
         EPFun(List.rev(ls))
       ; _ ? EBlock(exps(cs))
@@ -62,25 +62,28 @@ exp = {
     
 }
 
-/*
+
 and addEmpty(e) =
   e match {
-  ; [] ? [EEmpty]
+  ; [] ? EEmpty::[]
   ; prm ? prm
   }
 
 
-and exps = function
-  | CList ls -> List.map exp ls
-  | _ -> assert false
+and exps = {
+  ; CList(ls)? List.map( exp ls)
+  ; _ ? assert( false)
+  }
 
-(*
+/*
 and typ = function
   | 
 and types = function
   | [] -> []
   | c::cs -> typ c :: types cs
-*)
+*/
+
+/*
 and stmt = function
   | CPre(COp("open"),CId(id)) -> SOpen id
   | CBin(CId id,COp("type"),CPrn(_, CList(cs) ,_)) ->

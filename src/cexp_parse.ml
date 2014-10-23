@@ -6,26 +6,26 @@ module M = Map.Make (String)
 let infixs =
   List.fold_left (fun m (k,prec,left) -> M.add k (prec,left) m) M.empty
     [
-      ".",  2, true;
       "=>", 2, true;
       ",",  2, true;
-      "match", 2, true;
       "=",  2, false;
       ":=", 2, false;
-      "==", 3, true;
-      "!=", 3, true;
-      "<",  4, true;
-      ">",  4, true;
-      "<=", 5, true;
-      ">=", 6, true;
-      "+",  7, true;
-      "-",  7, true;
+      "match", 3, true;
+      ".",  3, true;
+      "==", 4, true;
+      "!=", 4, true;
+      "<",  5, true;
+      ">",  5, true;
+      "<=", 6, true;
+      ">=", 7, true;
+      "+",  8, true;
+      "-",  8, true;
 
-      "/",  8, true;
-      "*",  8, true;
-      "::", 9, false;
-      "@", 9, false;
-      "and", 1, false;
+      "/",  9, true;
+      "*",  9, true;
+      "::", 10, false;
+      "@", 10, false;
+      "and", 1, true;
       "else", 2, true;
       "type", 1, true
     ]
@@ -33,26 +33,26 @@ let infixs =
 let prefixs =
   List.fold_left (fun m (k,prec,left) -> M.add k (prec,left) m ) M.empty
     [
-      "def", 10, false;
-      "open", 9, false;
-      "new",  9, false;
-      "!",    9, false;
-      "-",    9, false;
+      "def", 11, false;
+      "open", 10, false;
+      "new",  10, false;
+      "!",    10, false;
+      "-",    10, false;
       "|",    1, false;
     ]
 
 let postfixs =
   List.fold_left (fun m (k,prec,left) -> M.add k (prec,left) m ) M.empty
     [
-      "++", 10, true;
-      "--", 10, true;
+      "++", 11, true;
+      "--", 11, true;
       "?", 0, false
     ]
 
 let sts =
   List.fold_left (fun m (k,prec,left) -> M.add k (prec,left) m ) M.empty
     [
-      "if", 10, true;
+      "if", 11, true;
     ]
 
 let _p = ref 0
