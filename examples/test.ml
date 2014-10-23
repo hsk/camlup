@@ -128,4 +128,20 @@ let rec eval = begin fun t1'  -> match t1' with
     (eval (a) + eval (b));
   )
  end ;;
-printf  ("10+2=%d\n") (eval (EAdd ((EInt (10) , EInt (2)))))
+printf  ("10+2=%d\n") (eval (EAdd ((EInt (10) , EInt (2)))));;
+type a = {x:int;y:int};;
+let rec record = (fun () -> 
+  let a = {x=1;y=2} in
+  printf  ("%d\n") ((a . x));
+  printf  ("%d\n") (({x=(1 + (2 * 3));y=
+let a = 1 in
+a;
+} . x));
+  let aa = begin fun t1'  -> match t1' with
+  | ({x}) -> (
+
+    printf  ("%d\n") (x);
+  )
+ end  in ()
+);;
+record ()

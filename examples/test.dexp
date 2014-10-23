@@ -7,77 +7,11 @@
 
 - [ ] matchのwhen
 - [x] tuple ok
-- [ ] typeのレコード
-- [ ] typeのヴァリアント
+- [x] typeのレコード
+- [x] typeのヴァリアント
 - [ ] モジュール
-- [ ] 型定義
-
-a = (
-  a = f(a; b; -c)
-  a
-)
-
-b = (
-  c = (
-    d = 5
-    d + 2
-  )
-  e = 1
-  c + e
-)
-
-レコード
-
-トップレベルはレコードの値宣言リストと考える。
-
-Main module {
-
-  add(a b) = (
-    a + b
-  )
-  mul(a b) = (
-    a * b
-  )
-
-  addt(a,b) = (
-    a + b
-  )
-
-  fib(n) = (
-    if (n == 0) 0 else
-    if (n == 1) 1 else
-    fib(n-2)+fib(n-1)
-  )
-
-  fib = (
-    0 ?
-      a = 0
-      a
-    1 ?
-      b = 1
-      b
-    n ?
-      a = fib(n-2)
-      b = fib(n-1)
-      a + b
-  )
-
-  printf("test%d"; fib(10))
-
-  eval(e) =
-    e match (
-      Int(a)   ? k = a k
-      Add(a,b) ? add(eval(a) eval(b))
-      Mul(a,b) ? mul(eval(a) eval(b))
-    )
-
-  printf("1+2*3=%d" eval(Add(Int(1),Mul(Int(2),Int(3)))))
-
-}
-
-パターンマッチは式が含まれた関数の実行 レコードはほとんどオブジェクト
-
-a()
+- [ ] リファレンス
+- [x] 型定義
 
 
 */
@@ -118,9 +52,9 @@ pattern_match() = (
 
   fib(n) = (
     n match {
-    ; 0 ? a = 0 a
-    ; 1 ? 1
-    ; n ? fib(n-2) + fib(n-1)
+      ; 0 ? a = 0 a
+      ; 1 ? 1
+      ; n ? fib(n-2) + fib(n-1)
     }
   )
 
@@ -131,16 +65,16 @@ pattern_match() = (
 parcial_function() = (
 
   def fib = {
-  ; 0 ? a=1 a
-  ; 1 ? 1
-  ; n ? fib(n-2) + fib(n-1)
+    ; 0 ? a=1 a
+    ; 1 ? 1
+    ; n ? fib(n-2) + fib(n-1)
   }
   
   printf("fib 10 = %d\n" fib(10))
   
   llor = {
-  ; 0,0 ?  a=1 b=2 a + b
-  ; a,b ?  a + b
+    ; 0,0 ? a=1 b=2 a + b
+    ; a,b ? a + b
   }
 
   printf("llor %d\n" llor(1,2))
@@ -173,12 +107,11 @@ e type (
   EAdd(e, e)
 ) 
 
-
 variant() = (
 
   def eval = {
-    ; EUnit ? 0
-    ; EInt(i) ? i
+    ; EUnit      ? 0
+    ; EInt(i)    ? i
     ; EAdd(a, b) ? eval(a) + eval(b)
   }
 
@@ -186,8 +119,8 @@ variant() = (
 ) variant()
 
 def eval = {
-  ; EUnit ? 0
-  ; EInt(i) ? i
+  ; EUnit      ? 0
+  ; EInt(i)    ? i
   ; EAdd(a, b) ? eval(a) + eval(b)
 }
 
@@ -210,19 +143,18 @@ reference() := {
 
 } reference()
 */
-/*
 a type {x:int y:int}
 
-record() := (
+record() = (
 
   a = {x=1 y=2}
 
   printf("%d\n" a.x)
 
-  printf("%d\n"; {:x=1+2*3 y={a:=1 a}}.x)
+  printf("%d\n"; {x=1+2*3 y=(a=1 a)}.x)
 
-  aa := {{:x}=>printf("%d\n" x)}
-  
+  aa = {{x}?printf("%d\n" x)}
+
 ) record()
-*/
+
 

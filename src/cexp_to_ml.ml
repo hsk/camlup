@@ -54,6 +54,15 @@ let rec exp = function
         ) [] (exps2 xs) in
 
         EPFun(List.rev ls)
+      | CList(cs) ->
+        let cs = List.map(function
+          | CBin(CId(x),COp("="), c) -> (x, exp c)
+          | CId(x) -> (x, EEmpty)
+          | e ->
+            Cexp.print Format.std_formatter e;
+            assert false
+        ) cs in
+        ERecord(cs)
       | _ -> EBlock(exps cs)
     end
   | CList(ls) -> EList(List.map exp ls)
@@ -72,16 +81,17 @@ and exps = function
   | CList ls -> List.map exp ls
   | _ -> assert false
 
-(*
 and typ = function
-  | 
+  | CId(id) -> Ty id
+  | _ -> assert false
+
 and types = function
   | [] -> []
   | c::cs -> typ c :: types cs
-*)
+
 and stmt = function
   | CPre(COp("open"),CId(id)) -> SOpen id
-  | CBin(CId id,COp("type"),CPrn(_, CList(cs) ,_)) ->
+  | CBin(CId id,COp("type"),CPrn("(", CList(cs) ,")")) ->
     let cs = List.map(function
       | CId i -> (i, TEmpty)
       | (CMsg(CId(i),_,CList[c],_)) ->
@@ -97,6 +107,15 @@ and stmt = function
       
     ) cs in
     STypeVariant(id, cs)
+  | CBin(CId id,COp("type"),CPrn("{", CList(cs) ,"}")) ->
+    let cs = List.map(function
+      | CBin(CId(i),COp(":"),c) ->
+        (i, typ c)
+      | e ->
+        Cexp.print Format.std_formatter e;
+        ("error", TEmpty)
+    ) cs in
+    STypeRec(id, cs)
   | CBin(a,COp("and"),b) -> SAnd(stmt a, stmt b)
   | ast -> SExp(exp ast)
 

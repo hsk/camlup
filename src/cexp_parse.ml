@@ -27,7 +27,8 @@ let infixs =
       "@", 10, false;
       "and", 1, true;
       "else", 2, true;
-      "type", 1, true
+      "type", 1, true;
+      ":", 1, true;
     ]
 
 let prefixs =
