@@ -23,7 +23,11 @@ let infixs =
 
       "/",  8, true;
       "*",  8, true;
-      "else", 2, true
+      "::", 9, false;
+      "@", 9, false;
+      "and", 1, false;
+      "else", 2, true;
+      "type", 1, true
     ]
 
 let prefixs =
@@ -41,7 +45,8 @@ let postfixs =
   List.fold_left (fun m (k,prec,left) -> M.add k (prec,left) m ) M.empty
     [
       "++", 10, true;
-      "--", 10, true
+      "--", 10, true;
+      "?", 0, false
     ]
 
 let sts =

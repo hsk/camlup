@@ -18,7 +18,7 @@ rule token = parse
   | digit+ { INT(int_of_string (Lexing.lexeme lexbuf)) }
 
   | '"' [^ '"']* '"'  { STRING(Lexing.lexeme lexbuf) }
-  | ['+' '-' '*' '/' '%' '<' '>' '=' '&' '|' '^' '~' ':']+
+  | ['+' '-' '*' '/' '%' '<' '>' '=' '&' '|' '^' '~' ':' '?' '@']+
       { OP(Lexing.lexeme lexbuf) }
   | [';' ','] { OP(Lexing.lexeme lexbuf) }
   | ['.']+ { OP(Lexing.lexeme lexbuf) }

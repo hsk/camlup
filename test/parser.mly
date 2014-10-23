@@ -2,69 +2,111 @@
 
 open Format
 
-type t =
+type d =
   | DInt of int
-  | DCase of t
-  | DAdd of t * t
-  | DMul of t * t
-  | DList of t list
-  | DPFun of (t * t) list
-
+  | DStr of string
+  | DVar of string
+  | DCase of d
+  | DAdd of d * d
+  | DSub of d * d
+  | DMul of d * d
+  | DOr of d * d
+  | Ds of d list
+  | DPFun of (d * d) list
+  | DCall of d * d
 let rec print fp = function
   | DInt(i) -> fprintf fp "DInt(%d)@?" i 
-  | DCase(t) -> fprintf fp "DCase(%a)@?" print t
+  | DStr(i) -> fprintf fp "DStr(%s)@?" i 
+  | DVar(i) -> fprintf fp "DVar(%s)@?" i 
+  | DCase(a) -> fprintf fp "DCase(%a)@?" print a
   | DAdd(a,b) -> fprintf fp "DAdd(%a,%a)@?" print a print b
+  | DSub(a,b) -> fprintf fp "DSub(%a,%a)@?" print a print b
   | DMul(a,b) -> fprintf fp "DMul(%a,%a)@?" print a print b
-  | DList(ls) -> fprintf fp "DList([%a])@?" (fun fp -> List.iter(fprintf fp "%a;" print)) ls
+  | DOr(a,b) -> fprintf fp "DOr(%a,%a)@?" print a print b
+  | Ds(ls) -> fprintf fp "Ds([%a])@?" (fun fp -> List.iter(fprintf fp "%a;" print)) ls
   | DPFun(ls) -> fprintf fp "DPFun([%a])@?"
     (fun fp ->
       List.iter(fun (l,r) -> fprintf fp "%a,%a;" print l print r)
     ) ls
+  | DCall(l,r) -> fprintf fp "DCall(%a, %a)@?" print l print r
 %}
 
 %token <int> INT
-%token ADD MUL CASE MATCH
+%token <string> STR
+%token <string> VAR
+%token ADD SUB MUL OR CASE SEMI
 %token LPAREN RPAREN
 %token EOF
 
 %right LIST
-%left ADD
+%left OR
+%left ADD SUB
 %left MUL
+%left CALL
 
-%type <t> prog
+%type <d> prog
 %start prog
 
 %%
 
 prog:
-  | exps { DList($1) }
+  | exps { Ds($1) }
+
+exp1:
+  | exp { $1 }
+  | exp SEMI { $1 }
+
+exp0:
+  | SEMI exp0 { $2 }
+  | exp { $1 }
+  | exp SEMI { $1 }
 
 exps:
-  | exp { [$1] }
-  | exp exps %prec LIST { $1 :: $2 }
+  | exp1 { [$1] }
+  | exp1 exps %prec LIST { $1 :: $2 }
 
 lexps:
   | lexp { [$1] }
   | lexp lexps %prec LIST { $1 :: $2 }
 
 lexp:
-  | exp { $1 }
-  | exp CASE { DCase $1 }
+  | exp1 { $1 }
+  | exp1 CASE { DCase $1 }
 
 exp:
-  | LPAREN RPAREN { DList([]) }
-  | LPAREN exps RPAREN { DList($2) }
-  | exp ADD exp { DAdd($1, $3) }
-  | exp MUL exp { DMul($1, $3) }
   | INT { DInt($1) }
-  | LPAREN lexps RPAREN {
+  | STR { DStr($1) }
+  | VAR { DVar($1) }
+  | LPAREN RPAREN { Ds([]) }
+  | LPAREN exps RPAREN { Ds($2) }
+  | exp ADD exp { DAdd($1, $3) }
+  | exp SUB exp { DSub($1, $3) }
+  | exp MUL exp { DMul($1, $3) }
+  | exp OR exp { DOr($1, $3) }
+  | exp LPAREN RPAREN %prec CALL { DCall($1, Ds[])}
+  | exp LPAREN exps RPAREN %prec CALL { DCall($1, Ds $3) }
+  | LPAREN CASE RPAREN {
+    DPFun([])
+  }
+  /*
+     ( a? b c d ? e f )
+  */
+  | LPAREN exp0 CASE lexps RPAREN {
+    (* (a) ? (b c d ? e f) *)
     let ls = List.fold_left (fun ls d ->
       match(ls,d) with
-      | ls,(DCase _ as d) ->
-        (d,DList[])::ls 
-      | (c,DList l1)::ls, d ->
-        (c, DList (l1@[d]))::ls
+      | ls,(DCase _ as d) -> (d,[])::ls 
+      | (c,l1)::ls, d -> (c, (d :: l1))::ls
       | _ -> assert false
-    ) [] $2 in
-    DPFun(List.rev ls)
+    ) [] ((DCase $2)::$4) in (* a ? b c d ? e f *)
+
+    (* (d ?, f e) (a ?, c b) *)
+    (* reverse list *)
+    let ls = List.fold_left (fun ls (d,l) ->
+      (d,Ds(List.rev l))::ls
+    ) [] ls in
+
+    (* (a ?, b c) (d ? e f)  *)
+
+    DPFun(ls)
   }

@@ -23,7 +23,7 @@ end functions()
 
 curry_function := begin
 
-  f0:()=>int = {|| 0 }
+  f0:()=>int = { 0 }
   def f0():int 0 end
   def f0() 0 end
 

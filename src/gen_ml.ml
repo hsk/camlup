@@ -240,6 +240,17 @@ let rec print_s sp ppf (s:s):unit =
         id
         (print_t sp "") t
         (print_e sp) e
+    | SAnd(e1, SExp(ELetRec(id, TEmpty, e))) ->
+      fprintf ppf "%a\n"
+        (print_s sp) e1;
+      fprintf ppf "%sand %s = %a"
+        sp
+        id
+        (print_e (sp^"  ")) e
+    | SAnd(e1, e2) ->
+      fprintf ppf "%a and %a"
+        (print_s sp) e1
+        (print_s sp) e2
 
     | SExp e ->
       fprintf ppf "%s%a"

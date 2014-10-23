@@ -32,6 +32,7 @@ type s =
   | SOpen of string
   | SLet of string * t * e
   | SLetRec of string * t * e
+  | SAnd of s * s
   | SExp of e
   | SModule of string * s list
   | STypeRec of string * (string * t) list

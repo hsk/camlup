@@ -3,6 +3,15 @@
 ./nmlc -run -to examples/test.dexp
 
 
+細かいシンタックスで悩むより、とりあえず、オブジェクトまで実装しよう。
+
+- [ ] matchのwhen
+- [x] tuple ok
+- [ ] typeのレコード
+- [ ] typeのヴァリアント
+- [ ] モジュール
+- [ ] 型定義
+
 a = (
   a = f(a; b; -c)
   a
@@ -92,7 +101,7 @@ block = (
 
 )
 
-functions(a b) = {
+functions(a b) = (
 
   printf("test %d\n" a+b)
 
@@ -103,37 +112,117 @@ functions(a b) = {
 
   printf("fib %d %d\n" a+b fib(a+b))
 
-} functions(10 11)
+) functions(10 11)
 
-pattern_match() = {
+pattern_match() = (
 
-  fib(n) = {
+  fib(n) = (
     n match {
-      0 ? 0
-      1 ? -1
-      n ? fib(n-2) + fib(n-1)
+    ; 0 ? a = 0 a
+    ; 1 ? 1
+    ; n ? fib(n-2) + fib(n-1)
     }
-  }
+  )
 
   printf("fib 21 %d\n" fib(21))
-} pattern_match()
+) pattern_match()
 
 
-parcial_function() = {
+parcial_function() = (
 
   def fib = {
-    0 ? a=1 a
-    1 ? 1
-    n ? fib(n-2) + fib(n-1)
+  ; 0 ? a=1 a
+  ; 1 ? 1
+  ; n ? fib(n-2) + fib(n-1)
   }
   
   printf("fib 10 = %d\n" fib(10))
   
   llor = {
-    0,0 ? a=1 b=2 a + b
-    a,b ? a + b
+  ; 0,0 ?  a=1 b=2 a + b
+  ; a,b ?  a + b
   }
 
   printf("llor %d\n" llor(1,2))
   
-} parcial_function()
+) parcial_function()
+
+tuple() = (
+  add(a,b) = a + b
+
+  printf("1+2=%d\n" add(1,2))  
+
+  add(a,b,c) = a + b + c
+
+  printf("1+2+3=%d\n" add(1,2,3))  
+
+) tuple()
+
+open List
+
+list() = (
+  Printf.printf("%d\n" 10)
+  iter({x? printf("%d\n" x) })([1 2 3])
+  iter({x? printf("%d\n" x) })[1 2 3]
+  iter{x? printf("%d\n" x) }[1 2 3]
+) list()
+
+e type (
+  EUnit
+  EInt(int)
+  EAdd(e, e)
+) 
+
+
+variant() = (
+
+  def eval = {
+    ; EUnit ? 0
+    ; EInt(i) ? i
+    ; EAdd(a, b) ? eval(a) + eval(b)
+  }
+
+  printf("10+2=%d\n" eval(EAdd(EInt(10), EInt(2))))
+) variant()
+
+def eval = {
+  ; EUnit ? 0
+  ; EInt(i) ? i
+  ; EAdd(a, b) ? eval(a) + eval(b)
+}
+
+printf("10+2=%d\n" eval(EAdd(EInt(10), EInt(2))))
+
+/*
+reference() := {
+
+  a := & 1;
+
+  *a = 2;
+
+  printf("%d\n"; *a);
+
+  b #= 1;
+
+  *b = 3;
+
+  printf("%d\n"; *b);
+
+} reference()
+*/
+/*
+a type {x:int y:int}
+
+record() := (
+
+  a = {x=1 y=2}
+
+  printf("%d\n" a.x)
+
+  printf("%d\n"; {:x=1+2*3 y={a:=1 a}}.x)
+
+  aa := {{:x}=>printf("%d\n" x)}
+  
+) record()
+*/
+

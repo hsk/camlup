@@ -12,10 +12,14 @@ rule token = parse
   | '(' { LPAREN }
   | ')' { RPAREN }
   | digit+ { INT(int_of_string (Lexing.lexeme lexbuf)) }
+  | '"' [^ '"']* '"'  { STR(Lexing.lexeme lexbuf) }
+  | ['a'-'z' 'A'-'Z' '_']['a'-'z' 'A'-'Z' '_' '0'-'9']* { VAR(Lexing.lexeme lexbuf) }
   | '+' { ADD }
+  | '-' { SUB }
   | '*' { MUL }
-  | "match" { MATCH }
+  | '|' { OR }
   | '?' { CASE }
+  | ';' { SEMI }
   | eof { EOF }
   | _ { failwith
         (Printf.sprintf "unknown token %s near characters %d-%d"
