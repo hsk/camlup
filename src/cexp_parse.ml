@@ -7,7 +7,7 @@ let infixs =
   List.fold_left (fun m (k,prec,left) -> M.add k (prec,left) m) M.empty
     [
       "=>", 2, true;
-      ",",  2, true;
+      ",",  3, true;
       "=",  2, false;
       ":=", 2, false;
       "#=", 2, false;

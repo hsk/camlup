@@ -21,7 +21,7 @@ def exp = {
     exp(b) match {
       ; EPFun(ls) ?
         EMatch(exp(e), ls)
-      ; EBlock ls ?
+      ; EBlock(ls) ?
         EMatch(exp(e), ls)
       ; _ ?
         Cexp.print(Format.std_formatter b)
@@ -60,7 +60,7 @@ def exp = {
     EList(exps(cs))
   ; CPrn("{",cs,"}") ?
     cs match {
-      ; CList((_::COp("?")::xs) as xs) ?
+      ; CList((_::COp("?")::_) as xs) ?
         def exps2 = {
           ; [] ? []
           ; x::(COp("?"))::xs ? exp(CPst(x,COp("?")))::(exps2(xs))
@@ -75,7 +75,7 @@ def exp = {
             ; ls,e ?
               e::ls
           }
-        } [] (exps(cs))
+        } [] (exps2(xs))
         EPFun(List.rev(ls))
       ; CList(cs) ?
         cs = List.map{

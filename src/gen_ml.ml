@@ -49,6 +49,12 @@ let rec print_e sp ppf = function
     fprintf ppf "%s"
       i
 
+  | EBin(e1,",",e2) ->
+    fprintf ppf "%a %s %a"
+      (print_e sp) e1
+      ","
+      (print_e sp) e2
+
   | EBin(e1,op,e2) ->
     fprintf ppf "(%a %s %a)"
       (print_e sp) e1

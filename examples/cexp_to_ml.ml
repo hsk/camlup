@@ -13,30 +13,29 @@ let rec exp = begin fun t1'  -> match t1' with
 
     EVar (id)
   )
-  | (CBin (((CMsg ((((CId (f) , "(") , prm) , ")")) , COp ("=")) , e))) -> (
+  | (CBin (CMsg (CId (f) , "(" , prm , ")") , COp ("=") , e)) -> (
 
-    ELetRec (((f , TEmpty) , EFun (((addEmpty (exps (prm)) , TEmpty) , exp (e)))))
+    ELetRec (f , TEmpty , EFun (addEmpty (exps (prm)) , TEmpty , exp (e)))
   )
-  | (CBin (((CId (i) , COp ("=")) , b))) -> (
+  | (CBin (CId (i) , COp ("=") , b)) -> (
 
-    ELet (((i , TEmpty) , exp (b)))
+    ELet (i , TEmpty , exp (b))
   )
-  | (CBin (((CId (i) , COp ("#=")) , b))) -> (
+  | (CBin (CId (i) , COp ("#=") , b)) -> (
 
-    ELet (((i , TEmpty) , EPre (("ref" , exp (b)))))
+    ELet (i , TEmpty , EPre ("ref" , exp (b)))
   )
-  | (CBin (((CPre ((COp ("def") , CId (i))) , COp ("=")) , b))) -> (
+  | (CBin (CPre (COp ("def") , CId (i)) , COp ("=") , b)) -> (
 
-    ELetRec (((i , TEmpty) , exp (b)))
+    ELetRec (i , TEmpty , exp (b))
   )
-  | (CBin (((e , COp ("match")) , b))) -> (
+  | (CBin (e , COp ("match") , b)) -> (
 
     (match exp (b) with | (EPFun (ls)) -> (
-      EMatch ((exp (e) , ls));
-      EBlock
+      EMatch (exp (e) , ls)
     
-)| (ls) -> (
-      EMatch ((exp (e) , ls))
+)| (EBlock (ls)) -> (
+      EMatch (exp (e) , ls)
     
 )| (_) -> (
       (Cexp . print  ((Format . std_formatter)) (b));
@@ -44,62 +43,62 @@ let rec exp = begin fun t1'  -> match t1' with
     
 ))
   )
-  | (CBin (((a , COp (op)) , b))) -> (
+  | (CBin (a , COp (op) , b)) -> (
 
-    EBin (((exp (a) , op) , exp (b)))
+    EBin (exp (a) , op , exp (b))
   )
-  | (CPst ((CPrn ((("(" , es) , ")")) , COp ("?")))) -> (
+  | (CPst (CPrn ("(" , es , ")") , COp ("?"))) -> (
 
-    EFun (((exps (es) , TEmpty) , EBlock ([])))
+    EFun (exps (es) , TEmpty , EBlock ([]))
   )
-  | (CPst ((e , COp ("?")))) -> (
+  | (CPst (e , COp ("?"))) -> (
 
-    EFun ((([exp (e)] , TEmpty) , EBlock ([])))
+    EFun ([exp (e)] , TEmpty , EBlock ([]))
   )
-  | (CPre ((COp ("&") , b))) -> (
+  | (CPre (COp ("&") , b)) -> (
 
-    EPre (("ref" , exp (b)))
+    EPre ("ref" , exp (b))
   )
-  | (CPre ((COp ("*") , b))) -> (
+  | (CPre (COp ("*") , b)) -> (
 
-    EPre (("!" , exp (b)))
+    EPre ("!" , exp (b))
   )
-  | (CPre ((COp (op) , b))) -> (
+  | (CPre (COp (op) , b)) -> (
 
-    EPre ((op , exp (b)))
+    EPre (op , exp (b))
   )
-  | (CMsg ((((i , "(") , CList (ls)) , ")"))) -> (
+  | (CMsg (i , "(" , CList (ls) , ")")) -> (
 
-    ECall ((exp (i) , addEmpty ((List . map  (exp) (ls)))))
+    ECall (exp (i) , addEmpty ((List . map  (exp) (ls))))
   )
-  | (CMsg ((((i , "[") , ls) , "]"))) -> (
+  | (CMsg (i , "[" , ls , "]")) -> (
 
-    ECall ((exp (i) , [EList (exps (ls))]))
+    ECall (exp (i) , [EList (exps (ls))])
   )
-  | (CMsg ((((i , "{") , ls) , "}"))) -> (
+  | (CMsg (i , "{" , ls , "}")) -> (
 
-    ECall ((exp (i) , [exp (CPrn ((("{" , ls) , "}")))]))
+    ECall (exp (i) , [exp (CPrn ("{" , ls , "}"))])
   )
-  | (CSt (((((COp ("if") , "(") , CList ([e])) , ")") , CBin (((e2 , COp ("else")) , e3))))) -> (
+  | (CSt (COp ("if") , "(" , CList ([e]) , ")" , CBin (e2 , COp ("else") , e3))) -> (
 
-    EIf (((exp (e) , exp (e2)) , exp (e3)))
+    EIf (exp (e) , exp (e2) , exp (e3))
   )
-  | (CSt (((((COp ("if") , "(") , e) , ")") , e2))) -> (
+  | (CSt (COp ("if") , "(" , e , ")" , e2)) -> (
 
-    EIf (((exp (e) , exp (e2)) , EEmpty))
+    EIf (exp (e) , exp (e2) , EEmpty)
   )
-  | (CPrn ((("(" , cs) , ")"))) -> (
+  | (CPrn ("(" , cs , ")")) -> (
 
     EBlock (exps (cs))
   )
-  | (CPrn ((("[" , cs) , "]"))) -> (
+  | (CPrn ("[" , cs , "]")) -> (
 
     EList (exps (cs))
   )
-  | (CPrn ((("{" , cs) , "}"))) -> (
+  | (CPrn ("{" , cs , "}")) -> (
 
     (match cs with | (CList ((
- (_ :: (COp ("?") :: xs))
+ (_ :: (COp ("?") :: _))
  as xs))) -> (
       let rec exps2 = begin fun t1'  -> match t1' with
         | ([]) -> (
@@ -110,7 +109,7 @@ let rec exp = begin fun t1'  -> match t1' with
 COp ("?")
  :: xs))) -> (
 
-          (exp (CPst ((x , COp ("?")))) :: 
+          (exp (CPst (x , COp ("?"))) :: 
           exps2 (xs)
 )
         )
@@ -122,31 +121,31 @@ COp ("?")
       let ls = (List . fold_left (begin fun t1' t2'  -> match t1',t2' with
   | (ls),(e) -> (
 
-    (ls , (match e with | ((ls , EFun (_))) -> (
+    (match ls , e with | (ls , EFun (_)) -> (
       (e :: ls)
     
-)| (((EFun (((p , t) , EBlock (xs))) :: ls) , e)) -> (
-      (EFun (((p , t) , EBlock ((xs @ [e])))) :: ls)
+)| ((EFun (p , t , EBlock (xs)) :: ls) , e) -> (
+      (EFun (p , t , EBlock ((xs @ [e]))) :: ls)
     
-)| ((ls , e)) -> (
+)| (ls , e) -> (
       (e :: ls)
     
-)))
+))
   )
- end ) ([]) (exps (cs))) in
+ end ) ([]) (exps2 (xs))) in
       EPFun ((List . rev (ls)))
     
 )| (CList (cs)) -> (
       let cs = (List . map (begin fun t1'  -> match t1' with
-  | (CBin (((CId (x) , COp ("=")) , c))) -> (
+  | (CBin (CId (x) , COp ("=") , c)) -> (
 
     
-    (x , exp (c))
+    x , exp (c)
 
   )
   | (CId (x)) -> (
 
-    (x , EEmpty)
+    x , EEmpty
   )
   | (e) -> (
 
@@ -218,27 +217,27 @@ and types = begin fun t1'  -> match t1' with
    end 
 
 and stmt = begin fun t1'  -> match t1' with
-    | (CPre ((COp ("open") , CId (id)))) -> (
+    | (CPre (COp ("open") , CId (id))) -> (
 
       SOpen (id)
     )
-    | (CBin (((CId (id) , COp ("type")) , CPrn ((("(" , CList (cs)) , ")"))))) -> (
+    | (CBin (CId (id) , COp ("type") , CPrn ("(" , CList (cs) , ")"))) -> (
 
       let cs = (List . map (begin fun t1'  -> match t1' with
   | (CId (i)) -> (
 
     
-    (i , TEmpty)
+    i , TEmpty
 
   )
-  | (CMsg ((((CId (i) , _) , CList ([c])) , _))) -> (
+  | (CMsg (CId (i) , _ , CList ([c]) , _)) -> (
 
     let rec f = begin fun t1'  -> match t1' with
       | (CId (a)) -> (
 
         [Ty (a)]
       )
-      | (CBin (((a , COp (",")) , b))) -> (
+      | (CBin (a , COp (",") , b)) -> (
 
         (f (a) @ f (b))
       )
@@ -248,41 +247,41 @@ and stmt = begin fun t1'  -> match t1' with
       )
      end  in
     
-    (i , TTuple (f (c)))
+    i , TTuple (f (c))
 
   )
   | (e) -> (
 
     (Cexp . print  ((Format . std_formatter)) (e));
     
-    ("error" , TEmpty)
+    "error" , TEmpty
 
   )
  end ) (cs)) in
-      STypeVariant ((id , cs))
+      STypeVariant (id , cs)
     )
-    | (CBin (((CId (id) , COp ("type")) , CPrn ((("{" , CList (cs)) , "}"))))) -> (
+    | (CBin (CId (id) , COp ("type") , CPrn ("{" , CList (cs) , "}"))) -> (
 
       let cs = (List . map (begin fun t1'  -> match t1' with
-  | (CBin (((CId (i) , COp (":")) , c))) -> (
+  | (CBin (CId (i) , COp (":") , c)) -> (
 
     
-    (i , typ (c))
+    i , typ (c)
 
   )
   | (e) -> (
 
     (Cexp . print  ((Format . std_formatter)) (e));
     
-    ("error" , TEmpty)
+    "error" , TEmpty
 
   )
  end ) (cs)) in
-      STypeRec ((id , cs))
+      STypeRec (id , cs)
     )
-    | (CBin (((a , COp ("and")) , b))) -> (
+    | (CBin (a , COp ("and") , b)) -> (
 
-      SAnd ((stmt (a) , stmt (b)))
+      SAnd (stmt (a) , stmt (b))
     )
     | (ast) -> (
 
