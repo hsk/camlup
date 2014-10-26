@@ -210,18 +210,18 @@ pattern_match() := {
 
   def fib:(int)=>int={ n =>
     n match {
-      case 0 => 0
-      case 1 => 1
-      case n => fib(n-2) + fib(n-1)
+      | 0 => 0;
+      | 1 => 1;
+      | n => fib(n-2) + fib(n-1)
     }
   }
 
   /*
   def fib(n:int):int = {
     n match {
-      case 0 => 0
-      case 1 => 1
-      case n => fib(n-2) + fib(n-1)
+      | 0 => 0 ;
+      | 1 => 1 ;
+      | n => fib(n-2) + fib(n-1)
     }
   }
   */
@@ -231,9 +231,9 @@ pattern_match() := {
 parcial_function() := {
 
   def fib:(int)=>int={
-    case 0 => 0
-    case 1 => 1
-    case n => fib(n-2) + fib(n-1)
+    | 0 => 0;
+    | 1 => 1;
+    | n => fib(n-2) + fib(n-1)
   }
   
   printf("fib 10 = %d\n" fib(10))
@@ -241,8 +241,8 @@ parcial_function() := {
   /* tuple parcual function */
 
   llor:(int,int)=>int={
-    case 0,0 => a:=1 b:=2; a | b
-    case a,b => a | b
+    | 0,0 => a:=1 b:=2; a | b;
+    | a,b => a | b
   }
 
   printf("llor %d\n" llor(1,2))
@@ -271,8 +271,8 @@ list() := {
 
   /*
   def ps(xs):= {
-    case [] => ()
-    case x::xs => printf("%d\n" x) ps(xs)
+    | [] => () ;
+    | x::xs => printf("%d\n" x) ps(xs)
   }
   ps(xs)
   */
@@ -300,9 +300,9 @@ e type | EUnit | EInt(int) | EAdd(e, e)
 variant() := {
 
   def eval:e=>int={
-    case EUnit => 0
-    case EInt(i) => i
-    case EAdd(a, b) => eval(a) + eval(b)
+    | EUnit => 0 ;
+    | EInt(i) => i ;
+    | EAdd(a, b) => eval(a) + eval(b)
   }
 
   printf("1+2=%d\n" eval(EAdd(EInt(1), EInt(2))))
@@ -380,8 +380,8 @@ list_type := {
   } printf("\n")
 
   def f:={
-    case [] => ()
-    case x::xs => printf("%d,\n" x) f(xs)
+    | [] => ();
+    | x::xs => printf("%d,\n" x) f(xs)
   };
 
   f [1 2 3]

@@ -183,11 +183,11 @@ exp:
         | EPre("!", a) -> EBin(a, ":=", $3)
         | _ -> EBin($1, ":=", $3)
     }
-  | exp MATCH LBRACE CASE fns RBRACE { EMatch($1, $5) }
+  | exp MATCH LBRACE OR fns RBRACE { EMatch($1, $5) }
   | IF LPAREN exp RPAREN exp ELSE exp { EIf($3, $5, $7) }
   | IF LPAREN exp RPAREN exp %prec LIST { EIf($3, $5, EEmpty) }
   | LBRACE fn RBRACE { $2 }
-  | LBRACE CASE fns RBRACE { EPFun($3) }
+  | LBRACE OR fns RBRACE { EPFun($3) }
   | LBRACE exps RBRACE { EBlock($2) }
   | LBRACK RBRACK { EList[]}
   | LBRACK exps RBRACK { EList $2 }
@@ -195,7 +195,7 @@ exp:
   | LPAREN exp RPAREN { $2 }
   | LBRACE COLON records RBRACE { ERecord($3) }
   | exp LBRACE fn RBRACE %prec CALL { ECall($1, [$3]) }
-  | exp LBRACE CASE fns RBRACE %prec CALL { ECall($1, [EPFun($4)]) }
+  | exp LBRACE OR fns RBRACE %prec CALL { ECall($1, [EPFun($4)]) }
   | exp LBRACE exps RBRACE %prec CALL { ECall($1, [EBlock($3)]) }
   | exp LBRACK RBRACK %prec CALL { ECall($1, [EList[]]) }
   | exp LBRACK exps RBRACK %prec CALL { ECall($1, [EList $3]) }
@@ -284,7 +284,7 @@ fn:
 
 fns:
   | fn { [$1] }
-  | fn CASE fns { $1 :: $3 }
+  | fn OR fns { $1 :: $3 }
 
 stmt:
   | exp { SExp($1) }
