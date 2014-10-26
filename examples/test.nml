@@ -23,7 +23,7 @@ functions() := {
 
 curry_function := {
 
-  f0:()=>int= { () => 0 }
+  f0:()=>int= {|() => 0 }
   f0():int= { 0 }
   f0():int= 0 
   f0():= 0 
@@ -32,7 +32,7 @@ curry_function := {
   printf("%d\n"; f0())
   printf("%d\n" f0())
 
-  f1:(int)=>int={ a => a }
+  f1:(int)=>int={|a => a }
   f1(a:int):int={ a }
   f1(a:int):int= a
   f1(a:int):= a
@@ -41,8 +41,8 @@ curry_function := {
   printf("%d\n"; f1(1))
   printf("%d\n" f1(1))
 
-  f2:int(int)(int)={ a b => a + b }
-  f2(a:int):(int)=>int={ b => a + b }
+  f2:int(int)(int)={| a b => a + b }
+  f2(a:int):(int)=>int={| b => a + b }
   f2(a:int)(b:int):int={a + b}
   f2(a:int; b:int):int= a + b
   f2(a:int b:int):= a + b
@@ -51,9 +51,9 @@ curry_function := {
   printf("%d\n"; f2(1; 2))
   printf("%d\n" f2(1 2))
 
-  f3:int(int int int)={ a b c => a + b + c }
-  f3(a:int):int(int int)={ b c => a + b + c}
-  f3(a:int)(b:int):int(int)={ c => a + b + c}
+  f3:int(int int int)={| a b c => a + b + c }
+  f3(a:int):int(int int)={| b c => a + b + c}
+  f3(a:int)(b:int):int(int)={| c => a + b + c}
   f3(a:int)(b:int)(c:int):int={a + b + c}
   f3(a:int; b:int; c:int):int= a + b + c
   f3(a:int b:int c:int):= a + b + c
@@ -110,7 +110,7 @@ if_else() := {
 recursive_function() := {
 
   /* (let rec) */
-  def fib:(int)=>int = { n=>
+  def fib:(int)=>int = {| n =>
     if (n == 0) 0
     else if (n == 1) 1
     else fib(n-2) + fib(n -1)
@@ -131,7 +131,7 @@ recursive_function() := {
 
 tuple() := {
 
-  addt:(int,int)=>int={ (a,b) =>
+  addt:(int,int)=>int = {| a,b =>
     a + b
   }
   /*
@@ -140,15 +140,15 @@ tuple() := {
 
   /*
   f3:={
-    (a,b,c) => a*b*c
+    |(a,b,c) => a*b*c
   }
   */
   /*
   f3:(int,int,int)=>int={
-    (a,b,c) => a*b*c
+    |(a,b,c) => a*b*c
   }
   f3:int((int,int,int))={
-    (a,b,c) => a*b*c
+    |(a,b,c) => a*b*c
   }
   printf("%d" f3(1,2,3))
   */
@@ -158,43 +158,43 @@ tuple() := {
   printf("%d\n" addt(1,2))
 
   ff2:(int,int)=>(int,int)=>int={
-    a,b c,d => a*b + c*d
+    |a,b c,d => a*b + c*d
   }
 
   f2:int((int,int))((int,int))={
-    a,b c,d => a*b + c*d
+    |a,b c,d => a*b + c*d
   }
   */
   /*
   f2:int((int,int);(int,int))={
-    a,b c,d => a*b + c*d
+    |a,b c,d => a*b + c*d
   }
   */
   /*
   ff:int=>int,int=>int={
-    a c,d => a + c*d
+    |a c,d => a + c*d
   }
 
   ff:int=>((int,int)=>int)={
-    a c,d => a + c*d
+    |a c,d => a + c*d
   }
 
   ff:((int,int)=>int)(int)={
-    a c,d => a + c*d
+    |a c,d => a + c*d
   }
 
   ff:int((int,int))(int)={
-    a c,d => a + c*d
+    |a c,d => a + c*d
   }
   */
   /*
   ff:int(int int,int)={
-    a c,d => a + c*d
+    |a c,d => a + c*d
   }
   */
 
   f2:(int,int)=>(int,int)=>int={
-    a,b c,d => a*b + c*d
+    |a,b c,d => a*b + c*d
   }
   /*
   f2(a:int,b:int)(c:int,d:int):int={
@@ -208,10 +208,10 @@ tuple() := {
 
 pattern_match() := {
 
-  def fib:(int)=>int={ n =>
+  def fib:(int)=>int = {| n =>
     n match {
-      | 0 => 0;
-      | 1 => 1;
+      | 0 => 0
+      | 1 => 1
       | n => fib(n-2) + fib(n-1)
     }
   }
@@ -219,8 +219,8 @@ pattern_match() := {
   /*
   def fib(n:int):int = {
     n match {
-      | 0 => 0 ;
-      | 1 => 1 ;
+      | 0 => 0 
+      | 1 => 1 
       | n => fib(n-2) + fib(n-1)
     }
   }
@@ -231,8 +231,8 @@ pattern_match() := {
 parcial_function() := {
 
   def fib:(int)=>int={
-    | 0 => 0;
-    | 1 => 1;
+    | 0 => 0
+    | 1 => 1
     | n => fib(n-2) + fib(n-1)
   }
   
@@ -241,7 +241,7 @@ parcial_function() := {
   /* tuple parcual function */
 
   llor:(int,int)=>int={
-    | 0,0 => a:=1 b:=2; a | b;
+    | 0,0 => a:=1 b:=2 a | b
     | a,b => a | b
   }
 
@@ -250,23 +250,23 @@ parcial_function() := {
 
 list() := {
 
-  iter({x => printf("%d\n")(x)})([1; 2; 3; 4])
-  iter({x => printf("%d\n"; x)})([1; 2; 3; 4])
-  iter({x => printf("%d\n" x)})([1; 2; 3; 4])
-  iter({x => printf("%d\n" x)}; [1; 2; 3; 4])
-  /* iter({x => printf("%d\n" x)} [1; 2; 3; 4])*/
-  iter{x => printf("%d\n" x)}([1; 2; 3; 4])
-  iter{x => printf("%d\n" x)}([1 2 3 4])
-  iter{x => printf("%d\n" x)}[1 2 3 4];
+  iter({|x => printf("%d\n")(x)})([1; 2; 3; 4])
+  iter({|x => printf("%d\n"; x)})([1; 2; 3; 4])
+  iter({|x => printf("%d\n" x)})([1; 2; 3; 4])
+  iter({|x => printf("%d\n" x)}; [1; 2; 3; 4])
+  /* iter({|x = printf("%d\n" x)} [1; 2; 3; 4])*/
+  iter{|x => printf("%d\n" x)}([1; 2; 3; 4])
+  iter{|x => printf("%d\n" x)}([1 2 3 4])
+  iter{|x => printf("%d\n" x)}[1 2 3 4]
 
   [1 2 3 4] -> iter {
-    x => printf("%d\n" x)
-  };
+   | x => printf("%d\n" x)
+  }
 
   [1 2 3 4] -> map {
-    x => x * 10
+    | x => x * 10
   } -> iter {
-    x => printf("%d\n" x)
+    | x => printf("%d\n" x)
   }
 
   /*
@@ -290,7 +290,7 @@ record() := {
 
   printf("%d\n"; {:x=1+2*3 y={a:=1 a}}.x)
 
-  aa := {{:x}=>printf("%d\n" x)}
+  aa := {|{:x}=>printf("%d\n" x)}
   
 } record()
 
@@ -300,8 +300,8 @@ e type | EUnit | EInt(int) | EAdd(e, e)
 variant() := {
 
   def eval:e=>int={
-    | EUnit => 0 ;
-    | EInt(i) => i ;
+    | EUnit => 0
+    | EInt(i) => i
     | EAdd(a, b) => eval(a) + eval(b)
   }
 
@@ -310,17 +310,17 @@ variant() := {
 
 reference() := {
 
-  a := & 1;
+  a := & 1
 
-  *a = 2;
+  *a = 2
 
-  printf("%d\n"; *a);
+  printf("%d\n"; *a)
 
-  b #= 1;
+  b #= 1
 
-  *b = 3;
+  *b = 3
 
-  printf("%d\n"; *b);
+  printf("%d\n"; *b)
 
 } reference()
 
@@ -333,8 +333,8 @@ closure() := {
   }
   p := printf
 
-  p("def %s() " "a") block(""){sp=>
-    p("%sdef %s() " sp "b") block(sp){sp=>
+  p("def %s() " "a") block(""){|sp=>
+    p("%sdef %s() " sp "b") block(sp){|sp=>
       p("%sprogram2()\n" sp)
       p("%sprogram2()\n" sp)
     }
@@ -349,8 +349,8 @@ closure() := {
   }
   p := printf
 
-  p("def %s() " "a") block(""){sp=>
-    p("%sdef %s() " sp "b") block(sp){sp=>
+  p("def %s() " "a") block(""){|sp=>
+    p("%sdef %s() " sp "b") block(sp){|sp=>
       p("%sprogram2()\n" sp)
       p("%sprogram2()\n" sp)
     }
@@ -364,25 +364,25 @@ list_type := {
   ls := [1 2 3]
 
   ls -> iter {
-    l => printf("%d," l)
+    |l => printf("%d," l)
   } printf("\n")
 
   ls:list[int] = [1 2 3]
   
   ls -> iter {
-    l => printf("%d," l)
+    |l => printf("%d," l)
   } printf("\n")
 
   ls:list[(int,int)] = [1,2 3,4]
   
   ls -> iter {
-    (l,r) => printf("(%d,%d);" l r)
+    |(l,r) => printf("(%d,%d);" l r)
   } printf("\n")
 
   def f:={
-    | [] => ();
+    | [] => ()
     | x::xs => printf("%d,\n" x) f(xs)
-  };
+  }
 
   f [1 2 3]
 

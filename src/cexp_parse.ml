@@ -29,6 +29,7 @@ let infixs =
       "and", 1, true;
       "else", 2, true;
       "type", 1, true;
+      "module", 1, true;
       ":", 1, true;
       "as", 1, true 
     ]

@@ -32,7 +32,6 @@ block = (
   a=1+1
 
   printf("a=%d\n" a)
-
 )
 
 functions(a b) = (
@@ -41,14 +40,13 @@ functions(a b) = (
 
   fib(n) =
     if (n == 0)
-      0
+      0+0
     else if (n == 1)
       1
     else
       fib(n-2)+fib(n-1)
     
   printf("fib %d %d\n" a+b fib(a+b))
-
 ) functions(10 11)
 
 pattern_match() = (
@@ -81,7 +79,6 @@ parcial_function() = (
   }
 
   printf("llor %d\n" llor(1,2))
-  
 ) parcial_function()
 
 tuple() = (
@@ -100,7 +97,6 @@ tuple() = (
 
   add(a,(b,c)) = a + b + c
   printf("1+2+3=%d\n" add(3,x))
-  
 ) tuple()
 
 open List
@@ -116,7 +112,6 @@ list() = (
     (n x::xs) ? sum(n + x xs)
   }
   printf("%d" sum(0)[1 2 3])
-
 ) list()
 
 e type (
@@ -157,7 +152,6 @@ reference() = (
   b := 3
 
   printf("%d\n" ;*b)
-
 ) reference()
 
 a type {x:int y:int}
@@ -176,5 +170,35 @@ record() = (
 
   px(a)
   py(a)
-
 ) record()
+
+/*
+A module {
+  a = 1
+  f() = 1
+  add(a b) = a + b
+  mul(a,b) = a * b
+}
+
+mods() = (
+
+  printf("%d\n" A.a)
+  printf("%d\n" A.f())
+  printf("%d\n" A.add(1 2))
+  printf("%d\n" A.mul(1,2))
+
+) mods ()
+*/
+/*
+
+A type module {}
+
+A:A module {
+  
+}
+
+A(A:A) module {
+  
+}
+
+*/

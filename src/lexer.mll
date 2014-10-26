@@ -2,10 +2,11 @@
 open Parser
 }
 
-let space = [' ' '\t' '\n' '\r']
+let space = [' ' '\t']
 let digit = ['0'-'9']
 
 rule token = parse
+  | space* ['\n' '\r' ';'] [' ' '\t' '\n' '\r']* { SEMICOLON }
   | space+ { token lexbuf }
   | "open" { open_ lexbuf }
   | "/*" { comment lexbuf }

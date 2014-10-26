@@ -109,7 +109,8 @@ typs:
 
 exp1:
   | exp { $1 }
-  | exp SEMICOLON { $1 }
+  | SEMICOLON exp1 { $2 }
+  | exp1 SEMICOLON { $1 }
 
 exps:
   | exp1 { [$1] }
@@ -183,19 +184,17 @@ exp:
         | EPre("!", a) -> EBin(a, ":=", $3)
         | _ -> EBin($1, ":=", $3)
     }
-  | exp MATCH LBRACE OR fns RBRACE { EMatch($1, $5) }
-  | IF LPAREN exp RPAREN exp ELSE exp { EIf($3, $5, $7) }
-  | IF LPAREN exp RPAREN exp %prec LIST { EIf($3, $5, EEmpty) }
-  | LBRACE fn RBRACE { $2 }
-  | LBRACE OR fns RBRACE { EPFun($3) }
+  | exp MATCH LBRACE fns RBRACE { EMatch($1, $4) }
+  | IF LPAREN exp RPAREN exp1 ELSE exp1 { EIf($3, $5, $7) }
+  | IF LPAREN exp RPAREN exp1 %prec LIST { EIf($3, $5, EEmpty) }
+  | LBRACE fns RBRACE { EPFun($2) }
   | LBRACE exps RBRACE { EBlock($2) }
   | LBRACK RBRACK { EList[]}
   | LBRACK exps RBRACK { EList $2 }
   | LPAREN RPAREN { EUnit }
   | LPAREN exp RPAREN { $2 }
   | LBRACE COLON records RBRACE { ERecord($3) }
-  | exp LBRACE fn RBRACE %prec CALL { ECall($1, [$3]) }
-  | exp LBRACE OR fns RBRACE %prec CALL { ECall($1, [EPFun($4)]) }
+  | exp LBRACE fns RBRACE %prec CALL { ECall($1, [EPFun($3)]) }
   | exp LBRACE exps RBRACE %prec CALL { ECall($1, [EBlock($3)]) }
   | exp LBRACK RBRACK %prec CALL { ECall($1, [EList[]]) }
   | exp LBRACK exps RBRACK %prec CALL { ECall($1, [EList $3]) }
@@ -280,11 +279,16 @@ exp:
   | exp MEMBER exp { ECall($3, [$1]) }
 
 fn:
-  | exps ARROW exps { EFun($1, TEmpty, EBlock($3)) }
+  | OR exps ARROW exps { EFun($2, TEmpty, EBlock($4)) }
+
+fn1:
+  | fn { $1 }
+  | SEMICOLON fn1 { $2 }
+  | fn1 SEMICOLON { $1 }
 
 fns:
-  | fn { [$1] }
-  | fn OR fns { $1 :: $3 }
+  | fn1 { [$1] }
+  | fn1 fns { $1 :: $2 }
 
 stmt:
   | exp { SExp($1) }
@@ -295,9 +299,13 @@ stmt:
   | ID MODULE LBRACE stmts RBRACE { SModule($1, $4) }
   | ID TYPE OR variants { STypeVariant($1, $4)}
 
+stmt1:
+  | stmt { $1 }
+  | stmt1 SEMICOLON { $1 }
+
 stmts:
-  | stmt { [$1] }
-  | stmt stmts { $1 :: $2 }
+  | stmt1 { [$1] }
+  | stmt1 stmts { $1 :: $2 }
 
 prog:
   | stmts { Prog $1 }
