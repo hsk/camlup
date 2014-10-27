@@ -400,4 +400,12 @@ let rec (fib:((int))->(int)) = begin fun t1'  -> match t1' with
   )
  end  in
 printf  ("fib 11 %d\n") (fib (11))
+;;
+module A = struct
+(*s*)let a = 
+1234
+
+end;;
+let a = 
+printf  ("A.a = %d\n") ((A . a))
 

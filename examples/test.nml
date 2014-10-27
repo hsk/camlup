@@ -390,3 +390,12 @@ whens := {
   }
   printf("fib 11 %d\n" fib(11))
 }
+
+A module {
+  a := {
+    1234
+  }  
+}
+_ := {
+  printf("A.a = %d\n" A.a)  
+}

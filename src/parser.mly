@@ -300,16 +300,17 @@ fns:
   | fn1 fns { $1 :: $2 }
 
 stmt:
+  | ID MODULE LBRACE stmts RBRACE { SModule($1, $4) }
   | exp { SExp($1) }
   | ID COLONASSIGN exp2 { SLet($1, TEmpty, $3) }
   | DEF ID COLONASSIGN exp2 { SLetRec($2, TEmpty, $4) }
   | OPEN { SOpen($1) }
   | ID TYPE LBRACE defrecs RBRACE { STypeRec($1, $4)}
-  | ID MODULE LBRACE stmts RBRACE { SModule($1, $4) }
   | ID TYPE OR variants { STypeVariant($1, $4)}
 
 stmt1:
   | stmt { $1 }
+  | SEMICOLON stmt { $2 }
   | stmt1 SEMICOLON { $1 }
 
 stmts:

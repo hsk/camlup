@@ -35,7 +35,7 @@ rule token = parse
   | "match" { MATCH }
   | "when" { WHEN }
   | "type" { TYPE }
-  | "module" { MODULE }
+  | "module" { Printf.printf " module\n"; MODULE }
   | digit+ { INT(int_of_string (Lexing.lexeme lexbuf)) }
 
   | '^' { HAT }
@@ -72,7 +72,7 @@ rule token = parse
   | '=' { ASSIGN }
   | '"' [^ '"']* '"' { STRING(Lexing.lexeme lexbuf) }
   | ['a'-'z' 'A'-'Z' '_']['a'-'z' 'A'-'Z' '_' '0'-'9']*
-      { ID(Lexing.lexeme lexbuf) }
+      { Printf.printf "%s\n" (Lexing.lexeme lexbuf); ID(Lexing.lexeme lexbuf) }
   | eof { EOF }
   | _ { failwith
         (Printf.sprintf "unknown token %s near characters %d-%d"
