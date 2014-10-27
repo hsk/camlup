@@ -50,6 +50,7 @@ let e2e = function
 %token SHL SHR
 %token ADD SUB
 %token MUL DIV MOD
+%token WHEN
 
 %right LIST
 %nonassoc ELSE
@@ -87,15 +88,14 @@ let e2e = function
 typ:
   | ID { Ty $1 }
   | typ ARROW typ { TFun($1, $3) }
-  | typ LPAREN typ2 RPAREN {
+  | typ LPAREN typ2 RPAREN
+    {
       let rec loop = function
         | TFun(a,b) -> TFun(a, loop b)
         | t -> TFun(t, $1)
       in loop $3
     }
-  | typ LBRACK typs RBRACK {
-      TGen($1, $3)
-    }
+  | typ LBRACK typs RBRACK { TGen($1, $3) }
   | LPAREN typs RPAREN { TTuple($2)}
   | LPAREN RPAREN { TUnit }
 
@@ -111,6 +111,10 @@ exp1:
   | exp { $1 }
   | SEMICOLON exp1 { $2 }
   | exp1 SEMICOLON { $1 }
+
+exp2:
+  | exp { $1 }
+  | SEMICOLON exp { $2 }
 
 exps:
   | exp1 { [$1] }
@@ -145,41 +149,42 @@ exp:
   | AMP exp { EPre("ref", $2) }
   | MUL exp { EPre("!", $2) }
 
-  | exp HAT exp { EBin($1, "^", $3) }
+  | exp HAT exp2 { EBin($1, "^", $3) }
 
-  | exp LOR exp { EBin($1, "||", $3) }
-  | exp LAMP exp { EBin($1, "&&", $3) }
+  | exp LOR exp2 { EBin($1, "||", $3) }
+  | exp LAMP exp2 { EBin($1, "&&", $3) }
 
-  | exp OR exp { EBin($1, "lor", $3) }
+  | exp OR exp2 { EBin($1, "lor", $3) }
 
-  | exp XOR exp { EBin($1, "lxor", $3) }
+  | exp XOR exp2 { EBin($1, "lxor", $3) }
 
-  | exp AMP exp { EBin($1, "land", $3) }
+  | exp AMP exp2 { EBin($1, "land", $3) }
 
-  | exp EEQ exp { EBin($1, "==", $3) }
-  | exp ENE exp { EBin($1, "!=", $3) }
-  | exp EQ exp { EBin($1, "=", $3) }
-  | exp NE exp { EBin($1, "<>", $3) }
+  | exp EEQ exp2 { EBin($1, "==", $3) }
+  | exp ENE exp2 { EBin($1, "!=", $3) }
+  | exp EQ exp2 { EBin($1, "=", $3) }
+  | exp NE exp2 { EBin($1, "<>", $3) }
 
-  | exp LT exp { EBin($1, "<", $3) }
-  | exp GT exp { EBin($1, ">", $3) }
-  | exp LE exp { EBin($1, "<=", $3) }
-  | exp GE exp { EBin($1, ">=", $3) }
+  | exp LT exp2 { EBin($1, "<", $3) }
+  | exp GT exp2 { EBin($1, ">", $3) }
+  | exp LE exp2 { EBin($1, "<=", $3) }
+  | exp GE exp2 { EBin($1, ">=", $3) }
 
-  | exp ADD exp { EBin($1, "+", $3) }
-  | exp SUB exp { EBin($1, "-", $3) }
+  | exp ADD exp2 { EBin($1, "+", $3) }
+  | exp SUB exp2 { EBin($1, "-", $3) }
 
-  | exp MUL exp { EBin($1, "*", $3) }
-  | exp DIV exp { EBin($1, "/", $3) }
-  | exp MOD exp { EBin($1, "mod", $3) }
+  | exp MUL exp2 { EBin($1, "*", $3) }
+  | exp DIV exp2 { EBin($1, "/", $3) }
+  | exp MOD exp2 { EBin($1, "mod", $3) }
 
-  | exp SHL exp { EBin($1, "asl", $3) }
-  | exp SHR exp { EBin($1, "asr", $3) }
+  | exp SHL exp2 { EBin($1, "asl", $3) }
+  | exp SHR exp2 { EBin($1, "asr", $3) }
 
-  | exp DOT exp { EBin($1, ".", $3) }
-  | exp COMMA exp { EBin($1, ",", $3) }
-  | exp ADDLIST exp { EBin($1, "::", $3) }
-  | exp ASSIGN exp {
+  | exp DOT exp2 { EBin($1, ".", $3) }
+  | exp COMMA exp2 { EBin($1, ",", $3) }
+  | exp ADDLIST exp2 { EBin($1, "::", $3) }
+  | exp ASSIGN exp2
+    {
       match $1 with
         | EPre("!", a) -> EBin(a, ":=", $3)
         | _ -> EBin($1, ":=", $3)
@@ -201,8 +206,9 @@ exp:
   | exp LPAREN exps RPAREN %prec CALL { ECall($1, $3) }
   | exp LPAREN RPAREN %prec CALL { ECall($1, [EUnit]) }
 
-  | ID COLONASSIGN exp { ELet($1, TEmpty, $3) }
-  | exp COLONASSIGN exp {
+  | ID COLONASSIGN exp2 { ELet($1, TEmpty, $3) }
+  | exp COLONASSIGN exp2
+    {
       let rec loop = function 
         | EVar(id),b -> ELet(id, TEmpty, b)
         | ECall((e:e), ls), b ->
@@ -214,7 +220,8 @@ exp:
       in
       loop($1, $3)
     }
-  | exp COLON typ ASSIGN exp {
+  | exp COLON typ ASSIGN exp2
+    {
       let rec loop = function 
         | EVar(id),t,b -> ELet(id, t, b)
         | ECall((e:e), ls), (t:t), b ->
@@ -230,7 +237,8 @@ exp:
       in
       loop($1,$3,$5)
     }
-  | exp REFASSIGN exp {
+  | exp REFASSIGN exp2
+    {
       let rec loop = function 
         | EVar(id),b -> ELet(id, TEmpty, b)
         | ECall((e:e), ls), b ->
@@ -242,14 +250,13 @@ exp:
       in
       loop($1,EPre("ref", $3))
     }
-  | exp COLON typ {
-      ELet(e2id $1, $3, EEmpty)
-    }
+  | exp COLON typ { ELet(e2id $1, $3, EEmpty) }
   | INT { EInt($1) }
   | ID { EVar($1) }
   | STRING { EString($1) }
-  | DEF ID COLONASSIGN exp { ELetRec($2, TEmpty, $4) }
-  | DEF exp COLONASSIGN exp {
+  | DEF ID COLONASSIGN exp2 { ELetRec($2, TEmpty, $4) }
+  | DEF exp COLONASSIGN exp2
+    {
       let rec loop = function 
         | EVar(id),b -> ELetRec(id, TEmpty, b)
         | ECall((e:e), ls), b ->
@@ -261,7 +268,8 @@ exp:
       in
       loop($2,$4)
     }
-  | DEF exp COLON typ ASSIGN exp {
+  | DEF exp COLON typ ASSIGN exp2
+    {
       let rec loop = function 
         | EVar(id),t,b -> ELetRec(id, t, b)
         | ECall((e:e), ls), (t:t), b ->
@@ -280,6 +288,7 @@ exp:
 
 fn:
   | OR exps ARROW exps { EFun($2, TEmpty, EBlock($4)) }
+  | OR exps WHEN exp ARROW exps { EPtn($2, TEmpty, $4, EBlock($6)) }
 
 fn1:
   | fn { $1 }
@@ -292,8 +301,8 @@ fns:
 
 stmt:
   | exp { SExp($1) }
-  | ID COLONASSIGN exp { SLet($1, TEmpty, $3) }
-  | DEF ID COLONASSIGN exp { SLetRec($2, TEmpty, $4) }
+  | ID COLONASSIGN exp2 { SLet($1, TEmpty, $3) }
+  | DEF ID COLONASSIGN exp2 { SLetRec($2, TEmpty, $4) }
   | OPEN { SOpen($1) }
   | ID TYPE LBRACE defrecs RBRACE { STypeRec($1, $4)}
   | ID MODULE LBRACE stmts RBRACE { SModule($1, $4) }

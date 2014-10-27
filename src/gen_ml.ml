@@ -113,11 +113,13 @@ let rec print_e sp ppf = function
       (print_t (if t=TEmpty then "" else ":") "") t
       (print_e_block sp "\n") e
       sp
+  | EPtn _ -> assert false
   | EPFun (ls) ->
     fprintf ppf "begin fun ";
 
     begin match List.hd ls with
-      | EFun(its, t, e) ->
+      | EFun(its, t, e)
+      | EPtn(its, t, _, e) ->
         let _ = List.fold_left(fun n b ->
             fprintf ppf "t%d' " n;
             n + 1
@@ -150,6 +152,24 @@ let rec print_e sp ppf = function
           (print_t (if t=TEmpty then "" else ":") "") t
           (print_e_block sp "\n") e
           sp
+      | EPtn(its, t, w, e) ->
+        let rec print_ls sp sep p ppf = function
+          | [] -> ()
+          | [x] -> fprintf ppf "(%a)" (p sp) x
+          | x::xs ->
+            fprintf ppf "(%a)%s%a"
+              (p sp) x
+              sep
+              (print_ls sp sep p) xs
+        in
+        let sp = sp ^ "  " in
+        fprintf ppf "%s| %a%a when %a -> (\n%a%s)\n"
+          sp
+          (print_ls "" "," print_e) its
+          (print_t (if t=TEmpty then "" else ":") "") t
+          (print_e_block sp "\n") w
+          (print_e_block sp "\n") e
+          sp
 
       | _ -> assert false
     end ls;
@@ -172,6 +192,22 @@ let rec print_e sp ppf = function
         fprintf ppf "| %a%a -> (%a%s\n)"
           (print_ls " " (print_e " ")) its
           (print_t (if t=TEmpty then "" else ":") "") t
+          (print_e_block sp "\n") e
+          sp
+      | EPtn(its, t, w, e) ->
+        let rec print_ls sep p ppf = function
+          | [] -> ()
+          | [x] -> fprintf ppf "(%a)" p x
+          | x::xs ->
+            fprintf ppf "(%a)%s%a"
+              p x
+              sep
+              (print_ls sep p) xs
+        in
+        fprintf ppf "| %a%a when %a -> (%a%s\n)"
+          (print_ls " " (print_e " ")) its
+          (print_t (if t=TEmpty then "" else ":") "") t
+          (print_e_block sp "\n") w
           (print_e_block sp "\n") e
           sp
       | e ->

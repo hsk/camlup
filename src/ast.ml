@@ -19,6 +19,7 @@ type e =
   | EFun of e list * t * e
   | EPFun of e list
   | EMatch of e * e list
+  | EPtn of e list * t * e * e
   | EList of e list
   | ELet of string * t * e
   | ELetRec of string * t * e

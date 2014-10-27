@@ -7,6 +7,7 @@ b := 2
 _ := 3
 
 block : unit = {
+
   printf("test 1\n")
 }
 
@@ -18,7 +19,6 @@ block := {
 functions() := {
 
   printf("test")
-
 } functions()
 
 curry_function := {
@@ -92,7 +92,6 @@ curry_function := {
   printf("%d+%d=%d\n")(a)(b)(a+b)
   printf("%d+%d=%d\n"; a; b; a + b)
   printf("%d+%d=%d\n" a b a + b)
-  
 }
 
 if_else() := {
@@ -103,9 +102,7 @@ if_else() := {
   if (a > 10) printf("a\n") else printf("b3\n")
 
   printf(if (a < 1) "a\n" else "b1\n")
-
 } if_else()
-
 
 recursive_function() := {
 
@@ -125,8 +122,7 @@ recursive_function() := {
   }
   */
 
-  printf("fib 10 %d\n" fib(10))  
-
+  printf("fib 10 %d\n" fib(10))
 } recursive_function()
 
 tuple() := {
@@ -203,7 +199,6 @@ tuple() := {
   */
   printf("%d\n")(f2(1,2)(3,4))
   printf("%d\n" f2(1,2 3,4))
-
 } tuple ()
 
 pattern_match() := {
@@ -226,7 +221,6 @@ pattern_match() := {
   }
   */
 } pattern_match()
-
 
 parcial_function() := {
 
@@ -276,9 +270,7 @@ list() := {
   }
   ps(xs)
   */
-
 } list ()
-
 
 a type {x:int y:int}
 
@@ -291,9 +283,7 @@ record() := {
   printf("%d\n"; {:x=1+2*3 y={a:=1 a}}.x)
 
   aa := {|{:x}=>printf("%d\n" x)}
-  
 } record()
-
 
 e type | EUnit | EInt(int) | EAdd(e, e)
 
@@ -321,7 +311,6 @@ reference() := {
   *b = 3
 
   printf("%d\n"; *b)
-
 } reference()
 
 closure() := {
@@ -356,7 +345,6 @@ closure() := {
     }
     p("%sprogram()\n" sp)
   }
-
 } closure()
 
 list_type := {
@@ -376,14 +364,29 @@ list_type := {
   ls:list[(int,int)] = [1,2 3,4]
   
   ls -> iter {
-    |(l,r) => printf("(%d,%d);" l r)
+    |(l,r) =>
+      printf("(%d,%d);" l r)
   } printf("\n")
 
   def f:={
     | [] => ()
-    | x::xs => printf("%d,\n" x) f(xs)
+    | x::xs =>
+      printf("%d,\n" x)
+      f(xs)
   }
 
   f [1 2 3]
 
+  printf("1+20=%d\n" 1 +
+    20)
+}
+
+whens := {
+
+  def fib:(int)=>int={
+    | n when n == 0 => 0
+    | n when n == 1 => 1
+    | n => fib(n-2) + fib(n-1)
+  }
+  printf("fib 11 %d\n" fib(11))
 }

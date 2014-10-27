@@ -6,7 +6,7 @@ let space = [' ' '\t']
 let digit = ['0'-'9']
 
 rule token = parse
-  | space* ['\n' '\r' ';'] [' ' '\t' '\n' '\r']* { SEMICOLON }
+  | space* ['\n' '\r' ';'] [' ' '\t' '\n' '\r' ';']* { SEMICOLON }
   | space+ { token lexbuf }
   | "open" { open_ lexbuf }
   | "/*" { comment lexbuf }
@@ -28,13 +28,14 @@ rule token = parse
   | "->" { MEMBER }
   | "|>" { FARROW }
   | "if" { IF }
-  | "else" {ELSE}
-  | '@' {CASE}
+  | "else" { ELSE }
+  | '@' { CASE }
   | "::" { ADDLIST }
-  | "case" {CASE}
-  | "match" {MATCH}
-  | "type" {TYPE}
-  | "module" {MODULE}
+  | "case" { CASE }
+  | "match" { MATCH }
+  | "when" { WHEN }
+  | "type" { TYPE }
+  | "module" { MODULE }
   | digit+ { INT(int_of_string (Lexing.lexeme lexbuf)) }
 
   | '^' { HAT }
@@ -69,7 +70,7 @@ rule token = parse
   | "#=" { REFASSIGN }
   | "def" { DEF }
   | '=' { ASSIGN }
-  | '"' [^ '"']* '"'  { STRING(Lexing.lexeme lexbuf) }
+  | '"' [^ '"']* '"' { STRING(Lexing.lexeme lexbuf) }
   | ['a'-'z' 'A'-'Z' '_']['a'-'z' 'A'-'Z' '_' '0'-'9']*
       { ID(Lexing.lexeme lexbuf) }
   | eof { EOF }

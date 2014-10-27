@@ -67,26 +67,26 @@ printf  ("%d\n") (f2  (1) (2));
 let (f3:(int)->((int)->((int)->(int)))) = begin fun t1' t2' t3'  -> match t1',t2',t3' with
   | (a),(b),(c) -> (
 
-    ((a + b) + c)
+    (a + (b + c))
   )
  end  in
 let (f3:(int)->((int)->((int)->(int)))) = (fun (a) -> begin fun t1' t2'  -> match t1',t2' with
     | (b),(c) -> (
 
-      ((a + b) + c)
+      (a + (b + c))
     )
    end ) in
 let (f3:(int)->((int)->((int)->(int)))) = (fun (a) -> (fun (b) -> begin fun t1'  -> match t1' with
       | (c) -> (
 
-        ((a + b) + c)
+        (a + (b + c))
       )
      end   )) in
 let (f3:(int)->((int)->((int)->(int)))) = (fun (a) -> (fun (b) -> (fun (c) -> 
-      ((a + b) + c)
+      (a + (b + c))
     )  )) in
-let (f3:(int)->((int)->((int)->(int)))) = (fun (a) (b) (c) -> ((a + b) + c)) in
-let f3 = (fun (a) (b) (c) -> ((a + b) + c)) in
+let (f3:(int)->((int)->((int)->(int)))) = (fun (a) (b) (c) -> (a + (b + c))) in
+let f3 = (fun (a) (b) (c) -> (a + (b + c))) in
 printf ("%d\n") (f3 (1) (2) (3));
 printf  ("%d\n") (f3  (1)  (2) (3));
 printf  ("%d\n") (f3  (1)  (2) (3));
@@ -138,7 +138,7 @@ let tuple = (fun (()) ->
   let (f2:((int * int))->(((int * int))->(int))) = begin fun t1' t2'  -> match t1',t2' with
   | (a , b),(c , d) -> (
 
-    ((a * b) + (c * d))
+    (a * (b + (c * d)))
   )
  end  in
   printf ("%d\n") (f2 (1 , 2) (3 , 4));
@@ -381,5 +381,23 @@ let rec f = begin fun t1'  -> match t1' with
     f (xs)
   )
  end  in
-f ([1; 2; 3])
+f ([1; 2; 3]);
+printf  ("1+20=%d\n") ((1 + 20))
+;;
+let whens = 
+let rec (fib:((int))->(int)) = begin fun t1'  -> match t1' with
+  | (n) when (n = 0) -> (
+
+    0
+  )
+  | (n) when (n = 1) -> (
+
+    1
+  )
+  | (n) -> (
+
+    (fib ((n - 2)) + fib ((n - 1)))
+  )
+ end  in
+printf  ("fib 11 %d\n") (fib (11))
 
