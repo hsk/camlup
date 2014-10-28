@@ -407,10 +407,32 @@ end;;
 let _ = 
 printf  ("A.a = %d\n") ((A . a))
 ;;
-class ab (b:int)(c:int) = object
+class ab = object
+(*exp*)(*s*)val a = 123
+(*exp*)(*s*)method c = a
+end;;
+let _ = 
+printf  ("ab.a = %d\n") (((new ab) # c))
+;;
+class abc (b:int)(c:int) = object
 (*exp*)(*s*)val a = b
 (*exp*)(*s*)method c = a
 end;;
 let _ = 
-printf  ("ab.a = %d\n") (((new ab  (10) (20)) # c))
+printf  ("ab.a = %d\n") (((new abc  (10) (20)) # c))
+;;
+class fib (x:int) = object
+(*exp*)(*s*)method apply = (match x with | (0) -> (
+(*s*)  0
+(*s*)
+)| (1) -> (
+(*s*)  1
+(*s*)
+)| (n) -> (
+(*s*)  (((new fib ((x - 2))) # apply) + ((new fib ((x - 1))) # apply))
+(*s*)
+))
+end;;
+let _ = 
+printf  ("A.a = %d\n") (((new fib (10)) # apply))
 

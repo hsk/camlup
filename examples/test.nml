@@ -399,25 +399,33 @@ _ = {
   printf("A.a = %d\n" A.a)
 }
 
-ab class(b:int c:int) {
+ab class {
+  a = 123
+  def c = a
+}
+_ = {
+  printf("ab.a = %d\n" new ab->c)
+}
+
+abc class(b:int c:int) {
   a = b
   def c = a
 }
 _ = {
-  printf("ab.a = %d\n" new ab(10 20)->c)
+  printf("ab.a = %d\n" new abc(10 20)->c)
 }
 
-/*
+
 fib class(x:int) {
-  apply() =
+  def apply =
     x match {
       | 0 => 0
       | 1 => 1
-      | n => new fib(x-2) - new fib(x-1)
+      | n => (new fib(x-2)->apply) + (new fib(x-1)->apply)
     }
 }
 
 _ = {
-  printf("A.a = %d\n" new fib(40)->apply())
+  printf("A.a = %d\n" new fib(10)->apply)
 }
-*/
+
