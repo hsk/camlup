@@ -253,13 +253,13 @@ list() := {
   iter{|x => printf("%d\n" x)}([1 2 3 4])
   iter{|x => printf("%d\n" x)}[1 2 3 4]
 
-  [1 2 3 4] -> iter {
+  [1 2 3 4] |> iter {
    | x => printf("%d\n" x)
   }
 
-  [1 2 3 4] -> map {
+  [1 2 3 4] |> map {
     | x => x * 10
-  } -> iter {
+  } |> iter {
     | x => printf("%d\n" x)
   }
 
@@ -351,19 +351,19 @@ list_type := {
 
   ls := [1 2 3]
 
-  ls -> iter {
+  ls |> iter {
     |l => printf("%d," l)
   } printf("\n")
 
   ls:list[int] = [1 2 3]
   
-  ls -> iter {
+  ls |> iter {
     |l => printf("%d," l)
   } printf("\n")
 
   ls:list[(int,int)] = [1,2 3,4]
   
-  ls -> iter {
+  ls |> iter {
     |(l,r) =>
       printf("(%d,%d);" l r)
   } printf("\n")
@@ -392,10 +392,32 @@ whens := {
 }
 
 A module {
-  a := {
-    1234
-  }  
+  a := 1234
+}
+
+_ := {
+  printf("A.a = %d\n" A.a)
+}
+
+ab class {
+  a := 1234
+  def c := a
 }
 _ := {
-  printf("A.a = %d\n" A.a)  
+  printf("ab.a = %d\n" new ab->c)
 }
+
+/*
+fib class(x:int) {
+  apply() :=
+    x match {
+      | 0 => 0
+      | 1 => 1
+      | n => new fib(x-2) - new fib(x-1)
+    }
+}
+
+_ := {
+  printf("A.a = %d\n" new fib(40)->apply())
+}
+*/

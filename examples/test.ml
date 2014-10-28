@@ -402,10 +402,15 @@ let rec (fib:((int))->(int)) = begin fun t1'  -> match t1' with
 printf  ("fib 11 %d\n") (fib (11))
 ;;
 module A = struct
-(*s*)let a = 
-1234
-
+(*s*)let a = 1234
 end;;
-let a = 
+let _ = 
 printf  ("A.a = %d\n") ((A . a))
+;;
+class ab = object
+(*exp*)(*s*)val a = 1234
+(*exp*)(*s*)method c = a
+end;;
+let _ = 
+printf  ("ab.a = %d\n") (((new ab) # c))
 

@@ -338,6 +338,46 @@ let rec print_s sp ppf (s:s):unit =
 
       print_ls (sp ^ "(*s*)") ";;\n" print ppf ss;
       fprintf ppf "\n%send" sp
+
+    | SClass(name, ss) ->
+      fprintf ppf "%sclass %s = object\n"
+        sp
+        name
+      ;
+      print_ls (sp ^ "(*s*)") "\n" print_member ppf ss;
+      fprintf ppf "\n%send" sp
+
+
+  and print_member sp ppf s = 
+    let print_e2 sp ppf = function
+      | ELet (id, TEmpty, e) ->
+        fprintf ppf "val %s = %a"
+          id
+          (print_e "") e
+      | ELet (id, t, e) ->
+        fprintf ppf "val (%s:%a) = %a"
+          id
+          (print_t "" "") t
+          (print_e "") e
+      | ELetRec (id, TEmpty, e) ->
+        fprintf ppf "method %s = %a"
+          id
+          (print_e sp) e
+      | ELetRec (id, t, e) ->
+        fprintf ppf "method (%s:%a) = %a"
+          id
+          (print_t "" "") t
+          (print_e sp) e
+      | _ ->
+        assert false
+    in
+    match s with
+    | SExp e ->
+      fprintf ppf "(*exp*)%s%a"
+        sp
+        (print_e2 sp) e
+    | s ->
+      assert false
   in
     print sp ppf s
 
