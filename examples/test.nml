@@ -2,31 +2,31 @@ open Printf
 open List
 
 variable : int = 2
-a := 1
-b := 2
-_ := 3
+a = 1
+b = 2
+_ = 3
 
 block : unit = {
 
   printf("test 1\n")
 }
 
-block := {
+block = {
   printf("test 2\n")
   printf("test 2\n")
 }
 
-functions() := {
+functions() = {
 
   printf("test")
 } functions()
 
-curry_function := {
+curry_function = {
 
   f0:()=>int= {|() => 0 }
   f0():int= { 0 }
   f0():int= 0 
-  f0():= 0 
+  f0()= 0 
 
   printf("%d\n")(f0())
   printf("%d\n"; f0())
@@ -35,7 +35,7 @@ curry_function := {
   f1:(int)=>int={|a => a }
   f1(a:int):int={ a }
   f1(a:int):int= a
-  f1(a:int):= a
+  f1(a:int)= a
 
   printf("%d\n")(f1(1))
   printf("%d\n"; f1(1))
@@ -45,7 +45,7 @@ curry_function := {
   f2(a:int):(int)=>int={| b => a + b }
   f2(a:int)(b:int):int={a + b}
   f2(a:int; b:int):int= a + b
-  f2(a:int b:int):= a + b
+  f2(a:int b:int)= a + b
 
   printf("%d\n")(f2(1)(2))
   printf("%d\n"; f2(1; 2))
@@ -56,7 +56,7 @@ curry_function := {
   f3(a:int)(b:int):int(int)={| c => a + b + c}
   f3(a:int)(b:int)(c:int):int={a + b + c}
   f3(a:int; b:int; c:int):int= a + b + c
-  f3(a:int b:int c:int):= a + b + c
+  f3(a:int b:int c:int)= a + b + c
 
   printf("%d\n")(f3(1)(2)(3))
   printf("%d\n"; f3(1; 2; 3))
@@ -94,7 +94,7 @@ curry_function := {
   printf("%d+%d=%d\n" a b a + b)
 }
 
-if_else() := {
+if_else() = {
 
   if (a < 10) printf("b1\n")
   if (a < 10) { printf("b2\n") }
@@ -104,7 +104,7 @@ if_else() := {
   printf(if (a < 1) "a\n" else "b1\n")
 } if_else()
 
-recursive_function() := {
+recursive_function() = {
 
   /* (let rec) */
   def fib:(int)=>int = {| n =>
@@ -125,7 +125,7 @@ recursive_function() := {
   printf("fib 10 %d\n" fib(10))
 } recursive_function()
 
-tuple() := {
+tuple() = {
 
   addt:(int,int)=>int = {| a,b =>
     a + b
@@ -135,7 +135,7 @@ tuple() := {
   */
 
   /*
-  f3:={
+  f3={
     |(a,b,c) => a*b*c
   }
   */
@@ -201,7 +201,7 @@ tuple() := {
   printf("%d\n" f2(1,2 3,4))
 } tuple ()
 
-pattern_match() := {
+pattern_match() = {
 
   def fib:(int)=>int = {| n =>
     n match {
@@ -222,7 +222,7 @@ pattern_match() := {
   */
 } pattern_match()
 
-parcial_function() := {
+parcial_function() = {
 
   def fib:(int)=>int={
     | 0 => 0
@@ -235,14 +235,14 @@ parcial_function() := {
   /* tuple parcual function */
 
   llor:(int,int)=>int={
-    | 0,0 => a:=1 b:=2 a | b
+    | 0,0 => a=1 b=2 a | b
     | a,b => a | b
   }
 
   printf("llor %d\n" llor(1,2))
 } parcial_function()
 
-list() := {
+list() = {
 
   iter({|x => printf("%d\n")(x)})([1; 2; 3; 4])
   iter({|x => printf("%d\n"; x)})([1; 2; 3; 4])
@@ -264,7 +264,7 @@ list() := {
   }
 
   /*
-  def ps(xs):= {
+  def ps(xs)= {
     | [] => () ;
     | x::xs => printf("%d\n" x) ps(xs)
   }
@@ -274,20 +274,20 @@ list() := {
 
 a type {x:int y:int}
 
-record() := {
+record() = {
 
   a :a= {:x=1 y=2}
 
   printf("%d\n" a.x)
 
-  printf("%d\n"; {:x=1+2*3 y={a:=1 a}}.x)
+  printf("%d\n"; {:x=1+2*3 y={a=1 a}}.x)
 
-  aa := {|{:x}=>printf("%d\n" x)}
+  aa = {|{:x}=>printf("%d\n" x)}
 } record()
 
 e type | EUnit | EInt(int) | EAdd(e, e)
 
-variant() := {
+variant() = {
 
   def eval:e=>int={
     | EUnit => 0
@@ -298,29 +298,29 @@ variant() := {
   printf("1+2=%d\n" eval(EAdd(EInt(1), EInt(2))))
 } variant()
 
-reference() := {
+reference() = {
 
-  a := & 1
+  a = & 1
 
-  *a = 2
+  *a := 2
 
   printf("%d\n"; *a)
 
   b #= 1
 
-  *b = 3
+  *b := 3
 
   printf("%d\n"; *b)
 } reference()
 
-closure() := {
+closure() = {
 
-  block(sp)(f):={
+  block(sp)(f)={
     printf("{\n")
     f(sp ^ "  ")
     printf("%s}\n" sp)
   }
-  p := printf
+  p = printf
 
   p("def %s() " "a") block(""){|sp=>
     p("%sdef %s() " sp "b") block(sp){|sp=>
@@ -331,12 +331,12 @@ closure() := {
   }
   
 
-  block(sp)(f):={
+  block(sp)(f)={
     printf("{\n")
     f(sp ^ "  ")
     printf("%s}\n" sp)
   }
-  p := printf
+  p = printf
 
   p("def %s() " "a") block(""){|sp=>
     p("%sdef %s() " sp "b") block(sp){|sp=>
@@ -347,9 +347,9 @@ closure() := {
   }
 } closure()
 
-list_type := {
+list_type = {
 
-  ls := [1 2 3]
+  ls = [1 2 3]
 
   ls |> iter {
     |l => printf("%d," l)
@@ -368,7 +368,7 @@ list_type := {
       printf("(%d,%d);" l r)
   } printf("\n")
 
-  def f:={
+  def f={
     | [] => ()
     | x::xs =>
       printf("%d,\n" x)
@@ -381,7 +381,7 @@ list_type := {
     20)
 }
 
-whens := {
+whens = {
 
   def fib:(int)=>int={
     | n when n == 0 => 0
@@ -392,24 +392,24 @@ whens := {
 }
 
 A module {
-  a := 1234
+  a = 1234
 }
 
-_ := {
+_ = {
   printf("A.a = %d\n" A.a)
 }
 
 ab class {
-  a := 1234
-  def c := a
+  a = 1234
+  def c = a
 }
-_ := {
+_ = {
   printf("ab.a = %d\n" new ab->c)
 }
 
 /*
 fib class(x:int) {
-  apply() :=
+  apply() =
     x match {
       | 0 => 0
       | 1 => 1
@@ -417,7 +417,7 @@ fib class(x:int) {
     }
 }
 
-_ := {
+_ = {
   printf("A.a = %d\n" new fib(40)->apply())
 }
 */

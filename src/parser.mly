@@ -184,7 +184,7 @@ exp:
   | exp COMMA exp2 { EBin($1, ",", $3) }
   | exp ADDLIST exp2 { EBin($1, "::", $3) }
   | exp MEMBER exp2 { EBin($1, "#", $3) }
-  | exp ASSIGN exp2
+  | exp COLONASSIGN exp2
     {
       match $1 with
         | EPre("!", a) -> EBin(a, ":=", $3)
@@ -207,8 +207,8 @@ exp:
   | exp LPAREN exps RPAREN %prec CALL { ECall($1, $3) }
   | exp LPAREN RPAREN %prec CALL { ECall($1, [EUnit]) }
 
-  | ID COLONASSIGN exp2 { ELet($1, TEmpty, $3) }
-  | exp COLONASSIGN exp2
+  | ID ASSIGN exp2 { ELet($1, TEmpty, $3) }
+  | exp ASSIGN exp2
     {
       let rec loop = function 
         | EVar(id),b -> ELet(id, TEmpty, b)
@@ -255,8 +255,8 @@ exp:
   | INT { EInt($1) }
   | ID { EVar($1) }
   | STRING { EString($1) }
-  | DEF ID COLONASSIGN exp2 { ELetRec($2, TEmpty, $4) }
-  | DEF exp COLONASSIGN exp2
+  | DEF ID ASSIGN exp2 { ELetRec($2, TEmpty, $4) }
+  | DEF exp ASSIGN exp2
     {
       let rec loop = function 
         | EVar(id),b -> ELetRec(id, TEmpty, b)
@@ -304,8 +304,8 @@ stmt:
   | ID MODULE LBRACE stmts RBRACE { SModule($1, $4) }
   | ID CLASS LBRACE stmts RBRACE { SClass($1, $4) }
   | exp { SExp($1) }
-  | ID COLONASSIGN exp2 { SLet($1, TEmpty, $3) }
-  | DEF ID COLONASSIGN exp2 { SLetRec($2, TEmpty, $4) }
+  | ID ASSIGN exp2 { SLet($1, TEmpty, $3) }
+  | DEF ID ASSIGN exp2 { SLetRec($2, TEmpty, $4) }
   | OPEN { SOpen($1) }
   | ID TYPE LBRACE defrecs RBRACE { STypeRec($1, $4) }
   | ID TYPE OR variants { STypeVariant($1, $4)}
