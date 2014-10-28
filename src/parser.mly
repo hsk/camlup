@@ -183,7 +183,7 @@ exp:
   | exp DOT exp2 { EBin($1, ".", $3) }
   | exp COMMA exp2 { EBin($1, ",", $3) }
   | exp ADDLIST exp2 { EBin($1, "::", $3) }
-  | exp MEMBER exp2 { EBin($1, "#", $3) }
+  | exp MEMBER exp { EBin($1, "#", $3) }
   | exp COLONASSIGN exp2
     {
       match $1 with

@@ -415,13 +415,12 @@ _ = {
   printf("ab.a = %d\n" new abc(10 20)->c)
 }
 
-
 fib class(x:int) {
   def apply =
     x match {
       | 0 => 0
       | 1 => 1
-      | n => (new fib(x-2)->apply) + (new fib(x-1)->apply)
+      | n => new fib(x-2)->apply + new fib(x-1)->apply
     }
 }
 
