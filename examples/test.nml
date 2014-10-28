@@ -399,12 +399,12 @@ _ = {
   printf("A.a = %d\n" A.a)
 }
 
-ab class {
-  a = 1234
+ab class(b:int c:int) {
+  a = b
   def c = a
 }
 _ = {
-  printf("ab.a = %d\n" new ab->c)
+  printf("ab.a = %d\n" new ab(10 20)->c)
 }
 
 /*

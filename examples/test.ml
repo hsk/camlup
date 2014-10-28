@@ -407,10 +407,10 @@ end;;
 let _ = 
 printf  ("A.a = %d\n") ((A . a))
 ;;
-class ab = object
-(*exp*)(*s*)val a = 1234
+class ab (b:int)(c:int) = object
+(*exp*)(*s*)val a = b
 (*exp*)(*s*)method c = a
 end;;
 let _ = 
-printf  ("ab.a = %d\n") (((new ab) # c))
+printf  ("ab.a = %d\n") (((new ab  (10) (20)) # c))
 

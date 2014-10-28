@@ -302,7 +302,9 @@ fns:
 
 stmt:
   | ID MODULE LBRACE stmts RBRACE { SModule($1, $4) }
-  | ID CLASS LBRACE stmts RBRACE { SClass($1, $4) }
+  | ID CLASS LBRACE stmts RBRACE { SClass($1, [], $4) }
+  | ID CLASS LPAREN RPAREN LBRACE stmts RBRACE { SClass($1, [], $6) }
+  | ID CLASS LPAREN defrecs RPAREN LBRACE stmts RBRACE { SClass($1, $4, $7) }
   | exp { SExp($1) }
   | ID ASSIGN exp2 { SLet($1, TEmpty, $3) }
   | DEF ID ASSIGN exp2 { SLetRec($2, TEmpty, $4) }
