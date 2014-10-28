@@ -20,11 +20,12 @@ rule token = parse
   | "return" { RETURN }
   | "new" { NEW }
   | "this" { THIS }
-  | "class" { STRUCT }
+  | "class" { CLASS }
   | "trait" { TRAIT }
   | "<:" { IMPLEMENT }
   | ":>" { RIMPLEMENT }
   | "=>" { ARROW }
+  | "|>" { FARROW }
   | "->" { MEMBER }
   | "|>" { FARROW }
   | "if" { IF }

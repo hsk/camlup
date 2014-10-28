@@ -37,6 +37,7 @@ type s =
   | SAnd of s * s
   | SExp of e
   | SModule of string * s list
+  | SClass of string * (string * t) list * s list
   | STypeRec of string * (string * t) list
   | STypeVariant of string * (string * t) list
 

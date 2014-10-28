@@ -32,7 +32,7 @@ let e2e = function
 %token RETURN
 %token <string> OPEN
 %token <string> STRING
-%token STRUCT THIS DOT
+%token CLASS THIS DOT
 %token IF ELSE
 %token IMPLEMENT RIMPLEMENT TRAIT
 %token ARROW MEMBER FARROW
@@ -71,9 +71,9 @@ let e2e = function
 %left ADD SUB
 %left MUL DIV MOD
 
-%left NEW
 %left prec_app
-%left MEMBER
+%left MEMBER FARROW
+%left NEW
 %left DOT
 %right ARROW
 %left AT
@@ -148,7 +148,7 @@ exp:
   | SUB exp { EPre("-", $2) }
   | AMP exp { EPre("ref", $2) }
   | MUL exp { EPre("!", $2) }
-
+  | NEW exp { EPre("new", $2) }
   | exp HAT exp2 { EBin($1, "^", $3) }
 
   | exp LOR exp2 { EBin($1, "||", $3) }
@@ -183,7 +183,8 @@ exp:
   | exp DOT exp2 { EBin($1, ".", $3) }
   | exp COMMA exp2 { EBin($1, ",", $3) }
   | exp ADDLIST exp2 { EBin($1, "::", $3) }
-  | exp ASSIGN exp2
+  | exp MEMBER exp { EBin($1, "#", $3) }
+  | exp COLONASSIGN exp2
     {
       match $1 with
         | EPre("!", a) -> EBin(a, ":=", $3)
@@ -206,8 +207,8 @@ exp:
   | exp LPAREN exps RPAREN %prec CALL { ECall($1, $3) }
   | exp LPAREN RPAREN %prec CALL { ECall($1, [EUnit]) }
 
-  | ID COLONASSIGN exp2 { ELet($1, TEmpty, $3) }
-  | exp COLONASSIGN exp2
+  | ID ASSIGN exp2 { ELet($1, TEmpty, $3) }
+  | exp ASSIGN exp2
     {
       let rec loop = function 
         | EVar(id),b -> ELet(id, TEmpty, b)
@@ -254,8 +255,8 @@ exp:
   | INT { EInt($1) }
   | ID { EVar($1) }
   | STRING { EString($1) }
-  | DEF ID COLONASSIGN exp2 { ELetRec($2, TEmpty, $4) }
-  | DEF exp COLONASSIGN exp2
+  | DEF ID ASSIGN exp2 { ELetRec($2, TEmpty, $4) }
+  | DEF exp ASSIGN exp2
     {
       let rec loop = function 
         | EVar(id),b -> ELetRec(id, TEmpty, b)
@@ -284,7 +285,7 @@ exp:
       in
       loop($2,$4,$6)
     }
-  | exp MEMBER exp { ECall($3, [$1]) }
+  | exp FARROW exp { ECall($3, [$1]) }
 
 fn:
   | OR exps ARROW exps { EFun($2, TEmpty, EBlock($4)) }
@@ -301,11 +302,14 @@ fns:
 
 stmt:
   | ID MODULE LBRACE stmts RBRACE { SModule($1, $4) }
+  | ID CLASS LBRACE stmts RBRACE { SClass($1, [], $4) }
+  | ID CLASS LPAREN RPAREN LBRACE stmts RBRACE { SClass($1, [], $6) }
+  | ID CLASS LPAREN defrecs RPAREN LBRACE stmts RBRACE { SClass($1, $4, $7) }
   | exp { SExp($1) }
-  | ID COLONASSIGN exp2 { SLet($1, TEmpty, $3) }
-  | DEF ID COLONASSIGN exp2 { SLetRec($2, TEmpty, $4) }
+  | ID ASSIGN exp2 { SLet($1, TEmpty, $3) }
+  | DEF ID ASSIGN exp2 { SLetRec($2, TEmpty, $4) }
   | OPEN { SOpen($1) }
-  | ID TYPE LBRACE defrecs RBRACE { STypeRec($1, $4)}
+  | ID TYPE LBRACE defrecs RBRACE { STypeRec($1, $4) }
   | ID TYPE OR variants { STypeVariant($1, $4)}
 
 stmt1:
