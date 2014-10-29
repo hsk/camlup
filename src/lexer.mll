@@ -9,7 +9,7 @@ rule token = parse
   | space* ['\n' '\r' ';'] [' ' '\t' '\n' '\r' ';']* { SEMI }
   | space+ { token lexbuf }
   | "open" { open_ lexbuf }
-  | "/*" { comment lexbuf }
+  | "/*" { comment lexbuf; token lexbuf }
   | "//" [^ '\n' '\r']* ['\n' '\r'] { token lexbuf }
   | '(' { LPAREN }
   | ')' { RPAREN }
@@ -90,10 +90,7 @@ and open_ = parse
           (Lexing.lexeme_end lexbuf)) }
 
 and comment = parse
-  | "*/" { token lexbuf }
-  | eof { failwith
-        (Printf.sprintf "unknown token %s near characters %d-%d"
-          (Lexing.lexeme lexbuf)
-          (Lexing.lexeme_start lexbuf)
-          (Lexing.lexeme_end lexbuf)) }
+  | "*/" { () }
+  | "/*" { comment lexbuf; comment lexbuf }
+  | eof { Format.eprintf "warning: unterminated comment@." }
   | _ { comment lexbuf }

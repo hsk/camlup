@@ -18,7 +18,7 @@ block = {
 
 functions() = {
 
-  printf("test")
+  printf("test\n")
 } functions()
 
 curry_function = {
@@ -409,6 +409,7 @@ abc class(b:int c:int) {
   a = b
   def c = a
 }
+
 _ = {
 
   printf("ab.a = %d\n" new abc(10 20)->c)
@@ -428,4 +429,6 @@ fib class(x:int) {
 _ = {
 
   printf("A.a = %d\n" new fib(10)->apply)
+  printf("%d %d\n" 1+2*3;-1)
 }
+/* /*nested comment*/ */

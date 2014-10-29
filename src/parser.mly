@@ -25,7 +25,6 @@ let e2e = function
 
 %token SEMI
 %token LPAREN RPAREN LBRACE RBRACE LBRACK RBRACK
-%token PRINT
 %token EOF
 %token COLON COMMA COLONASSIGN REFASSIGN
 %token ASSIGN

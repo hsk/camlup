@@ -12,7 +12,7 @@ printf ("test 2\n");
 printf ("test 2\n")
 ;;
 let functions = (fun (()) -> 
-  printf ("test")
+  printf ("test\n")
 );;
 functions (());;
 let curry_function = 
@@ -435,5 +435,6 @@ method apply = (match x with | (0) -> (
 ))
 end;;
 let _ = 
-printf  ("A.a = %d\n") (((new fib (10)) # apply))
+printf  ("A.a = %d\n") (((new fib (10)) # apply));
+printf  ("%d %d\n")  ((1 + (2 * 3))) ((- 1))
 
