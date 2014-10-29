@@ -199,7 +199,7 @@ exp:
 
   | exp OR exp { EBin($1, "lor", $3) }
 
-/*  | exp XOR exp { EBin($1, "lxor", $3) }*/
+  | exp XOR exp { EBin($1, "lxor", $3) }
 
   | exp AMP exp { EBin($1, "land", $3) }
 
