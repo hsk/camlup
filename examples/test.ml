@@ -296,8 +296,10 @@ let reference = (fun (()) ->
   (a := 2);
   printf  ("%d\n") ((! a));
   let b = (ref 1) in
-  (b := 3);
-  printf  ("%d\n") ((! b))
+  incr (b);
+  printf  ("++ %d\n") ((! b));
+  decr (b);
+  printf  ("-- %d\n") ((! b))
 );;
 reference (());;
 let closure = (fun (()) -> 

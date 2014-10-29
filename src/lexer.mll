@@ -36,7 +36,7 @@ rule token = parse
   | "match" { MATCH }
   | "when" { WHEN }
   | "type" { TYPE }
-  | "module" { Printf.printf " module\n"; MODULE }
+  | "module" { MODULE }
   | digit+ { INT(int_of_string (Lexing.lexeme lexbuf)) }
 
   | '^' { HAT }
@@ -62,6 +62,10 @@ rule token = parse
   | '*' { MUL }
   | '/' { DIV }
   | '%' { MOD }
+
+  | "--" { DEC }
+  | "++" { INC }
+  | '!' { NOT }
 
   | '.' { DOT }
   | ',' { COMMA }

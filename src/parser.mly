@@ -49,6 +49,7 @@ let e2e = function
 %token SHL SHR
 %token ADD SUB
 %token MUL DIV MOD
+%token INC DEC NOT
 %token WHEN
 
 %right LIST
@@ -69,6 +70,8 @@ let e2e = function
 %left SHL SHR
 %left ADD SUB
 %left MUL DIV MOD
+
+%left INC DEC NOT
 
 %left prec_app
 %left SEMI
@@ -142,8 +145,12 @@ variants:
 exp:
   | SEMI exp { $2 }
   | SUB exp { EPre("-", $2) }
+  | DEC exp { ECall(EVar("decr"), [$2]) }
+  | INC exp { ECall(EVar("incr"), [$2]) }
+
   | AMP exp { EPre("ref", $2) }
   | MUL exp { EPre("!", $2) }
+  | NOT exp { EPre("not", $2) }
   | NEW exp { EPre("new", $2) }
   | exp HAT exp { EBin($1, "^", $3) }
 

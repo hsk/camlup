@@ -304,9 +304,11 @@ reference() = {
   *a := 2
   printf("%d\n"; *a)
   b #= 1
-  *b := 3
+  ++b
 
-  printf("%d\n"; *b)
+  printf("++ %d\n"; *b)
+  --b
+  printf("-- %d\n"; *b)
 } reference()
 
 closure() = {
