@@ -77,6 +77,7 @@ rule token = parse
   | ':' { COLON }
   | ":=" { COLONASSIGN }
   | "<-" { ARROWASSIGN }
+  | '#' { REF }
   | "#=" { REFASSIGN }
   | "def" { DEF }
   | '=' { ASSIGN }

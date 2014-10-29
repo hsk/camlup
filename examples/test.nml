@@ -317,7 +317,7 @@ closure() = {
 
   block(sp)(f)={
     printf("{\n")
-    f(sp ^ "  ")
+    f(sp ~ "  ")
     printf("%s}\n" sp)
   }
   p = printf
@@ -333,7 +333,7 @@ closure() = {
 
   block(sp)(f)={
     printf("{\n")
-    f(sp ^ "  ")
+    f(sp ~ "  ")
     printf("%s}\n" sp)
   }
   p = printf
@@ -473,9 +473,11 @@ keyword_params = {
   }
   printf("%d\n" eval(`add(`mul(`int(10),`int(20)),`int(20))))
 
-  f(~a:int=1; ~b:int; ~c; d) = a+b+c+d
+  f(#a:int=1; #b:int; #c; d) = a+b+c+d
   printf("%d\n" f(a=1 b=2 c=5 3))
 
+  f(~a:int=1; ~b:int; ~c; d) = a+b+c+d
+  printf("%d\n" f(a=1 b=2 c=5 3))
 }
 
 /* /*nested comment*/ */

@@ -47,46 +47,46 @@ printf  ("%d\n") (f1 (1));
 let (f2:(int)->((int)->(int))) = begin fun t1' t2'  -> match t1',t2' with
   | (a),(b) -> (
 
-    ((*bin*)a + b)
+    (a + b)
   )
  end  in
 let (f2:(int)->(((int))->(int))) = (fun (a:int) -> begin fun t1'  -> match t1' with
     | (b) -> (
 
-      ((*bin*)a + b)
+      (a + b)
     )
    end ) in
 let (f2:(int)->((int)->(int))) = (fun (a:int) -> (fun (b:int) -> 
-    ((*bin*)a + b)
+    (a + b)
   )) in
-let (f2:(int)->((int)->(int))) = (fun (a:int) (b:int) -> ((*bin*)a + b)) in
-let f2 = (fun (a:int) (b:int) -> ((*bin*)a + b)) in
+let (f2:(int)->((int)->(int))) = (fun (a:int) (b:int) -> (a + b)) in
+let f2 = (fun (a:int) (b:int) -> (a + b)) in
 printf ("%d\n") (f2 (1) (2));
 printf  ("%d\n") (f2  (1) (2));
 printf  ("%d\n") (f2  (1) (2));
 let (f3:(int)->((int)->((int)->(int)))) = begin fun t1' t2' t3'  -> match t1',t2',t3' with
   | (a),(b),(c) -> (
 
-    ((*bin*)((*bin*)a + b) + c)
+    ((a + b) + c)
   )
  end  in
 let (f3:(int)->((int)->((int)->(int)))) = (fun (a:int) -> begin fun t1' t2'  -> match t1',t2' with
     | (b),(c) -> (
 
-      ((*bin*)((*bin*)a + b) + c)
+      ((a + b) + c)
     )
    end ) in
 let (f3:(int)->((int)->((int)->(int)))) = (fun (a:int) -> (fun (b:int) -> begin fun t1'  -> match t1' with
       | (c) -> (
 
-        ((*bin*)((*bin*)a + b) + c)
+        ((a + b) + c)
       )
      end   )) in
 let (f3:(int)->((int)->((int)->(int)))) = (fun (a:int) -> (fun (b:int) -> (fun (c:int) -> 
-      ((*bin*)((*bin*)a + b) + c)
+      ((a + b) + c)
     )  )) in
-let (f3:(int)->((int)->((int)->(int)))) = (fun (a:int) (b:int) (c:int) -> ((*bin*)((*bin*)a + b) + c)) in
-let f3 = (fun (a:int) (b:int) (c:int) -> ((*bin*)((*bin*)a + b) + c)) in
+let (f3:(int)->((int)->((int)->(int)))) = (fun (a:int) (b:int) (c:int) -> ((a + b) + c)) in
+let f3 = (fun (a:int) (b:int) (c:int) -> ((a + b) + c)) in
 printf ("%d\n") (f3 (1) (2) (3));
 printf  ("%d\n") (f3  (1)  (2) (3));
 printf  ("%d\n") (f3  (1)  (2) (3));
@@ -101,28 +101,28 @@ printf  ("%d %d %d %d\n")  (f0 (()))  (f1 (1))  (f2  (1) (2)) (f3  (1)  (2) (3))
 printf ("%d\n") (f3 ((- 1)) ((- 2)) ((- 3)));
 printf  ("%d\n") (f3  ((- 1))  ((- 2)) ((- 3)));
 printf  ("%d\n") (f3  ((- 1))  ((- 2)) ((- 3)));
-printf ("%d+%d=%d\n") (a) (b) (((*bin*)a + b));
-printf  ("%d+%d=%d\n")  (a)  (b) (((*bin*)a + b));
-printf  ("%d+%d=%d\n")  (a)  (b) (((*bin*)a + b))
+printf ("%d+%d=%d\n") (a) (b) ((a + b));
+printf  ("%d+%d=%d\n")  (a)  (b) ((a + b));
+printf  ("%d+%d=%d\n")  (a)  (b) ((a + b))
 ;;
 let if_else = (fun () -> 
-  (if ((*bin*)a < 10) then (printf ("b1\n"))  );
-  (if ((*bin*)a < 10) then (
+  (if (a < 10) then (printf ("b1\n"))  );
+  (if (a < 10) then (
     printf ("b2\n")
 )  );
-  (if ((*bin*)a < 10) then (
+  (if (a < 10) then (
     printf ("b2\n");
     printf ("b3\n")
 )  );
-  (if ((*bin*)a > 10) then (printf ("a\n")  )else(printf ("b3\n")));
-  printf ((if ((*bin*)a < 1) then ("a\n"  )else("b1\n")))
+  (if (a > 10) then (printf ("a\n")  )else(printf ("b3\n")));
+  printf ((if (a < 1) then ("a\n"  )else("b1\n")))
 );;
 if_else (());;
 let recursive_function = (fun () -> 
   let rec (fib:((int))->(int)) = begin fun t1'  -> match t1' with
     | (n) -> (
 
-      (if ((*bin*)n = 0) then (0      )else((if ((*bin*)n = 1) then (1        )else(((*bin*)fib (((*bin*)n - 2)) + fib (((*bin*)n - 1)))))))
+      (if (n = 0) then (0      )else((if (n = 1) then (1        )else((fib ((n - 2)) + fib ((n - 1)))))))
     )
    end  in
   printf  ("fib 10 %d\n") (fib (10))
@@ -132,13 +132,13 @@ let tuple = (fun () ->
   let (addt:((int * int))->(int)) = begin fun t1'  -> match t1' with
   | (a , b) -> (
 
-    ((*bin*)a + b)
+    (a + b)
   )
  end  in
   let (f2:((int * int))->(((int * int))->(int))) = begin fun t1' t2'  -> match t1',t2' with
   | (a , b),(c , d) -> (
 
-    ((*bin*)((*bin*)a * b) + ((*bin*)c * d))
+    ((a * b) + (c * d))
   )
  end  in
   printf ("%d\n") (f2 (1 , 2) (3 , 4));
@@ -156,7 +156,7 @@ let pattern_match = (fun () ->
         1
       
 )| (n) -> (
-        ((*bin*)fib (((*bin*)n - 2)) + fib (((*bin*)n - 1)))
+        (fib ((n - 2)) + fib ((n - 1)))
       
 ))
     )
@@ -175,7 +175,7 @@ let parcial_function = (fun () ->
     )
     | (n) -> (
 
-      ((*bin*)fib (((*bin*)n - 2)) + fib (((*bin*)n - 1)))
+      (fib ((n - 2)) + fib ((n - 1)))
     )
    end  in
   printf  ("fib 10 = %d\n") (fib (10));
@@ -184,11 +184,11 @@ let parcial_function = (fun () ->
 
     let a = 1 in
     let b = 2 in
-    ((*bin*)a lor b)
+    (a lor b)
   )
   | (a , b) -> (
 
-    ((*bin*)a lor b)
+    (a lor b)
   )
  end  in
   printf  ("llor %d\n") (llor (1 , 2))
@@ -245,7 +245,7 @@ let list = (fun () ->
    end ) (map (begin fun t1'  -> match t1' with
     | (x) -> (
 
-      ((*bin*)x * 10)
+      (x * 10)
     )
    end ) ([1; 2; 3; 4]))
 );;
@@ -253,8 +253,8 @@ list (());;
 type a = {x:int;y:int};;
 let record = (fun () -> 
   let (a:a) = {x=1;y=2} in
-  printf  ("%d\n") (((*bin*)a . x));
-  printf  ("%d\n") (((*bin*){x=((*bin*)1 + ((*bin*)2 * 3));y=
+  printf  ("%d\n") ((a . x));
+  printf  ("%d\n") (({x=(1 + (2 * 3));y=
 let a = 1 in
 a
 } . x));
@@ -279,7 +279,7 @@ let variant = (fun () ->
     )
     | (EAdd (a , b)) -> (
 
-      ((*bin*)eval (a) + eval (b))
+      (eval (a) + eval (b))
     )
    end  in
   printf  ("1+2=%d\n") (eval (EAdd (EInt (1) , EInt (2))))
@@ -287,7 +287,7 @@ let variant = (fun () ->
 variant (());;
 let reference = (fun () -> 
   let a = (ref 1) in
-  ((*bin*)a := 2);
+  (a := 2);
   printf  ("%d\n") ((! a));
   incr (a);
   printf  ("%d\n") ((! a));
@@ -301,7 +301,7 @@ reference (());;
 let closure = (fun () -> 
   let block = (fun sp -> (fun f -> 
     printf ("{\n");
-    f (((*bin*)sp ^ "  "));
+    f ((sp ^ "  "));
     printf  ("%s}\n") (sp)
   )) in
   let p = printf in
@@ -322,7 +322,7 @@ let closure = (fun () ->
    end );
   let block = (fun sp -> (fun f -> 
     printf ("{\n");
-    f (((*bin*)sp ^ "  "));
+    f ((sp ^ "  "));
     printf  ("%s}\n") (sp)
   )) in
   let p = printf in
@@ -373,52 +373,52 @@ let rec f = begin fun t1'  -> match t1' with
 
     ()
   )
-  | (((*bin*)x :: xs)) -> (
+  | ((x :: xs)) -> (
 
     printf  ("%d,\n") (x);
     f (xs)
   )
  end  in
 f ([1; 2; 3]);
-printf  ("1+20=%d\n") (((*bin*)1 + 20))
+printf  ("1+20=%d\n") ((1 + 20))
 ;;
 let whens = 
 let rec (fib:((int))->(int)) = begin fun t1'  -> match t1' with
-  | (n) when ((*bin*)n = 0) -> (
+  | (n) when (n = 0) -> (
 
     0
   )
-  | (n) when ((*bin*)n = 1) -> (
+  | (n) when (n = 1) -> (
 
     1
   )
   | (n) -> (
 
-    ((*bin*)fib (((*bin*)n - 2)) + fib (((*bin*)n - 1)))
+    (fib ((n - 2)) + fib ((n - 1)))
   )
  end  in
 printf  ("fib 11 %d\n") (fib (11))
 ;;
 module A = struct
 let a = 1234;;
-let inc = (fun k -> ((*bin*)k + 1))
+let inc = (fun k -> (k + 1))
 end;;
 let _ = 
-printf  ("A.a = %d A.inc(10) = %d\n")  (((*bin*)A . a)) (((*bin*)A . inc (10)))
+printf  ("A.a = %d A.inc(10) = %d\n")  ((A . a)) ((A . inc (10)))
 ;;
 class ab = object
 val a = 123
 method c = a
 end;;
 let _ = 
-printf  ("ab.a = %d\n") (((*bin*)(new ab) # c))
+printf  ("ab.a = %d\n") (((new ab) # c))
 ;;
 class abc (b:int)(c:int) = object
 method c = b
 end;;
 let _ = 
-printf  ("ab.a = %d\n") (((*bin*)(new abc  (10) (20)) # c));
-printf  ("ab.a = %d\n") (((*bin*)((*bin*)2 * 3) + 1))
+printf  ("ab.a = %d\n") (((new abc  (10) (20)) # c));
+printf  ("ab.a = %d\n") (((2 * 3) + 1))
 ;;
 class fib (x:int) = object
 method apply = (match x with | (0) -> (
@@ -428,13 +428,13 @@ method apply = (match x with | (0) -> (
   1
 
 )| (n) -> (
-  ((*bin*)((*bin*)(new fib (((*bin*)x - 2))) # apply) + ((*bin*)(new fib (((*bin*)x - 1))) # apply))
+  (((new fib ((x - 2))) # apply) + ((new fib ((x - 1))) # apply))
 
 ))
 end;;
 let _ = 
-printf  ("A.a = %d\n") (((*bin*)(new fib (10)) # apply));
-printf  ("%d %d\n")  (((*bin*)((*bin*)1 + 2) - 3)) ((- 1))
+printf  ("A.a = %d\n") (((new fib (10)) # apply));
+printf  ("%d %d\n")  (((1 + 2) - 3)) ((- 1))
 ;;
 let array_and_loop = 
 let a = [|1; 2; 3|] in
@@ -446,7 +446,7 @@ for i = 10 downto 1 do
 printf  ("%d\n") (i)
  done;
 let i = (ref 0) in
-while ((*bin*)(! i) < 3) do 
+while ((! i) < 3) do 
 incr (i);
 printf  ("while %d\n") ((! i))
  done
@@ -459,14 +459,16 @@ let rec eval = begin fun t1'  -> match t1' with
   )
   | (`add (a , b)) -> (
 
-    ((*bin*)eval (a) + eval (b))
+    (eval (a) + eval (b))
   )
   | (`mul (a , b)) -> (
 
-    ((*bin*)eval (a) * eval (b))
+    (eval (a) * eval (b))
   )
  end  in
 printf  ("%d\n") (eval (`add (`mul (`int (10) , `int (20)) , `int (20))));
-let f = (fun ?(a:int=1) ~(b:int) ~(c) d -> ((*bin*)((*bin*)((*bin*)a + b) + c) + d)) in
+let f = (fun ?(a:int=1) ~(b:int) ~(c) d -> (((a + b) + c) + d)) in
+printf  ("%d\n") (f  ~a:1  ~b:2  ~c:5 (3));
+let f = (fun ?(a:int=1) ~(b:int) ~(c) d -> (((a + b) + c) + d)) in
 printf  ("%d\n") (f  ~a:1  ~b:2  ~c:5 (3))
 

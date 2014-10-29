@@ -75,7 +75,7 @@ let rec print_e sp ppf = function
     fprintf ppf "(%a)"
       (print_ls "" ", " print_e) ls
   | EBin(e1,op,e2) ->
-    fprintf ppf "((*bin*)%a %s %a)"
+    fprintf ppf "(%a %s %a)"
       (print_e sp) e1
       op
       (print_e sp) e2

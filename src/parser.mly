@@ -60,6 +60,7 @@ let rec loop1 f = function
 %token ARROW MEMBER FARROW
 %token CAST NEW AT DEF CASE MATCH TYPE MODULE
 %token ADDLIST
+%token REF
 
 %token HAT
 %token LOR
@@ -82,11 +83,11 @@ let rec loop1 f = function
 %right CAST
 %right ADDLIST
 
-%left HAT
+%left XOR
 %left LOR
 %left LAMP
 %left OR
-%left XOR
+%left HAT
 %left AMP
 %left EQ NE EEQ ENE
 %left LT GT LE GE
@@ -192,14 +193,14 @@ exp:
   | MUL exp { EPre("!", $2) }
   | NOT exp { EPre("not", $2) }
   | NEW exp { EPre("new", $2) }
-  | exp HAT exp { EBin($1, "^", $3) }
+  | exp XOR exp { EBin($1, "^", $3) }
 
   | exp LOR exp { EBin($1, "||", $3) }
   | exp LAMP exp { EBin($1, "&&", $3) }
 
   | exp OR exp { EBin($1, "lor", $3) }
 
-  | exp XOR exp { EBin($1, "lxor", $3) }
+  | exp HAT exp { EBin($1, "lxor", $3) }
 
   | exp AMP exp { EBin($1, "land", $3) }
 
@@ -278,6 +279,13 @@ exp:
       | _ -> ELet(e2id $1, $3, EEmpty)
     }
   | XOR exp
+    {
+      match $2 with
+      | ELetRec(id,t,e) -> ELetRec(id, t, e)
+      | ELet(id,t,e) -> ELetRec(id, t, e)
+      | _ -> ELetRec(e2id $2, TEmpty, EEmpty)
+    }
+  | REF exp
     {
       match $2 with
       | ELetRec(id,t,e) -> ELetRec(id, t, e)
