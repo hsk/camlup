@@ -29,7 +29,8 @@ type e =
   | ETuple of e list
   | EIndex of e * e list
   | EArray of e list
-
+  | EFor of string * e * e * int * e
+  | EWhile of e * e
 type s = 
   | SOpen of string
   | SLet of string * t * e

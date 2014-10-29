@@ -26,7 +26,7 @@ let e2e = function
 %token SEMI
 %token LPAREN RPAREN LBRACE RBRACE LBRACK RBRACK
 %token EOF
-%token COLON COMMA COLONASSIGN REFASSIGN
+%token COLON COMMA COLONASSIGN REFASSIGN ARROWASSIGN
 %token ASSIGN
 %token RETURN
 %token <string> OPEN
@@ -51,10 +51,10 @@ let e2e = function
 %token MUL DIV MOD
 %token INC DEC NOT
 %token WHEN
-
+%token FOR WHILE TO UNTIL DOWNTO
 %right LIST
 %nonassoc ELSE
-%right ASSIGN COLONASSIGN REFASSIGN
+%right ASSIGN COLONASSIGN REFASSIGN ARROWASSIGN
 %left COMMA
 %right CAST
 %right ADDLIST
@@ -152,6 +152,22 @@ exp:
   | MUL exp { EPre("!", $2) }
   | NOT exp { EPre("not", $2) }
   | NEW exp { EPre("new", $2) }
+  | FOR LPAREN VAR ARROWASSIGN exp TO exp RPAREN exp
+    {
+      EFor($3, $5, $7, 1, $9)
+    }
+  | FOR LPAREN VAR ARROWASSIGN exp DOWNTO exp RPAREN exp
+    {
+      EFor($3, $5, $7, -1, $9)
+    }
+  | FOR LPAREN VAR ARROWASSIGN exp UNTIL exp RPAREN exp
+    {
+      EFor($3, $5, EBin($7, "-", EInt 1), 1, $9)
+    }
+  | WHILE LPAREN exp RPAREN exp
+    {
+      EWhile($3, $5)
+    }
   | exp HAT exp { EBin($1, "^", $3) }
 
   | exp LOR exp { EBin($1, "||", $3) }

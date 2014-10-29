@@ -434,5 +434,16 @@ let _ =
 printf  ("A.a = %d\n") (((new fib (10)) # apply));
 printf  ("%d %d\n")  (((1 + 2) - 3)) ((- 1));
 let a = [|1; 2; 3|] in
-printf  ("%d%d%d")  (a .(0))  (a .(1)) (a .(2))
+printf  ("%d%d%d\n")  (a .(0))  (a .(1)) (a .(2));
+for i = 0 to 3 do 
+printf  ("%d\n") (i)
+ done;
+for i = 10 downto 1 do 
+printf  ("%d\n") (i)
+ done;
+let i = (ref 0) in
+while ((! i) < 3) do 
+incr (i);
+printf  ("while %d\n") ((! i))
+ done
 

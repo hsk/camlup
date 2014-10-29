@@ -17,6 +17,11 @@ rule token = parse
   | '}' { RBRACE }
   | '[' { LBRACK }
   | ']' { RBRACK }
+  | "for" { FOR }
+  | "while" { WHILE }
+  | "to" { TO }
+  | "until" { UNTIL }
+  | "downto" { DOWNTO }
   | "return" { RETURN }
   | "new" { NEW }
   | "this" { THIS }
@@ -71,6 +76,7 @@ rule token = parse
   | ',' { COMMA }
   | ':' { COLON }
   | ":=" { COLONASSIGN }
+  | "<-" { ARROWASSIGN }
   | "#=" { REFASSIGN }
   | "def" { DEF }
   | '=' { ASSIGN }

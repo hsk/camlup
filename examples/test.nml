@@ -441,7 +441,20 @@ _ = {
   printf("%d %d\n" 1+2-3;-1)
 
   a = [| 1; 2; 3]
-  printf("%d%d%d" a[0] a[1] a[2])
+  printf("%d%d%d\n" a[0] a[1] a[2])
 
+  for(i <- 0 to 3) {
+    printf("%d\n" i)
+  }
+
+  for (i <- 10 downto 1) {
+    printf("%d\n" i)
+  }
+
+  i #= 0
+  while(*i < 3) {
+    ++i
+    printf("while %d\n"; *i)
+  }
 }
 /* /*nested comment*/ */

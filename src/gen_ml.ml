@@ -269,6 +269,25 @@ let rec print_e sp ppf = function
       id
       (print_t "" "") t
       (print_e sp) e
+
+  | EFor(id, start, end1, step1, e) ->
+    if(step1 < 0) then
+      fprintf ppf "for %s = %a downto %a do %a done@?"
+        id
+        (print_e sp) start
+        (print_e sp) end1
+        (print_e sp) e
+    else
+      fprintf ppf "for %s = %a to %a do %a done@?"
+        id
+        (print_e sp) start
+        (print_e sp) end1
+        (print_e sp) e
+  | EWhile(e1,e2) ->
+    fprintf ppf "while %a do %a done@?"
+        (print_e sp) e1
+        (print_e sp) e2
+
 and print_e_block sp b ppf = print_e (sp ^ "  ") ppf
 
 let rec print_s sp ppf (s:s):unit = 
