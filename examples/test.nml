@@ -251,7 +251,6 @@ list() = {
   /* iter({|x = printf("%d\n" x)} [1; 2; 3; 4])*/
   iter{|x => printf("%d\n" x)}([1; 2; 3; 4])
   iter{|x => printf("%d\n" x)}([1 2 3 4])
-  iter{|x => printf("%d\n" x)}[1 2 3 4]
 
   [1 2 3 4] |> iter {
    | x => printf("%d\n" x)
@@ -373,7 +372,7 @@ list_type = {
       f(xs)
   }
 
-  f [1 2 3]
+  f([1 2 3])
 
   printf("1+20=%d\n" 1 +
     20)
@@ -391,16 +390,24 @@ whens = {
 
 A module {
   a = 1234
+  inc(k) = k + 1
 }
 
 _ = {
   
-  printf("A.a = %d\n" A.a)
+  printf("A.a = %d A.inc(10) = %d\n" A.a A.inc(10))
 }
 
 ab class {
+  // private member
   a = 123
+  // public method
   def c = a
+
+  /*
+  // private method
+  - d = 10
+  */
 }
 _ = {
 
@@ -408,8 +415,8 @@ _ = {
 }
 
 abc class(b:int c:int) {
-  a = b
-  def c = a
+  // public method
+  def c = b
 }
 
 _ = {
@@ -431,6 +438,10 @@ fib class(x:int) {
 _ = {
 
   printf("A.a = %d\n" new fib(10)->apply)
-  printf("%d %d\n" 1+2*3;-1)
+  printf("%d %d\n" 1+2-3;-1)
+
+  a = [| 1; 2; 3]
+  printf("%d%d%d" a[0] a[1] a[2])
+
 }
 /* /*nested comment*/ */

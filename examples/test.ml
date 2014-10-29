@@ -242,12 +242,6 @@ let list = (fun (()) ->
 
       printf  ("%d\n") (x)
     )
-   end ) ([1; 2; 3; 4]);
-  iter (begin fun t1'  -> match t1' with
-    | (x) -> (
-
-      printf  ("%d\n") (x)
-    )
    end ) (map (begin fun t1'  -> match t1' with
     | (x) -> (
 
@@ -404,10 +398,11 @@ let rec (fib:((int))->(int)) = begin fun t1'  -> match t1' with
 printf  ("fib 11 %d\n") (fib (11))
 ;;
 module A = struct
-let a = 1234
+let a = 1234;;
+let inc = (fun (k) -> (k + 1))
 end;;
 let _ = 
-printf  ("A.a = %d\n") ((A . a))
+printf  ("A.a = %d A.inc(10) = %d\n")  ((A . a)) ((A . inc (10)))
 ;;
 class ab = object
 val a = 123
@@ -417,8 +412,7 @@ let _ =
 printf  ("ab.a = %d\n") (((new ab) # c))
 ;;
 class abc (b:int)(c:int) = object
-val a = b
-method c = a
+method c = b
 end;;
 let _ = 
 printf  ("ab.a = %d\n") (((new abc  (10) (20)) # c));
@@ -438,5 +432,7 @@ method apply = (match x with | (0) -> (
 end;;
 let _ = 
 printf  ("A.a = %d\n") (((new fib (10)) # apply));
-printf  ("%d %d\n")  ((1 + (2 * 3))) ((- 1))
+printf  ("%d %d\n")  (((1 + 2) - 3)) ((- 1));
+let a = [|1; 2; 3|] in
+printf  ("%d%d%d")  (a .(0))  (a .(1)) (a .(2))
 

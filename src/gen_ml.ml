@@ -78,6 +78,20 @@ let rec print_e sp ppf = function
     fprintf ppf "%a %a"
       (print_e sp) e1
       (print_ls sp " " (print_e)) es
+  | EIndex(e1,es) ->
+    let rec print_ls sp sep p ppf = function
+      | [] -> ()
+      | [x] -> fprintf ppf ".(%a)" (p sp) x
+      | x::xs ->
+        fprintf ppf " .(%a)%s%a"
+          (p sp) x
+          sep
+          (print_ls sp sep p) xs
+    in
+    fprintf ppf "%a %a"
+      (print_e sp) e1
+      (print_ls sp " " (print_e)) es
+
   | EIf(e1, e2, EEmpty) ->
     fprintf ppf "(if %a then (%a)%s)"
       (print_e "") e1
@@ -233,6 +247,9 @@ let rec print_e sp ppf = function
     loop ls
   | EList ls ->
     fprintf ppf "[%a]"
+      (print_ls "" "; " (print_e)) ls
+  | EArray ls ->
+    fprintf ppf "[|%a|]"
       (print_ls "" "; " (print_e)) ls
   | ELet (id, TEmpty, e) ->
     fprintf ppf "let %s = %a"

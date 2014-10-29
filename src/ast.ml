@@ -27,6 +27,8 @@ type e =
   | EBlock of e list
   | ERecord of (string * e) list
   | ETuple of e list
+  | EIndex of e * e list
+  | EArray of e list
 
 type s = 
   | SOpen of string

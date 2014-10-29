@@ -198,15 +198,17 @@ exp:
   | IF LPAREN exp RPAREN exp1 %prec LIST { EIf($3, $5, EEmpty) }
   | LBRACE fns RBRACE { EPFun($2) }
   | LBRACE exps RBRACE { EBlock($2) }
-  | LBRACK RBRACK { EList[]}
+  | LBRACK RBRACK { EList[] }
   | LBRACK exps RBRACK { EList $2 }
+  | LBRACK OR RBRACK { EArray[] }
+  | LBRACK OR exps RBRACK { EArray $3 }
   | LPAREN RPAREN { EUnit }
   | LPAREN exp RPAREN { $2 }
   | LBRACE COLON records RBRACE { ERecord($3) }
   | exp LBRACE fns RBRACE %prec CALL { ECall($1, [EPFun($3)]) }
   | exp LBRACE exps RBRACE %prec CALL { ECall($1, [EBlock($3)]) }
-  | exp LBRACK RBRACK %prec CALL { ECall($1, [EList[]]) }
-  | exp LBRACK exps RBRACK %prec CALL { ECall($1, [EList $3]) }
+  | exp LBRACK RBRACK %prec CALL { EIndex($1, []) }
+  | exp LBRACK exps RBRACK %prec CALL { EIndex($1, $3) }
   | exp LPAREN exps RPAREN %prec CALL { ECall($1, $3) }
   | exp LPAREN RPAREN %prec CALL { ECall($1, [EUnit]) }
 
