@@ -43,6 +43,8 @@ rule token = parse
   | "type" { TYPE }
   | "module" { MODULE }
   | digit+ { INT(int_of_string (Lexing.lexeme lexbuf)) }
+  | digit+ ('.' digit*)? (['e' 'E'] ['+' '-']? digit+)?
+    { FLOAT(float_of_string (Lexing.lexeme lexbuf)) }  
 
   | '^' { HAT }
   | "||" { LOR }
@@ -71,6 +73,11 @@ rule token = parse
   | "--" { DEC }
   | "++" { INC }
   | '!' { NOT }
+  | "-." { FSUB }
+  | "+." { FADD }
+  | "*." { FMUL }
+  | "/." { FDIV }
+  | "**" { FPOW }
 
   | '.' { DOT }
   | ',' { COMMA }

@@ -10,6 +10,7 @@ type t =
 type e =
   | EEmpty
   | EInt of int
+  | EFloat of float
   | EStr of string
   | EVar of string
   | EBin of e * string * e

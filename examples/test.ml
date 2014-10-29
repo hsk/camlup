@@ -451,7 +451,7 @@ incr (i);
 printf  ("while %d\n") ((! i))
  done
 ;;
-let keyword_params = 
+let variants = 
 let rec eval = begin fun t1'  -> match t1' with
   | (`int (n)) -> (
 
@@ -466,9 +466,16 @@ let rec eval = begin fun t1'  -> match t1' with
     (eval (a) * eval (b))
   )
  end  in
-printf  ("%d\n") (eval (`add (`mul (`int (10) , `int (20)) , `int (20))));
+printf  ("%d\n") (eval (`add (`mul (`int (10) , `int (20)) , `int (20))))
+;;
+let keyword_params = 
 let f = (fun ?(a:int=1) ~(b:int) ~(c) d -> (((a + b) + c) + d)) in
 printf  ("%d\n") (f  ~a:1  ~b:2  ~c:5 (3));
 let f = (fun ?(a:int=1) ~(b:int) ~(c) d -> (((a + b) + c) + d)) in
 printf  ("%d\n") (f  ~a:1  ~b:2  ~c:5 (3))
+;;
+let floats = 
+let n = 1.234000 in
+let m = (n +. 10.500000) in
+printf  ("%f\n") (m)
 

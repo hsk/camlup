@@ -43,6 +43,7 @@ let rec loop1 f = function
 %}
 
 %token <int> INT
+%token <float> FLOAT
 %token <string> VAR
 
 
@@ -71,8 +72,8 @@ let rec loop1 f = function
 %token EQ NE ENE EEQ
 %token LT GT LE GE
 %token SHL SHR
-%token ADD SUB
-%token MUL DIV MOD
+%token ADD SUB FADD FSUB
+%token MUL DIV MOD FMUL FDIV FPOW
 %token INC DEC NOT
 %token WHEN
 %token FOR WHILE TO UNTIL DOWNTO
@@ -92,8 +93,8 @@ let rec loop1 f = function
 %left EQ NE EEQ ENE
 %left LT GT LE GE
 %left SHL SHR
-%left ADD SUB
-%left MUL DIV MOD
+%left ADD SUB FADD FSUB
+%left MUL DIV MOD FMUL FDIV FPOW
 
 %left INC DEC NOT
 
@@ -169,6 +170,7 @@ variants:
 
 exp:
   | INT { EInt($1) }
+  | FLOAT { EFloat($1) }
   | VAR { EVar($1) }
   | STR { EStr($1) }
 
@@ -220,6 +222,13 @@ exp:
   | exp MUL exp { EBin($1, "*", $3) }
   | exp DIV exp { EBin($1, "/", $3) }
   | exp MOD exp { EBin($1, "mod", $3) }
+
+  | exp FADD exp { EBin($1, "+.", $3) }
+  | exp FSUB exp { EBin($1, "-.", $3) }
+
+  | exp FMUL exp { EBin($1, "*.", $3) }
+  | exp FDIV exp { EBin($1, "/.", $3) }
+  | exp FPOW exp { EBin($1, "**", $3) }
 
   | exp SHL exp { EBin($1, "asl", $3) }
   | exp SHR exp { EBin($1, "asr", $3) }

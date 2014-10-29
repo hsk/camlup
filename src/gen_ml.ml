@@ -42,6 +42,9 @@ let rec print_e sp ppf = function
   | EInt i ->
     fprintf ppf "%d"
       i
+  | EFloat i ->
+    fprintf ppf "%f"
+      i
   | EStr i ->
     fprintf ppf "%s"
       i

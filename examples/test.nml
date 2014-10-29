@@ -464,7 +464,7 @@ array_and_loop = {
   }
 }
 
-keyword_params = {
+variants = {
 
   def eval = {
     | `int(n) => n
@@ -472,12 +472,20 @@ keyword_params = {
     | `mul(a,b) => eval(a) * eval(b)
   }
   printf("%d\n" eval(`add(`mul(`int(10),`int(20)),`int(20))))
+}
 
-  f(#a:int=1; #b:int; #c; d) = a+b+c+d
+keyword_params = {
+  f(#a:int=1 #b:int #c d) = a+b+c+d
   printf("%d\n" f(a=1 b=2 c=5 3))
 
   f(~a:int=1; ~b:int; ~c; d) = a+b+c+d
   printf("%d\n" f(a=1 b=2 c=5 3))
+}
+
+floats = {
+  n = 1.234
+  m = n +. 10.5
+  printf("%f\n" m)
 }
 
 /* /*nested comment*/ */
