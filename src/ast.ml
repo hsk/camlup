@@ -10,7 +10,7 @@ type t =
 type e =
   | EEmpty
   | EInt of int
-  | EString of string
+  | EStr of string
   | EVar of string
   | EBin of e * string * e
   | EPre of string * e
@@ -27,8 +27,6 @@ type e =
   | EBlock of e list
   | ERecord of (string * e) list
   | ETuple of e list
-  
-(*  | ETuple of e list *)
 
 type s = 
   | SOpen of string
@@ -43,4 +41,3 @@ type s =
 
 type prog =
   | Prog of s list
-

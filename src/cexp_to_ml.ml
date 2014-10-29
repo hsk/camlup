@@ -5,7 +5,7 @@ let rec exp = function
   | CInt s ->
     EInt(s)
   | CStr s ->
-    EString(s)
+    EStr(s)
   | CId id ->
     EVar(id)
 

@@ -267,7 +267,7 @@ exp:
     }*/
   | INT { EInt($1) }
   | ID { EVar($1) }
-  | STRING { EString($1) }
+  | STRING { EStr($1) }
   | DEF ID COLONASSIGN exp { ELetRec($2, TEmpty, $4) }
 
   | DEF ID fns END { ELetRec($2, TEmpty, EPFun($3)) }
@@ -340,7 +340,7 @@ patterns:
 pattern:
   | ID { EVar $1 }
   | INT { EInt $1 }
-  | STRING { EString $1 }
+  | STRING { EStr $1 }
 prog:
   | stmts { Prog $1 }
   | error

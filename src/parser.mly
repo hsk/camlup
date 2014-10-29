@@ -2,28 +2,28 @@
 open Ast
 
 let e2t = function
-| EVar(e) -> TEmpty
-| ELet(_,t,EEmpty) -> t
-| EUnit -> TUnit
-| _ -> assert false
+  | EVar(e) -> TEmpty
+  | ELet(_,t,EEmpty) -> t
+  | EUnit -> TUnit
+  | _ -> assert false
 
 let e2id = function
-| EVar(i) -> i
-| ELet(i,t,EEmpty) -> i
-| _ -> assert false
+  | EVar(i) -> i
+  | ELet(i,t,EEmpty) -> i
+  | _ -> assert false
 
 let e2e = function
-| ELet(e,_,EEmpty) -> EVar(e)
-| ELet(e,_,e2) -> assert false
-| e -> e
+  | ELet(e,_,EEmpty) -> EVar(e)
+  | ELet(e,_,e2) -> assert false
+  | e -> e
 
 %}
 
 %token <int> INT
-%token <string> ID
+%token <string> VAR
 
 
-%token SEMICOLON
+%token SEMI
 %token LPAREN RPAREN LBRACE RBRACE LBRACK RBRACK
 %token PRINT
 %token EOF
@@ -31,7 +31,7 @@ let e2e = function
 %token ASSIGN
 %token RETURN
 %token <string> OPEN
-%token <string> STRING
+%token <string> STR
 %token CLASS THIS DOT
 %token IF ELSE
 %token IMPLEMENT RIMPLEMENT TRAIT
@@ -72,6 +72,7 @@ let e2e = function
 %left MUL DIV MOD
 
 %left prec_app
+%left SEMI
 %left MEMBER FARROW
 %left NEW
 %left DOT
@@ -86,7 +87,7 @@ let e2e = function
 %%
 
 typ:
-  | ID { Ty $1 }
+  | VAR { Ty $1 }
   | typ ARROW typ { TFun($1, $3) }
   | typ LPAREN typ2 RPAREN
     {
@@ -109,82 +110,78 @@ typs:
 
 exp1:
   | exp { $1 }
-  | SEMICOLON exp1 { $2 }
-  | exp1 SEMICOLON { $1 }
-
-exp2:
-  | exp { $1 }
-  | SEMICOLON exp { $2 }
+  | exp1 SEMI { $1 }
 
 exps:
   | exp1 { [$1] }
   | exp1 exps %prec LIST { $1 :: $2 }
 
 defrec:
-  | ID COLON typ { ($1, $3) }
-  | ID COLON typ SEMICOLON { ($1, $3) }
+  | VAR COLON typ { ($1, $3) }
+  | VAR COLON typ SEMI { ($1, $3) }
 
 defrecs:
   | defrec { [$1] }
   | defrec defrecs %prec LIST { $1::$2 }
 
 record:
-  | ID ASSIGN exp1 { ($1, $3) }
-  | ID { ($1, EEmpty)}
+  | VAR ASSIGN exp1 { ($1, $3) }
+  | VAR { ($1, EEmpty)}
 
 records:
   | record { [$1] }
   | record records  %prec LIST { $1::$2 }
 
 variant:
-  | ID typ { ($1,$2) }
-  | ID { ($1,TEmpty) }
+  | VAR typ { ($1,$2) }
+  | VAR { ($1,TEmpty) }
 
 variants:
   | variant { [$1] }
   | variant OR variants { $1::$3 }
 
 exp:
+  | SEMI exp { $2 }
   | SUB exp { EPre("-", $2) }
   | AMP exp { EPre("ref", $2) }
   | MUL exp { EPre("!", $2) }
   | NEW exp { EPre("new", $2) }
-  | exp HAT exp2 { EBin($1, "^", $3) }
+  | exp HAT exp { EBin($1, "^", $3) }
 
-  | exp LOR exp2 { EBin($1, "||", $3) }
-  | exp LAMP exp2 { EBin($1, "&&", $3) }
+  | exp LOR exp { EBin($1, "||", $3) }
+  | exp LAMP exp { EBin($1, "&&", $3) }
 
-  | exp OR exp2 { EBin($1, "lor", $3) }
+  | exp OR exp { EBin($1, "lor", $3) }
 
-  | exp XOR exp2 { EBin($1, "lxor", $3) }
+  | exp XOR exp { EBin($1, "lxor", $3) }
 
-  | exp AMP exp2 { EBin($1, "land", $3) }
+  | exp AMP exp { EBin($1, "land", $3) }
 
-  | exp EEQ exp2 { EBin($1, "==", $3) }
-  | exp ENE exp2 { EBin($1, "!=", $3) }
-  | exp EQ exp2 { EBin($1, "=", $3) }
-  | exp NE exp2 { EBin($1, "<>", $3) }
+  | exp EEQ exp { EBin($1, "==", $3) }
+  | exp ENE exp { EBin($1, "!=", $3) }
+  | exp EQ exp { EBin($1, "=", $3) }
+  | exp NE exp { EBin($1, "<>", $3) }
 
-  | exp LT exp2 { EBin($1, "<", $3) }
-  | exp GT exp2 { EBin($1, ">", $3) }
-  | exp LE exp2 { EBin($1, "<=", $3) }
-  | exp GE exp2 { EBin($1, ">=", $3) }
+  | exp LT exp { EBin($1, "<", $3) }
+  | exp GT exp { EBin($1, ">", $3) }
+  | exp LE exp { EBin($1, "<=", $3) }
+  | exp GE exp { EBin($1, ">=", $3) }
 
-  | exp ADD exp2 { EBin($1, "+", $3) }
-  | exp SUB exp2 { EBin($1, "-", $3) }
+  | exp ADD exp { EBin($1, "+", $3) }
+  | exp SUB exp { EBin($1, "-", $3) }
 
-  | exp MUL exp2 { EBin($1, "*", $3) }
-  | exp DIV exp2 { EBin($1, "/", $3) }
-  | exp MOD exp2 { EBin($1, "mod", $3) }
+  | exp MUL exp { EBin($1, "*", $3) }
+  | exp DIV exp { EBin($1, "/", $3) }
+  | exp MOD exp { EBin($1, "mod", $3) }
 
-  | exp SHL exp2 { EBin($1, "asl", $3) }
-  | exp SHR exp2 { EBin($1, "asr", $3) }
+  | exp SHL exp { EBin($1, "asl", $3) }
+  | exp SHR exp { EBin($1, "asr", $3) }
 
-  | exp DOT exp2 { EBin($1, ".", $3) }
-  | exp COMMA exp2 { EBin($1, ",", $3) }
-  | exp ADDLIST exp2 { EBin($1, "::", $3) }
+  | exp DOT exp { EBin($1, ".", $3) }
+  | exp COMMA exp { EBin($1, ",", $3) }
+  | exp ADDLIST exp { EBin($1, "::", $3) }
   | exp MEMBER exp { EBin($1, "#", $3) }
-  | exp COLONASSIGN exp2
+  | exp COLONASSIGN exp
     {
       match $1 with
         | EPre("!", a) -> EBin(a, ":=", $3)
@@ -207,8 +204,8 @@ exp:
   | exp LPAREN exps RPAREN %prec CALL { ECall($1, $3) }
   | exp LPAREN RPAREN %prec CALL { ECall($1, [EUnit]) }
 
-  | ID ASSIGN exp2 { ELet($1, TEmpty, $3) }
-  | exp ASSIGN exp2
+  | VAR ASSIGN exp { ELet($1, TEmpty, $3) }
+  | exp ASSIGN exp
     {
       let rec loop = function 
         | EVar(id),b -> ELet(id, TEmpty, b)
@@ -221,7 +218,7 @@ exp:
       in
       loop($1, $3)
     }
-  | exp COLON typ ASSIGN exp2
+  | exp COLON typ ASSIGN exp
     {
       let rec loop = function 
         | EVar(id),t,b -> ELet(id, t, b)
@@ -238,7 +235,7 @@ exp:
       in
       loop($1,$3,$5)
     }
-  | exp REFASSIGN exp2
+  | exp REFASSIGN exp
     {
       let rec loop = function 
         | EVar(id),b -> ELet(id, TEmpty, b)
@@ -253,10 +250,10 @@ exp:
     }
   | exp COLON typ { ELet(e2id $1, $3, EEmpty) }
   | INT { EInt($1) }
-  | ID { EVar($1) }
-  | STRING { EString($1) }
-  | DEF ID ASSIGN exp2 { ELetRec($2, TEmpty, $4) }
-  | DEF exp ASSIGN exp2
+  | VAR { EVar($1) }
+  | STR { EStr($1) }
+  | DEF VAR ASSIGN exp { ELetRec($2, TEmpty, $4) }
+  | DEF exp ASSIGN exp
     {
       let rec loop = function 
         | EVar(id),b -> ELetRec(id, TEmpty, b)
@@ -269,7 +266,7 @@ exp:
       in
       loop($2,$4)
     }
-  | DEF exp COLON typ ASSIGN exp2
+  | DEF exp COLON typ ASSIGN exp
     {
       let rec loop = function 
         | EVar(id),t,b -> ELetRec(id, t, b)
@@ -293,29 +290,29 @@ fn:
 
 fn1:
   | fn { $1 }
-  | SEMICOLON fn1 { $2 }
-  | fn1 SEMICOLON { $1 }
+  | SEMI fn1 { $2 }
+  | fn1 SEMI { $1 }
 
 fns:
   | fn1 { [$1] }
   | fn1 fns { $1 :: $2 }
 
 stmt:
-  | ID MODULE LBRACE stmts RBRACE { SModule($1, $4) }
-  | ID CLASS LBRACE stmts RBRACE { SClass($1, [], $4) }
-  | ID CLASS LPAREN RPAREN LBRACE stmts RBRACE { SClass($1, [], $6) }
-  | ID CLASS LPAREN defrecs RPAREN LBRACE stmts RBRACE { SClass($1, $4, $7) }
+  | VAR MODULE LBRACE stmts RBRACE { SModule($1, $4) }
+  | VAR CLASS LBRACE stmts RBRACE { SClass($1, [], $4) }
+  | VAR CLASS LPAREN RPAREN LBRACE stmts RBRACE { SClass($1, [], $6) }
+  | VAR CLASS LPAREN defrecs RPAREN LBRACE stmts RBRACE { SClass($1, $4, $7) }
   | exp { SExp($1) }
-  | ID ASSIGN exp2 { SLet($1, TEmpty, $3) }
-  | DEF ID ASSIGN exp2 { SLetRec($2, TEmpty, $4) }
+  | VAR ASSIGN exp { SLet($1, TEmpty, $3) }
+  | DEF VAR ASSIGN exp { SLetRec($2, TEmpty, $4) }
   | OPEN { SOpen($1) }
-  | ID TYPE LBRACE defrecs RBRACE { STypeRec($1, $4) }
-  | ID TYPE OR variants { STypeVariant($1, $4)}
+  | VAR TYPE LBRACE defrecs RBRACE { STypeRec($1, $4) }
+  | VAR TYPE OR variants { STypeVariant($1, $4)}
 
 stmt1:
   | stmt { $1 }
-  | SEMICOLON stmt { $2 }
-  | stmt1 SEMICOLON { $1 }
+  | SEMI stmt { $2 }
+  | stmt1 SEMI { $1 }
 
 stmts:
   | stmt1 { [$1] }

@@ -199,7 +199,7 @@ tuple() = {
   */
   printf("%d\n")(f2(1,2)(3,4))
   printf("%d\n" f2(1,2 3,4))
-} tuple ()
+} tuple()
 
 pattern_match() = {
 
@@ -270,7 +270,7 @@ list() = {
   }
   ps(xs)
   */
-} list ()
+} list()
 
 a type {x:int y:int}
 
@@ -301,13 +301,9 @@ variant() = {
 reference() = {
 
   a = & 1
-
   *a := 2
-
   printf("%d\n"; *a)
-
   b #= 1
-
   *b := 3
 
   printf("%d\n"; *b)
@@ -396,6 +392,7 @@ A module {
 }
 
 _ = {
+  
   printf("A.a = %d\n" A.a)
 }
 
@@ -404,6 +401,7 @@ ab class {
   def c = a
 }
 _ = {
+
   printf("ab.a = %d\n" new ab->c)
 }
 
@@ -412,7 +410,9 @@ abc class(b:int c:int) {
   def c = a
 }
 _ = {
+
   printf("ab.a = %d\n" new abc(10 20)->c)
+  printf("ab.a = %d\n" 2*3+1)
 }
 
 fib class(x:int) {
@@ -420,11 +420,12 @@ fib class(x:int) {
     x match {
       | 0 => 0
       | 1 => 1
-      | n => new fib(x-2)->apply + new fib(x-1)->apply
+      | n => new fib(x-2)->apply +
+             new fib(x-1)->apply
     }
 }
 
 _ = {
+
   printf("A.a = %d\n" new fib(10)->apply)
 }
-

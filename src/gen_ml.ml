@@ -34,43 +34,37 @@ let rec print_t pp sp ppf = function
 let rec print_e sp ppf = function
 
   | EEmpty ->
+
     ()
   | EUnit ->
+
     fprintf ppf "()"
   | EInt i ->
     fprintf ppf "%d"
       i
-    
-  | EString i ->
+  | EStr i ->
     fprintf ppf "%s"
       i
-
   | EVar i ->
     fprintf ppf "%s"
       i
-
   | EBin(e1,",",e2) ->
     fprintf ppf "%a %s %a"
       (print_e sp) e1
       ","
       (print_e sp) e2
-
   | ETuple(ls) ->
-
     fprintf ppf "(%a)"
       (print_ls "" ", " print_e) ls
-
   | EBin(e1,op,e2) ->
     fprintf ppf "(%a %s %a)"
       (print_e sp) e1
       op
       (print_e sp) e2
-    
   | EPre(op,e1) ->
     fprintf ppf "(%s %a)" 
       op
       (print_e "") e1
-    
   | ECall(e1,es) ->
     let rec print_ls sp sep p ppf = function
       | [] -> ()
@@ -84,20 +78,17 @@ let rec print_e sp ppf = function
     fprintf ppf "%a %a"
       (print_e sp) e1
       (print_ls sp " " (print_e)) es
-
   | EIf(e1, e2, EEmpty) ->
     fprintf ppf "(if %a then (%a)%s)"
       (print_e "") e1
       (print_e_block sp "\n") e2
       sp
-
   | EIf(e1, e2, e3) ->
     fprintf ppf "(if %a then (%a%s)else(%a))"
       (print_e "" ) e1
       (print_e_block sp "\n") e2 
       sp
       (print_e_block sp "") e3 
-
   | EFun (its, t, e) ->
     let rec print_ls sep p ppf = function
       | [] -> ()
@@ -240,11 +231,9 @@ let rec print_e sp ppf = function
     in
     fprintf ppf "\n";
     loop ls
-
   | EList ls ->
     fprintf ppf "[%a]"
       (print_ls "" "; " (print_e)) ls
-
   | ELet (id, TEmpty, e) ->
     fprintf ppf "let %s = %a"
       id
@@ -336,7 +325,7 @@ let rec print_s sp ppf (s:s):unit =
         name
       ;
 
-      print_ls (sp ^ "(*s*)") ";;\n" print ppf ss;
+      print_ls sp ";;\n" print ppf ss;
       fprintf ppf "\n%send" sp
 
     | SClass(name, [], ss) ->
@@ -344,7 +333,7 @@ let rec print_s sp ppf (s:s):unit =
         sp
         name
       ;
-      print_ls (sp ^ "(*s*)") "\n" print_member ppf ss;
+      print_ls sp "\n" print_member ppf ss;
       fprintf ppf "\n%send" sp
 
     | SClass(name, sts, ss) ->
@@ -355,7 +344,7 @@ let rec print_s sp ppf (s:s):unit =
           (fun sp ppf (s,t) -> fprintf ppf "%s:%a" s (print_t "" "") t)
         ) sts
       ;
-      print_ls (sp ^ "(*s*)") "\n" print_member ppf ss;
+      print_ls sp "\n" print_member ppf ss;
       fprintf ppf "\n%send" sp
 
   and print_member sp ppf s = 
@@ -383,7 +372,7 @@ let rec print_s sp ppf (s:s):unit =
     in
     match s with
     | SExp e ->
-      fprintf ppf "(*exp*)%s%a"
+      fprintf ppf "%s%a"
         sp
         (print_e2 sp) e
     | s ->

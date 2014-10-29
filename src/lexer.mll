@@ -6,7 +6,7 @@ let space = [' ' '\t']
 let digit = ['0'-'9']
 
 rule token = parse
-  | space* ['\n' '\r' ';'] [' ' '\t' '\n' '\r' ';']* { SEMICOLON }
+  | space* ['\n' '\r' ';'] [' ' '\t' '\n' '\r' ';']* { SEMI }
   | space+ { token lexbuf }
   | "open" { open_ lexbuf }
   | "/*" { comment lexbuf }
@@ -65,15 +65,14 @@ rule token = parse
 
   | '.' { DOT }
   | ',' { COMMA }
-  | ';' { SEMICOLON }
   | ':' { COLON }
   | ":=" { COLONASSIGN }
   | "#=" { REFASSIGN }
   | "def" { DEF }
   | '=' { ASSIGN }
-  | '"' [^ '"']* '"' { STRING(Lexing.lexeme lexbuf) }
+  | '"' [^ '"']* '"' { STR(Lexing.lexeme lexbuf) }
   | ['a'-'z' 'A'-'Z' '_']['a'-'z' 'A'-'Z' '_' '0'-'9']*
-      { Printf.printf "%s\n" (Lexing.lexeme lexbuf); ID(Lexing.lexeme lexbuf) }
+      { VAR(Lexing.lexeme lexbuf) }
   | eof { EOF }
   | _ { failwith
         (Printf.sprintf "unknown token %s near characters %d-%d"
