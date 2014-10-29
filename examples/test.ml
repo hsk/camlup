@@ -469,10 +469,10 @@ let rec eval = begin fun t1'  -> match t1' with
 printf  ("%d\n") (eval (`add (`mul (`int (10) , `int (20)) , `int (20))))
 ;;
 let keyword_params = 
-let f = (fun ?(a:int=1) ~(b:int) ~(c) d -> (((a + b) + c) + d)) in
-printf  ("%d\n") (f  ~a:1  ~b:2  ~c:5 (3));
-let f = (fun ?(a:int=1) ~(b:int) ~(c) d -> (((a + b) + c) + d)) in
-printf  ("%d\n") (f  ~a:1  ~b:2  ~c:5 (3))
+let f = (fun ?(a:int=(1)) ~(b:int) ~(c) d -> (((a + b) + c) + d)) in
+printf  ("%d\n") (f  ~a:(1)  ~b:(2)  ~c:(5) (3));
+let f = (fun ?(a:int=(1)) ~(b:int) ~(c) d -> (((a + b) + c) + d)) in
+printf  ("%d\n") (f  ~a:(1)  ~b:(2)  ~c:(5) (3))
 ;;
 let floats = 
 let n = 1.234000 in

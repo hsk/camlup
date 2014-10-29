@@ -91,4 +91,4 @@ let _ =
   if !run then
     exit(Utils.run("ocaml "^(replace_ext (List.hd !files) ".ml")))
   else
-    exit(1)
+    exit(0)

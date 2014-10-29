@@ -18,7 +18,7 @@ all:
 		cexp.ml cexp_parse.ml \
 		cexp_to_ml.ml \
 		gen_ml.ml utils.ml main.ml -o ../nmlc
-
+	cp nmlc /usr/local/bin/.
 hello:
 	./nmlc -run examples/hello.nml
 

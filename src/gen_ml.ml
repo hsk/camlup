@@ -61,7 +61,7 @@ let rec print_e sp ppf = function
         (print_t "" "") t
     | _ ->
       if named then fprintf ppf "?";
-      fprintf ppf "(%s%s%a=%a)"
+      fprintf ppf "(%s%s%a=(%a))"
         i
         (if t=TEmpty then "" else ":")
         (print_t "" "") t
@@ -98,7 +98,7 @@ let rec print_e sp ppf = function
     in
     let print_e2 sp ppf = function
       | ELet (id, _, e) ->
-        fprintf ppf "~%s:%a"
+        fprintf ppf "~%s:(%a)"
           id
           (print_e "") e
       | e ->
