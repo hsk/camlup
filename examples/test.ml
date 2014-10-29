@@ -289,6 +289,8 @@ let reference = (fun (()) ->
   let a = (ref 1) in
   (a := 2);
   printf  ("%d\n") ((! a));
+  incr (a);
+  printf  ("%d\n") ((! a));
   let b = (ref 1) in
   incr (b);
   printf  ("++ %d\n") ((! b));
@@ -432,7 +434,9 @@ method apply = (match x with | (0) -> (
 end;;
 let _ = 
 printf  ("A.a = %d\n") (((new fib (10)) # apply));
-printf  ("%d %d\n")  (((1 + 2) - 3)) ((- 1));
+printf  ("%d %d\n")  (((1 + 2) - 3)) ((- 1))
+;;
+let array_and_loop = 
 let a = [|1; 2; 3|] in
 printf  ("%d%d%d\n")  (a .(0))  (a .(1)) (a .(2));
 for i = 0 to 3 do 
@@ -446,4 +450,21 @@ while ((! i) < 3) do
 incr (i);
 printf  ("while %d\n") ((! i))
  done
+;;
+let keyword_params = 
+let rec eval = begin fun t1'  -> match t1' with
+  | (`int (n)) -> (
+
+    n
+  )
+  | (`add (a , b)) -> (
+
+    (eval (a) + eval (b))
+  )
+  | (`mul (a , b)) -> (
+
+    (eval (a) * eval (b))
+  )
+ end  in
+printf  ("%d\n") (eval (`add (`mul (`int (10) , `int (20)) , `int (20))))
 

@@ -81,7 +81,7 @@ rule token = parse
   | "def" { DEF }
   | '=' { ASSIGN }
   | '"' [^ '"']* '"' { STR(Lexing.lexeme lexbuf) }
-  | ['a'-'z' 'A'-'Z' '_']['a'-'z' 'A'-'Z' '_' '0'-'9']*
+  | ['`' 'a'-'z' 'A'-'Z' '_']['a'-'z' 'A'-'Z' '_' '0'-'9']*
       { VAR(Lexing.lexeme lexbuf) }
   | eof { EOF }
   | _ { failwith

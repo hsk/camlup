@@ -302,6 +302,9 @@ reference() = {
   a = & 1
   *a := 2
   printf("%d\n"; *a)
+  ++a
+  printf("%d\n"; *a)
+
   b #= 1
   ++b
 
@@ -440,10 +443,13 @@ _ = {
   printf("A.a = %d\n" new fib(10)->apply)
   printf("%d %d\n" 1+2-3;-1)
 
+}
+
+array_and_loop = {
   a = [| 1; 2; 3]
   printf("%d%d%d\n" a[0] a[1] a[2])
 
-  for(i <- 0 to 3) {
+  for (i <- 0 to 3) {
     printf("%d\n" i)
   }
 
@@ -451,10 +457,27 @@ _ = {
     printf("%d\n" i)
   }
 
-  i #= 0
-  while(*i < 3) {
+  i = & 0
+  while (*i < 3) {
     ++i
     printf("while %d\n"; *i)
   }
 }
+
+keyword_params = {
+
+  def eval = {
+    | `int(n) => n
+    | `add(a,b) => eval(a) + eval(b)
+    | `mul(a,b) => eval(a) * eval(b)
+  }
+
+  printf("%d\n" eval(`add(`mul(`int(10),`int(20)),`int(20))))
+
+  /*
+  f(a~int=1 b~int=1) = a+b
+  printf("%d\n" f(a#1 b#2))
+  */
+}
+
 /* /*nested comment*/ */
