@@ -48,6 +48,24 @@ let rec print_e sp ppf = function
   | EVar i ->
     fprintf ppf "%s"
       i
+  | ETy(named,i,t,e) ->
+    (match e with
+    | EEmpty ->
+      if named then fprintf ppf "~";
+      fprintf ppf "(%s%s%a)"
+        i
+        (if t=TEmpty then "" else ":")
+        (print_t "" "") t
+    | _ ->
+      if named then fprintf ppf "?";
+      fprintf ppf "(%s%s%a=%a)"
+        i
+        (if t=TEmpty then "" else ":")
+        (print_t "" "") t
+        (print_e "") e
+    )
+
+
   | EBin(e1,",",e2) ->
     fprintf ppf "%a %s %a"
       (print_e sp) e1
@@ -57,7 +75,7 @@ let rec print_e sp ppf = function
     fprintf ppf "(%a)"
       (print_ls "" ", " print_e) ls
   | EBin(e1,op,e2) ->
-    fprintf ppf "(%a %s %a)"
+    fprintf ppf "((*bin*)%a %s %a)"
       (print_e sp) e1
       op
       (print_e sp) e2
@@ -68,16 +86,24 @@ let rec print_e sp ppf = function
   | ECall(e1,es) ->
     let rec print_ls sp sep p ppf = function
       | [] -> ()
-      | [x] -> fprintf ppf "(%a)" (p sp) x
+      | [x] -> fprintf ppf "%a" (p sp) x
       | x::xs ->
-        fprintf ppf " (%a)%s%a"
+        fprintf ppf " %a%s%a"
           (p sp) x
           sep
           (print_ls sp sep p) xs
     in
+    let print_e2 sp ppf = function
+      | ELet (id, _, e) ->
+        fprintf ppf "~%s:%a"
+          id
+          (print_e "") e
+      | e ->
+        fprintf ppf "(%a)" (print_e sp) e
+    in
     fprintf ppf "%a %a"
       (print_e sp) e1
-      (print_ls sp " " (print_e)) es
+      (print_ls sp " " (print_e2)) es
   | EIndex(e1,es) ->
     let rec print_ls sp sep p ppf = function
       | [] -> ()
@@ -106,9 +132,9 @@ let rec print_e sp ppf = function
   | EFun (its, t, e) ->
     let rec print_ls sep p ppf = function
       | [] -> ()
-      | [x] -> fprintf ppf "(%a)" (p sp) x
+      | [x] -> fprintf ppf "%a" (p sp) x
       | x::xs ->
-        fprintf ppf "(%a)%s%a"
+        fprintf ppf "%a%s%a"
           (p sp) x
           sep
           (print_ls sep p) xs

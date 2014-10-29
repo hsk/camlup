@@ -31,6 +31,8 @@ type e =
   | EArray of e list
   | EFor of string * e * e * int * e
   | EWhile of e * e
+  | ETy of bool * string * t * e
+
 type s = 
   | SOpen of string
   | SLet of string * t * e

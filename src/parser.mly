@@ -3,19 +3,42 @@ open Ast
 
 let e2t = function
   | EVar(e) -> TEmpty
-  | ELet(_,t,EEmpty) -> t
+  | ELet(_,t,_) -> t
+  | ELetRec(_,t,_) -> t
   | EUnit -> TUnit
   | _ -> assert false
 
 let e2id = function
   | EVar(i) -> i
-  | ELet(i,t,EEmpty) -> i
+  | ELet(i,_,_) -> i
+  | ELetRec(i,_,_) -> i
   | _ -> assert false
 
 let e2e = function
-  | ELet(e,_,EEmpty) -> EVar(e)
-  | ELet(e,_,e2) -> assert false
+  | ELet(e,t,e2) -> ETy(false,e,t,e2)
+  | ELetRec(e,t,e2) -> ETy(true,e,t,e2)
   | e -> e
+
+let rec loop f = function 
+  | EVar(id),t,b -> f(id, t, b)
+  | ECall((e:e), ls), (t:t), b ->
+    let (lt:t) = List.fold_left (fun (t:t) (l:e)  ->
+      TFun(e2t l, t)
+    ) (t:t) ls in
+    let le = List.map (fun (l:e) ->
+      e2e l
+    ) ls in
+    loop f (e, lt, EFun(le, TEmpty, b))
+  | _ -> assert false
+
+let rec loop1 f = function 
+  | EVar(id),b -> f(id, TEmpty, b)
+  | ECall((e:e), ls), b ->
+    let le = List.map (fun (l:e) ->
+      e2e l
+    ) ls in
+    loop1 f (e, EFun(le, TEmpty, b))
+  | _ -> assert false
 
 %}
 
@@ -82,6 +105,7 @@ let e2e = function
 %left AT
 %left LPAREN RPAREN LBRACE RBRACE LBRACK RBRACK
 %left CALL
+%left prec_name
 
 %type <Ast.prog> prog
 %start prog
@@ -143,6 +167,22 @@ variants:
   | variant OR variants { $1::$3 }
 
 exp:
+  | INT { EInt($1) }
+  | VAR { EVar($1) }
+  | STR { EStr($1) }
+
+  | LPAREN RPAREN { EUnit }
+  | LPAREN exp RPAREN { $2 }
+
+  | LBRACE fns RBRACE { EPFun($2) }
+  | LBRACE exps RBRACE { EBlock($2) }
+  | LBRACE COLON records RBRACE { ERecord($3) }
+
+  | LBRACK RBRACK { EList[] }
+  | LBRACK exps RBRACK { EList $2 }
+  | LBRACK OR RBRACK { EArray[] }
+  | LBRACK OR exps RBRACK { EArray $3 }
+
   | SEMI exp { $2 }
   | SUB exp { EPre("-", $2) }
   | DEC exp { ECall(EVar("decr"), [$2]) }
@@ -152,22 +192,6 @@ exp:
   | MUL exp { EPre("!", $2) }
   | NOT exp { EPre("not", $2) }
   | NEW exp { EPre("new", $2) }
-  | FOR LPAREN VAR ARROWASSIGN exp TO exp RPAREN exp
-    {
-      EFor($3, $5, $7, 1, $9)
-    }
-  | FOR LPAREN VAR ARROWASSIGN exp DOWNTO exp RPAREN exp
-    {
-      EFor($3, $5, $7, -1, $9)
-    }
-  | FOR LPAREN VAR ARROWASSIGN exp UNTIL exp RPAREN exp
-    {
-      EFor($3, $5, EBin($7, "-", EInt 1), 1, $9)
-    }
-  | WHILE LPAREN exp RPAREN exp
-    {
-      EWhile($3, $5)
-    }
   | exp HAT exp { EBin($1, "^", $3) }
 
   | exp LOR exp { EBin($1, "||", $3) }
@@ -175,7 +199,7 @@ exp:
 
   | exp OR exp { EBin($1, "lor", $3) }
 
-  | exp XOR exp { EBin($1, "lxor", $3) }
+/*  | exp XOR exp { EBin($1, "lxor", $3) }*/
 
   | exp AMP exp { EBin($1, "land", $3) }
 
@@ -203,110 +227,65 @@ exp:
   | exp COMMA exp { EBin($1, ",", $3) }
   | exp ADDLIST exp { EBin($1, "::", $3) }
   | exp MEMBER exp { EBin($1, "#", $3) }
+  | exp FARROW exp { ECall($3, [$1]) }
+
   | exp COLONASSIGN exp
     {
       match $1 with
         | EPre("!", a) -> EBin(a, ":=", $3)
         | _ -> EBin($1, ":=", $3)
     }
+
   | exp MATCH LBRACE fns RBRACE { EMatch($1, $4) }
   | IF LPAREN exp RPAREN exp1 ELSE exp1 { EIf($3, $5, $7) }
   | IF LPAREN exp RPAREN exp1 %prec LIST { EIf($3, $5, EEmpty) }
-  | LBRACE fns RBRACE { EPFun($2) }
-  | LBRACE exps RBRACE { EBlock($2) }
-  | LBRACK RBRACK { EList[] }
-  | LBRACK exps RBRACK { EList $2 }
-  | LBRACK OR RBRACK { EArray[] }
-  | LBRACK OR exps RBRACK { EArray $3 }
-  | LPAREN RPAREN { EUnit }
-  | LPAREN exp RPAREN { $2 }
-  | LBRACE COLON records RBRACE { ERecord($3) }
+  | FOR LPAREN VAR ARROWASSIGN exp TO exp RPAREN exp
+    {
+      EFor($3, $5, $7, 1, $9)
+    }
+  | FOR LPAREN VAR ARROWASSIGN exp DOWNTO exp RPAREN exp
+    {
+      EFor($3, $5, $7, -1, $9)
+    }
+  | FOR LPAREN VAR ARROWASSIGN exp UNTIL exp RPAREN exp
+    {
+      EFor($3, $5, EBin($7, "-", EInt 1), 1, $9)
+    }
+  | WHILE LPAREN exp RPAREN exp { EWhile($3, $5) }
+
   | exp LBRACE fns RBRACE %prec CALL { ECall($1, [EPFun($3)]) }
   | exp LBRACE exps RBRACE %prec CALL { ECall($1, [EBlock($3)]) }
+
   | exp LBRACK RBRACK %prec CALL { EIndex($1, []) }
   | exp LBRACK exps RBRACK %prec CALL { EIndex($1, $3) }
+
   | exp LPAREN exps RPAREN %prec CALL { ECall($1, $3) }
   | exp LPAREN RPAREN %prec CALL { ECall($1, [EUnit]) }
 
-  | VAR ASSIGN exp { ELet($1, TEmpty, $3) }
-  | exp ASSIGN exp
-    {
-      let rec loop = function 
-        | EVar(id),b -> ELet(id, TEmpty, b)
-        | ECall((e:e), ls), b ->
-          let le = List.map begin fun (l:e) ->
-            e2e l
-          end ls in
-          loop(e, EFun(le, TEmpty, b))
-        | _ -> assert false
-      in
-      loop($1, $3)
-    }
-  | exp COLON typ ASSIGN exp
-    {
-      let rec loop = function 
-        | EVar(id),t,b -> ELet(id, t, b)
-        | ECall((e:e), ls), (t:t), b ->
-
-          let (lt:t) = List.fold_left begin fun (t:t) (l:e)  ->
-            TFun(e2t l, t)
-          end (t:t) ls in
-          let le = List.map begin fun (l:e) ->
-            e2e l
-          end ls in
-          loop(e, lt, EFun(le, TEmpty, b))
-        | _ -> assert false
-      in
-      loop($1,$3,$5)
-    }
-  | exp REFASSIGN exp
-    {
-      let rec loop = function 
-        | EVar(id),b -> ELet(id, TEmpty, b)
-        | ECall((e:e), ls), b ->
-          let le = List.map begin fun (l:e) ->
-            e2e l
-          end ls in
-          loop(e, EFun(le, TEmpty, b))
-        | _ -> assert false
-      in
-      loop($1,EPre("ref", $3))
-    }
-  | exp COLON typ { ELet(e2id $1, $3, EEmpty) }
-  | INT { EInt($1) }
-  | VAR { EVar($1) }
-  | STR { EStr($1) }
+  |     VAR ASSIGN exp { ELet($1, TEmpty, $3) }
   | DEF VAR ASSIGN exp { ELetRec($2, TEmpty, $4) }
-  | DEF exp ASSIGN exp
+
+  |     exp ASSIGN exp { loop1 (fun(a,b,c)->ELet(a,b,c)) ($1, $3) }
+  | DEF exp ASSIGN exp { loop1 (fun(a,b,c)->ELetRec(a,b,c)) ($2,$4) }
+  |     exp REFASSIGN exp { loop1 (fun(a,b,c)->ELet(a,b,c)) ($1,EPre("ref", $3)) }
+
+  |     exp COLON typ ASSIGN exp { loop(fun(a,b,c)->ELet(a,b,c)) ($1,$3,$5) }
+  | DEF exp COLON typ ASSIGN exp { loop(fun(a,b,c)->ELetRec(a,b,c)) ($2,$4,$6) }
+  |     exp COLON typ
     {
-      let rec loop = function 
-        | EVar(id),b -> ELetRec(id, TEmpty, b)
-        | ECall((e:e), ls), b ->
-          let le = List.map begin fun (l:e) ->
-            e2e l
-          end ls in
-          loop(e, EFun(le, TEmpty, b))
-        | _ -> assert false
-      in
-      loop($2,$4)
+      match $1 with
+      | ELetRec(id,_,e) -> ELetRec(id, $3, e)
+      | _ -> ELet(e2id $1, $3, EEmpty)
     }
-  | DEF exp COLON typ ASSIGN exp
+  | XOR exp
     {
-      let rec loop = function 
-        | EVar(id),t,b -> ELetRec(id, t, b)
-        | ECall((e:e), ls), (t:t), b ->
-          let (lt:t) = List.fold_left begin fun (t:t) (l:e)  ->
-            TFun(e2t l, t)
-          end (t:t) ls in
-          let le = List.map begin fun (l:e) ->
-            e2e l
-          end ls in
-          loop(e, lt, EFun(le, TEmpty, b))
-        | _ -> assert false
-      in
-      loop($2,$4,$6)
+      match $2 with
+      | ELetRec(id,t,e) -> ELetRec(id, t, e)
+      | ELet(id,t,e) -> ELetRec(id, t, e)
+      | _ -> ELetRec(e2id $2, TEmpty, EEmpty)
     }
-  | exp FARROW exp { ECall($3, [$1]) }
+
+
 
 fn:
   | OR exps ARROW exps { EFun($2, TEmpty, EBlock($4)) }
