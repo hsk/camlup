@@ -106,19 +106,29 @@
 
   のように記述しても接続しないように出来ます。
 
-## 5. open
+## 5. コメント
+
+  コメントはネストで来ます。
+
+	/* /*nested comment*/ */
+
+  また、１行コメントも書けます。
+
+	// 1 line comment
+
+## 6. open
 
 	open Printf
 	open List
 
-## 6. 変数
+## 7. 変数
 
 	variable : int = 2
 	a = 1
 	b = 2
 	_ = 3
 
-## 7. ブロック
+## 8. ブロック
 
 	block : unit = {
 
@@ -130,7 +140,15 @@
 	  printf("test 2\n")
 	}
 
-## 8. 関数
+## 9. プリミティブ float string
+
+	floats = {
+	  n = 1.234
+	  m = n +. 10.5
+	  printf("%f\n" m)
+	}
+
+## 10. 関数
 
 
 	functions() = {
@@ -231,7 +249,98 @@
 	  printf("%d+%d=%d\n" a b a + b)
 	}
 
-## 9. if else
+## 11. 参照
+
+  newmlでは変数を書き換えたい場合には参照を使います。
+
+	  a = & 1
+
+  `&`で参照を取得します。
+
+	  *a := 2
+
+  `=`演算子は変数あるいは関数の定義につかっているため、代入は`:=`を使って代入出来ます。 
+  現在一般的に使われているプログラミング言語では変わっている仕様ですが、
+  数学的に見れば、=なのに値が違う方がおかしいと考えればこれで良いのかなと思います。
+  どっちでも良いと言えばどっちでも良い所ですが、newmlは関数型言語なので、書き換え可能な変数は
+  若干使いにくくなっています。
+
+  参照の中身を見るには`*`を使います。
+
+	  printf("%d\n"; *a)
+  
+  C言語のポインタだと思えば分かりやすいでしょう。
+
+  １つ値を増やす場合は、前置`++`演算子を使います。
+
+	  ++a
+
+  後置演算子は近年の関数型言語では廃止する事が多くなっています。そのため使えません。 
+
+  参照は#=演算子を使って初期化する事も可能です。
+
+	  b #= 1
+
+  この式の意味は、以下の式と同じです。
+
+	  b = & 1
+
+  しかしながら、沢山記述が増えた場合を考えると一文字でも短く書きたくなるのと、出来れば、
+  書き換え不能なimmutableな変数と書き換え可能なmutableな変数の記述量を一緒にするためこのような記述が可能になる事を検討しています。
+
+      b #int=1
+      b #int=2
+
+  書き忘れましたが、値を減らすには `--`前置演算子を用いる事で値を減らす事が出来ます。
+
+	  --b
+
+
+    // reference.nml
+    open Printf
+
+	reference() = {
+
+	  a = & 1
+	  *a := 2
+	  printf("%d\n"; *a)
+	  ++a
+	  printf("%d\n"; *a)
+
+	  b #= 1
+	  ++b
+
+	  printf("++ %d\n"; *b)
+	  --b
+	  printf("-- %d\n"; *b)
+	} reference()
+
+## 12. ループ
+
+  newmlでも配列を使ったり、ループをする事が可能です。
+
+	array_and_loop = {
+	  a = [| 1; 2; 3]
+	  printf("%d%d%d\n" a[0] a[1] a[2])
+
+	  for (i <- 0 to 3) {
+	    printf("%d\n" i)
+	  }
+
+	  for (i <- 10 downto 1) {
+	    printf("%d\n" i)
+	  }
+
+	  i = & 0
+	  while (*i < 3) {
+	    ++i
+	    printf("while %d\n"; *i)
+	  }
+	}
+
+## 13. if else
+
+  newmlでif elseはif文ではなく式です。三項演算子は無いので、if else式を変わりに使ってください。
 
 	if_else() = {
 
@@ -243,7 +352,10 @@
 	  printf(if (a < 1) "a\n" else "b1\n")
 	} if_else()
 
-## 10. 再帰関数
+## 14. 再帰関数
+
+  再帰関数を使うにはdefを関数の手前に付けます。何故このような至要になっているかというと、
+  関数の上書きが出来るようにするためです。
 
 	recursive_function() = {
 
@@ -266,7 +378,9 @@
 	  printf("fib 10 %d\n" fib(10))
 	} recursive_function()
 
-## 11. tuple
+## 15. tuple
+
+  多値を使う事も出来ます。
 
 	tuple() = {
 
@@ -346,7 +460,9 @@
 	  printf("%d\n" f2(1,2 3,4))
 	} tuple()
 
-## 12. パターンマッチ
+## 16. パターンマッチ
+
+  パターンマッチを以下のように記述する事が可能です。
 
 	pattern_match() = {
 
@@ -371,109 +487,17 @@
 	  */
 	} pattern_match()
 
-## 13. パーシャルファンクション
+## 17. when
 
-	parcial_function() = {
+	whens = {
 
 	  def fib:(int)=>int={
-	    | 0 => 0
-	    | 1 => 1
+	    | n when n == 0 => 0
+	    | n when n == 1 => 1
 	    | n => fib(n-2) + fib(n-1)
 	  }
-	  
-	  printf("fib 10 = %d\n" fib(10))
-
-	  /* tuple parcual function */
-
-	  llor:(int,int)=>int={
-	    | 0,0 => a=1 b=2 a | b
-	    | a,b => a | b
-	  }
-
-	  printf("llor %d\n" llor(1,2))
-	} parcial_function()
-
-## 14. リスト
-
-	list() = {
-
-	  iter({|x => printf("%d\n")(x)})([1; 2; 3; 4])
-	  iter({|x => printf("%d\n"; x)})([1; 2; 3; 4])
-	  iter({|x => printf("%d\n" x)})([1; 2; 3; 4])
-	  iter({|x => printf("%d\n" x)}; [1; 2; 3; 4])
-	  /* iter({|x = printf("%d\n" x)} [1; 2; 3; 4])*/
-	  iter{|x => printf("%d\n" x)}([1; 2; 3; 4])
-	  iter{|x => printf("%d\n" x)}([1 2 3 4])
-
-	  [1 2 3 4] |> iter {
-	   | x => printf("%d\n" x)
-	  }
-
-	  [1 2 3 4] |> map {
-	    | x => x * 10
-	  } |> iter {
-	    | x => printf("%d\n" x)
-	  }
-
-	  /*
-	  def ps(xs)= {
-	    | [] => () ;
-	    | x::xs => printf("%d\n" x) ps(xs)
-	  }
-	  ps(xs)
-	  */
-	} list()
-
-## 15. レコード
-
-	a type {x:int y:int}
-
-	record() = {
-
-	  a :a= {:x=1 y=2}
-
-	  printf("%d\n" a.x)
-
-	  printf("%d\n"; {:x=1+2*3 y={a=1 a}}.x)
-
-	  aa = {|{:x}=>printf("%d\n" x)}
-
-	  aa({:x=1 y=2})
-
-	} record()
-
-## 16. 代数データ型
-
-	e type | EUnit | EInt(int) | EAdd(e, e)
-
-	variant() = {
-
-	  def eval:e=>int={
-	    | EUnit => 0
-	    | EInt(i) => i
-	    | EAdd(a, b) => eval(a) + eval(b)
-	  }
-
-	  printf("1+2=%d\n" eval(EAdd(EInt(1), EInt(2))))
-	} variant()
-
-## 17. リファレンス
-
-	reference() = {
-
-	  a = & 1
-	  *a := 2
-	  printf("%d\n"; *a)
-	  ++a
-	  printf("%d\n"; *a)
-
-	  b #= 1
-	  ++b
-
-	  printf("++ %d\n"; *b)
-	  --b
-	  printf("-- %d\n"; *b)
-	} reference()
+	  printf("fib 11 %d\n" fib(11))
+	}
 
 ## 18. クロージャ
 
@@ -512,7 +536,60 @@
 	  }
 	} closure()
 
-## 19. リスト2
+## 19. パーシャルファンクション
+
+	parcial_function() = {
+
+	  def fib:(int)=>int={
+	    | 0 => 0
+	    | 1 => 1
+	    | n => fib(n-2) + fib(n-1)
+	  }
+	  
+	  printf("fib 10 = %d\n" fib(10))
+
+	  /* tuple parcual function */
+
+	  llor:(int,int)=>int={
+	    | 0,0 => a=1 b=2 a | b
+	    | a,b => a | b
+	  }
+
+	  printf("llor %d\n" llor(1,2))
+	} parcial_function()
+
+## 20. リスト
+
+	list() = {
+
+	  iter({|x => printf("%d\n")(x)})([1; 2; 3; 4])
+	  iter({|x => printf("%d\n"; x)})([1; 2; 3; 4])
+	  iter({|x => printf("%d\n" x)})([1; 2; 3; 4])
+	  iter({|x => printf("%d\n" x)}; [1; 2; 3; 4])
+	  /* iter({|x = printf("%d\n" x)} [1; 2; 3; 4])*/
+	  iter{|x => printf("%d\n" x)}([1; 2; 3; 4])
+	  iter{|x => printf("%d\n" x)}([1 2 3 4])
+
+	  [1 2 3 4] |> iter {
+	   | x => printf("%d\n" x)
+	  }
+
+	  [1 2 3 4] |> map {
+	    | x => x * 10
+	  } |> iter {
+	    | x => printf("%d\n" x)
+	  }
+
+	  /*
+	  def ps(xs)= {
+	    | [] => () ;
+	    | x::xs => printf("%d\n" x) ps(xs)
+	  }
+	  ps(xs)
+	  */
+	} list()
+
+## 21. リスト2
 
 	list_type = {
 
@@ -548,19 +625,40 @@
 	    20)
 	}
 
-## 20. when
+## 22. レコード
 
-	whens = {
+	a type {x:int y:int}
 
-	  def fib:(int)=>int={
-	    | n when n == 0 => 0
-	    | n when n == 1 => 1
-	    | n => fib(n-2) + fib(n-1)
+	record() = {
+
+	  a :a= {:x=1 y=2}
+
+	  printf("%d\n" a.x)
+
+	  printf("%d\n"; {:x=1+2*3 y={a=1 a}}.x)
+
+	  aa = {|{:x}=>printf("%d\n" x)}
+
+	  aa({:x=1 y=2})
+
+	} record()
+
+## 23. 代数データ型
+
+	e type | EUnit | EInt(int) | EAdd(e, e)
+
+	variant() = {
+
+	  def eval:e=>int={
+	    | EUnit => 0
+	    | EInt(i) => i
+	    | EAdd(a, b) => eval(a) + eval(b)
 	  }
-	  printf("fib 11 %d\n" fib(11))
-	}
 
-## 21. モジュール
+	  printf("1+2=%d\n" eval(EAdd(EInt(1), EInt(2))))
+	} variant()
+
+## 24. モジュール
 
 	A module {
 	  a = 1234
@@ -572,7 +670,7 @@
 	  printf("A.a = %d A.inc(10) = %d\n" A.a A.inc(10))
 	}
 
-## 22. クラス
+## 25. クラス
 
 	ab class {
 	  // private member
@@ -618,28 +716,7 @@
 
 	}
 
-## 23. ループ
-
-	array_and_loop = {
-	  a = [| 1; 2; 3]
-	  printf("%d%d%d\n" a[0] a[1] a[2])
-
-	  for (i <- 0 to 3) {
-	    printf("%d\n" i)
-	  }
-
-	  for (i <- 10 downto 1) {
-	    printf("%d\n" i)
-	  }
-
-	  i = & 0
-	  while (*i < 3) {
-	    ++i
-	    printf("while %d\n"; *i)
-	  }
-	}
-
-## 24. 多相ヴァリアント
+## 26. 多相ヴァリアント
 
 	variants = {
 
@@ -651,7 +728,7 @@
 	  printf("%d\n" eval(`add(`mul(`int(10),`int(20)),`int(20))))
 	}
 
-## 25. キーワード引数
+## 27. キーワード引数
 
 	keyword_params = {
 	  f(#a:int=1 #b:int #c d) = a+b+c+d
@@ -660,21 +737,3 @@
 	  f(~a:int=1; ~b:int; ~c; d) = a+b+c+d
 	  printf("%d\n" f(a=1 b=2 c=5 3))
 	}
-
-## 26. float
-
-	floats = {
-	  n = 1.234
-	  m = n +. 10.5
-	  printf("%f\n" m)
-	}
-
-## 27. コメント
-
-  コメントはネストで来ます。
-
-	/* /*nested comment*/ */
-
-  また、１行コメントも書けます。
-
-	// 1 line comment
