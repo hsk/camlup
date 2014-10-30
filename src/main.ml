@@ -1,3 +1,4 @@
+let version = "0.0.2"
 let parse input =
   let inp = open_in input in
   let lexbuf = Lexing.from_channel inp in
@@ -71,15 +72,21 @@ let replace_ext name ext =
 let _ =
   let files: string list ref = ref [] in
   let run = ref false in
+  let ver = ref false in
   Arg.parse
     [
       "-run", Arg.Unit(fun()->run:=true), "run";
       "-tc", Arg.Unit(fun()->transc:=true), "transc";
       "-to", Arg.Unit(fun()->transo:=true), "trans ocaml";
+      "-v", Arg.Unit(fun()->ver:=true), "show version";
     ]
     (fun s -> files := !files @ [s])
     ("Newml Compiler (C) Hiroshi Sakurai\n" ^
      Printf.sprintf "usage: %s [-run] ...filenames" Sys.argv.(0));
+  if !ver then(
+    Printf.printf "NewMLComiler %s\n" version;
+    exit(0)
+  );
   List.iter (fun (name) ->
     let ext = get_ext name in
     match ext with
