@@ -100,11 +100,22 @@ printf("%d\n" f2(1,2 3,4))
     - [ ] 型
     - [ ] 宣言
     - [ ] より詳細に
-
 - [ ] その他
     - [ ] 全般的なテスト
+    - [ ] ドキュメント
+        - [ ] windowsについて
+        - [ ] dexpとrmlについて
+    - [ ] チュートリアル
+    - [ ] makeとmake install を分ける
 
 ## サンプル
+
+シンプルなサンプル
+
+- [examples/hello.nml](examples/hello.nml)
+- [examples/fib.nml](examples/fib.nml)
+
+詳細な動作
 
 [examples/test.nml](examples/test.nml)とその変換結果[examples/test.ml](examples/test.ml) を参考にしてください。
 
