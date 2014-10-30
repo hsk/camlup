@@ -142,7 +142,9 @@ printf("%d\n" f2(1,2 3,4))
 
 # ドキュメント
 
-[newml\(仮\)ドキュメント ドキュメント)](docs)
+- [チュートリアル](docs/tutorial)
+- [言語仕様](docs/spec)
+- [newml\(仮\)ドキュメント ドキュメント)](docs)
 
 # License
 
