@@ -6,11 +6,18 @@ let space = [' ' '\t']
 let digit = ['0'-'9']
 
 rule token = parse
-  | space* ['\n' '\r' ';'] [' ' '\t' '\n' '\r' ';']* { SEMI }
+  | '\r' '\n' { incr lineno; SEMI(!lineno) }
+  | ['\n' '\r'] { incr lineno; SEMI(!lineno) }
+  | ';' { SEMI(!lineno) }
   | space+ { token lexbuf }
   | "open" { open_ lexbuf }
-  | "/*" { comment lexbuf; token lexbuf }
-  | "//" [^ '\n' '\r']* ['\n' '\r'] { token lexbuf }
+  | "/*" {
+      let no = !lineno in
+      comment lexbuf;
+      if no <> !lineno then SEMI(!lineno)
+      else token lexbuf
+    }
+  | "//" [^ '\n' '\r']* ['\n' '\r'] { incr lineno; SEMI(!lineno) }
   | '(' { LPAREN }
   | ')' { RPAREN }
   | '{' { LBRACE }
@@ -43,7 +50,7 @@ rule token = parse
   | "type" { TYPE }
   | "module" { MODULE }
   | digit+ { INT(int_of_string (Lexing.lexeme lexbuf)) }
-  | '-'? digit+ ('.' digit*)? (['e' 'E'] ['+' '-']? digit+)?
+  | digit+ ('.' digit*)? (['e' 'E'] ['+' '-']? digit+)?
     { FLOAT(float_of_string (Lexing.lexeme lexbuf)) }  
 
   | '^' { HAT }
@@ -109,6 +116,9 @@ and open_ = parse
 
 and comment = parse
   | "*/" { () }
+  | '\r' '\n' { incr lineno; comment lexbuf }
+  | ['\n' '\r'] { incr lineno; comment lexbuf }
+
   | "/*" { comment lexbuf; comment lexbuf }
   | eof { Format.eprintf "warning: unterminated comment@." }
   | _ { comment lexbuf }

@@ -31,8 +31,10 @@ let rec print_t pp sp ppf = function
       (print_ls sp " * " (print_t "")) ts
       (print_t "" "") t
 
-let rec print_e sp ppf = function
+let rec print_e sp ppf e = 
+    fprintf ppf "\n# 111 \"lexer.nml\"\n";
 
+  match e with
   | EEmpty ->
 
     ()

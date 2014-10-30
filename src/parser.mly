@@ -1,6 +1,8 @@
 %{
 open Ast
 
+let lineno = ref 1
+
 let e2t = function
   | EVar(e) -> TEmpty
   | ELet(_,t,_) -> t
@@ -47,7 +49,7 @@ let rec loop1 f = function
 %token <string> VAR
 
 
-%token SEMI
+%token <int> SEMI
 %token LPAREN RPAREN LBRACE RBRACE LBRACK RBRACK
 %token EOF
 %token COLON COMMA COLONASSIGN REFASSIGN ARROWASSIGN
@@ -187,7 +189,11 @@ exp:
   | LBRACK OR exps RBRACK { EArray $3 }
 
   | SEMI exp { $2 }
-  | SUB exp { EPre("-", $2) }
+  | SUB exp {
+      match $2 with
+      | EFloat(f) -> EFloat(-. f)
+      | _ -> EPre("-", $2)
+    }
   | DEC exp { ECall(EVar("decr"), [$2]) }
   | INC exp { ECall(EVar("incr"), [$2]) }
 

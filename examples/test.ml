@@ -1,481 +1,3285 @@
 open Printf;;
 open List;;
-let (variable:int) = 2;;
-let a = 1;;
-let b = 2;;
-let _ = 3;;
+
+# 111 "lexer.nml"
+let (variable:int) = 
+# 111 "lexer.nml"
+2;;
+
+# 111 "lexer.nml"
+let a = 
+# 111 "lexer.nml"
+1;;
+
+# 111 "lexer.nml"
+let b = 
+# 111 "lexer.nml"
+2;;
+
+# 111 "lexer.nml"
+let _ = 
+# 111 "lexer.nml"
+3;;
+
+# 111 "lexer.nml"
 let (block:unit) = 
-printf ("test 1\n")
+# 111 "lexer.nml"
+
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf (
+# 111 "lexer.nml"
+"test 1\n")
 ;;
+
+# 111 "lexer.nml"
 let block = 
-printf ("test 2\n");
-printf ("test 2\n")
+# 111 "lexer.nml"
+
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf (
+# 111 "lexer.nml"
+"test 2\n");
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf (
+# 111 "lexer.nml"
+"test 2\n")
 ;;
-let functions = (fun () -> 
-  printf ("test\n")
+
+# 111 "lexer.nml"
+let functions = 
+# 111 "lexer.nml"
+(fun 
+# 111 "lexer.nml"
+() -> 
+# 111 "lexer.nml"
+
+  
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf (
+# 111 "lexer.nml"
+"test\n")
 );;
-functions (());;
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+functions (
+# 111 "lexer.nml"
+());;
+
+# 111 "lexer.nml"
 let curry_function = 
-let (f0:(unit)->(int)) = begin fun t1'  -> match t1' with
-  | (()) -> (
+# 111 "lexer.nml"
 
-    0
+
+# 111 "lexer.nml"
+let (f0:(unit)->(int)) = 
+# 111 "lexer.nml"
+begin fun t1'  -> match t1' with
+  | (
+# 111 "lexer.nml"
+()) -> (
+
+# 111 "lexer.nml"
+
+    
+# 111 "lexer.nml"
+0
   )
  end  in
-let (f0:(unit)->(int)) = (fun () -> 
-  0
+
+# 111 "lexer.nml"
+let (f0:(unit)->(int)) = 
+# 111 "lexer.nml"
+(fun 
+# 111 "lexer.nml"
+() -> 
+# 111 "lexer.nml"
+
+  
+# 111 "lexer.nml"
+0
 ) in
-let (f0:(unit)->(int)) = (fun () -> 0) in
-let f0 = (fun () -> 0) in
-printf ("%d\n") (f0 (()));
-printf  ("%d\n") (f0 (()));
-printf  ("%d\n") (f0 (()));
-let (f1:((int))->(int)) = begin fun t1'  -> match t1' with
-  | (a) -> (
 
-    a
+# 111 "lexer.nml"
+let (f0:(unit)->(int)) = 
+# 111 "lexer.nml"
+(fun 
+# 111 "lexer.nml"
+() -> 
+# 111 "lexer.nml"
+0) in
+
+# 111 "lexer.nml"
+let f0 = 
+# 111 "lexer.nml"
+(fun 
+# 111 "lexer.nml"
+() -> 
+# 111 "lexer.nml"
+0) in
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf (
+# 111 "lexer.nml"
+"%d\n") (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+f0 (
+# 111 "lexer.nml"
+()));
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"%d\n") (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+f0 (
+# 111 "lexer.nml"
+()));
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"%d\n") (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+f0 (
+# 111 "lexer.nml"
+()));
+
+# 111 "lexer.nml"
+let (f1:((int))->(int)) = 
+# 111 "lexer.nml"
+begin fun t1'  -> match t1' with
+  | (
+# 111 "lexer.nml"
+a) -> (
+
+# 111 "lexer.nml"
+
+    
+# 111 "lexer.nml"
+a
   )
  end  in
-let (f1:(int)->(int)) = (fun (a:int) -> 
-  a
+
+# 111 "lexer.nml"
+let (f1:(int)->(int)) = 
+# 111 "lexer.nml"
+(fun 
+# 111 "lexer.nml"
+(a:int) -> 
+# 111 "lexer.nml"
+
+  
+# 111 "lexer.nml"
+a
 ) in
-let (f1:(int)->(int)) = (fun (a:int) -> a) in
-let f1 = (fun (a:int) -> a) in
-printf ("%d\n") (f1 (1));
-printf  ("%d\n") (f1 (1));
-printf  ("%d\n") (f1 (1));
-let (f2:(int)->((int)->(int))) = begin fun t1' t2'  -> match t1',t2' with
-  | (a),(b) -> (
 
-    (a + b)
+# 111 "lexer.nml"
+let (f1:(int)->(int)) = 
+# 111 "lexer.nml"
+(fun 
+# 111 "lexer.nml"
+(a:int) -> 
+# 111 "lexer.nml"
+a) in
+
+# 111 "lexer.nml"
+let f1 = 
+# 111 "lexer.nml"
+(fun 
+# 111 "lexer.nml"
+(a:int) -> 
+# 111 "lexer.nml"
+a) in
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf (
+# 111 "lexer.nml"
+"%d\n") (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+f1 (
+# 111 "lexer.nml"
+1));
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"%d\n") (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+f1 (
+# 111 "lexer.nml"
+1));
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"%d\n") (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+f1 (
+# 111 "lexer.nml"
+1));
+
+# 111 "lexer.nml"
+let (f2:(int)->((int)->(int))) = 
+# 111 "lexer.nml"
+begin fun t1' t2'  -> match t1',t2' with
+  | (
+# 111 "lexer.nml"
+a),(
+# 111 "lexer.nml"
+b) -> (
+
+# 111 "lexer.nml"
+
+    
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+a + 
+# 111 "lexer.nml"
+b)
   )
  end  in
-let (f2:(int)->(((int))->(int))) = (fun (a:int) -> begin fun t1'  -> match t1' with
-    | (b) -> (
 
-      (a + b)
+# 111 "lexer.nml"
+let (f2:(int)->(((int))->(int))) = 
+# 111 "lexer.nml"
+(fun 
+# 111 "lexer.nml"
+(a:int) -> 
+# 111 "lexer.nml"
+begin fun t1'  -> match t1' with
+    | (
+# 111 "lexer.nml"
+b) -> (
+
+# 111 "lexer.nml"
+
+      
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+a + 
+# 111 "lexer.nml"
+b)
     )
    end ) in
-let (f2:(int)->((int)->(int))) = (fun (a:int) -> (fun (b:int) -> 
-    (a + b)
+
+# 111 "lexer.nml"
+let (f2:(int)->((int)->(int))) = 
+# 111 "lexer.nml"
+(fun 
+# 111 "lexer.nml"
+(a:int) -> 
+# 111 "lexer.nml"
+(fun 
+# 111 "lexer.nml"
+(b:int) -> 
+# 111 "lexer.nml"
+
+    
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+a + 
+# 111 "lexer.nml"
+b)
   )) in
-let (f2:(int)->((int)->(int))) = (fun (a:int) (b:int) -> (a + b)) in
-let f2 = (fun (a:int) (b:int) -> (a + b)) in
-printf ("%d\n") (f2 (1) (2));
-printf  ("%d\n") (f2  (1) (2));
-printf  ("%d\n") (f2  (1) (2));
-let (f3:(int)->((int)->((int)->(int)))) = begin fun t1' t2' t3'  -> match t1',t2',t3' with
-  | (a),(b),(c) -> (
 
-    ((a + b) + c)
+# 111 "lexer.nml"
+let (f2:(int)->((int)->(int))) = 
+# 111 "lexer.nml"
+(fun 
+# 111 "lexer.nml"
+(a:int) 
+# 111 "lexer.nml"
+(b:int) -> 
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+a + 
+# 111 "lexer.nml"
+b)) in
+
+# 111 "lexer.nml"
+let f2 = 
+# 111 "lexer.nml"
+(fun 
+# 111 "lexer.nml"
+(a:int) 
+# 111 "lexer.nml"
+(b:int) -> 
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+a + 
+# 111 "lexer.nml"
+b)) in
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf (
+# 111 "lexer.nml"
+"%d\n") (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+f2 (
+# 111 "lexer.nml"
+1) (
+# 111 "lexer.nml"
+2));
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"%d\n") (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+f2  (
+# 111 "lexer.nml"
+1) (
+# 111 "lexer.nml"
+2));
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"%d\n") (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+f2  (
+# 111 "lexer.nml"
+1) (
+# 111 "lexer.nml"
+2));
+
+# 111 "lexer.nml"
+let (f3:(int)->((int)->((int)->(int)))) = 
+# 111 "lexer.nml"
+begin fun t1' t2' t3'  -> match t1',t2',t3' with
+  | (
+# 111 "lexer.nml"
+a),(
+# 111 "lexer.nml"
+b),(
+# 111 "lexer.nml"
+c) -> (
+
+# 111 "lexer.nml"
+
+    
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+a + 
+# 111 "lexer.nml"
+b) + 
+# 111 "lexer.nml"
+c)
   )
  end  in
-let (f3:(int)->((int)->((int)->(int)))) = (fun (a:int) -> begin fun t1' t2'  -> match t1',t2' with
-    | (b),(c) -> (
 
-      ((a + b) + c)
+# 111 "lexer.nml"
+let (f3:(int)->((int)->((int)->(int)))) = 
+# 111 "lexer.nml"
+(fun 
+# 111 "lexer.nml"
+(a:int) -> 
+# 111 "lexer.nml"
+begin fun t1' t2'  -> match t1',t2' with
+    | (
+# 111 "lexer.nml"
+b),(
+# 111 "lexer.nml"
+c) -> (
+
+# 111 "lexer.nml"
+
+      
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+a + 
+# 111 "lexer.nml"
+b) + 
+# 111 "lexer.nml"
+c)
     )
    end ) in
-let (f3:(int)->((int)->((int)->(int)))) = (fun (a:int) -> (fun (b:int) -> begin fun t1'  -> match t1' with
-      | (c) -> (
 
-        ((a + b) + c)
+# 111 "lexer.nml"
+let (f3:(int)->((int)->((int)->(int)))) = 
+# 111 "lexer.nml"
+(fun 
+# 111 "lexer.nml"
+(a:int) -> 
+# 111 "lexer.nml"
+(fun 
+# 111 "lexer.nml"
+(b:int) -> 
+# 111 "lexer.nml"
+begin fun t1'  -> match t1' with
+      | (
+# 111 "lexer.nml"
+c) -> (
+
+# 111 "lexer.nml"
+
+        
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+a + 
+# 111 "lexer.nml"
+b) + 
+# 111 "lexer.nml"
+c)
       )
      end   )) in
-let (f3:(int)->((int)->((int)->(int)))) = (fun (a:int) -> (fun (b:int) -> (fun (c:int) -> 
-      ((a + b) + c)
-    )  )) in
-let (f3:(int)->((int)->((int)->(int)))) = (fun (a:int) (b:int) (c:int) -> ((a + b) + c)) in
-let f3 = (fun (a:int) (b:int) (c:int) -> ((a + b) + c)) in
-printf ("%d\n") (f3 (1) (2) (3));
-printf  ("%d\n") (f3  (1)  (2) (3));
-printf  ("%d\n") (f3  (1)  (2) (3));
-printf;
-"%d %d %d %d\n";
-f0 (());
-f1 (1);
-f2 (1) (2);
-f3 (1) (2) (3);
-printf  ("%d %d %d %d\n")  (f0 (()))  (f1 (1))  (f2  (1) (2)) (f3  (1)  (2) (3));
-printf  ("%d %d %d %d\n")  (f0 (()))  (f1 (1))  (f2  (1) (2)) (f3  (1)  (2) (3));
-printf ("%d\n") (f3 ((- 1)) ((- 2)) ((- 3)));
-printf  ("%d\n") (f3  ((- 1))  ((- 2)) ((- 3)));
-printf  ("%d\n") (f3  ((- 1))  ((- 2)) ((- 3)));
-printf ("%d+%d=%d\n") (a) (b) ((a + b));
-printf  ("%d+%d=%d\n")  (a)  (b) ((a + b));
-printf  ("%d+%d=%d\n")  (a)  (b) ((a + b))
-;;
-let if_else = (fun () -> 
-  (if (a < 10) then (printf ("b1\n"))  );
-  (if (a < 10) then (
-    printf ("b2\n")
-)  );
-  (if (a < 10) then (
-    printf ("b2\n");
-    printf ("b3\n")
-)  );
-  (if (a > 10) then (printf ("a\n")  )else(printf ("b3\n")));
-  printf ((if (a < 1) then ("a\n"  )else("b1\n")))
-);;
-if_else (());;
-let recursive_function = (fun () -> 
-  let rec (fib:((int))->(int)) = begin fun t1'  -> match t1' with
-    | (n) -> (
 
-      (if (n = 0) then (0      )else((if (n = 1) then (1        )else((fib ((n - 2)) + fib ((n - 1)))))))
+# 111 "lexer.nml"
+let (f3:(int)->((int)->((int)->(int)))) = 
+# 111 "lexer.nml"
+(fun 
+# 111 "lexer.nml"
+(a:int) -> 
+# 111 "lexer.nml"
+(fun 
+# 111 "lexer.nml"
+(b:int) -> 
+# 111 "lexer.nml"
+(fun 
+# 111 "lexer.nml"
+(c:int) -> 
+# 111 "lexer.nml"
+
+      
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+a + 
+# 111 "lexer.nml"
+b) + 
+# 111 "lexer.nml"
+c)
+    )  )) in
+
+# 111 "lexer.nml"
+let (f3:(int)->((int)->((int)->(int)))) = 
+# 111 "lexer.nml"
+(fun 
+# 111 "lexer.nml"
+(a:int) 
+# 111 "lexer.nml"
+(b:int) 
+# 111 "lexer.nml"
+(c:int) -> 
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+a + 
+# 111 "lexer.nml"
+b) + 
+# 111 "lexer.nml"
+c)) in
+
+# 111 "lexer.nml"
+let f3 = 
+# 111 "lexer.nml"
+(fun 
+# 111 "lexer.nml"
+(a:int) 
+# 111 "lexer.nml"
+(b:int) 
+# 111 "lexer.nml"
+(c:int) -> 
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+a + 
+# 111 "lexer.nml"
+b) + 
+# 111 "lexer.nml"
+c)) in
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf (
+# 111 "lexer.nml"
+"%d\n") (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+f3 (
+# 111 "lexer.nml"
+1) (
+# 111 "lexer.nml"
+2) (
+# 111 "lexer.nml"
+3));
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"%d\n") (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+f3  (
+# 111 "lexer.nml"
+1)  (
+# 111 "lexer.nml"
+2) (
+# 111 "lexer.nml"
+3));
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"%d\n") (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+f3  (
+# 111 "lexer.nml"
+1)  (
+# 111 "lexer.nml"
+2) (
+# 111 "lexer.nml"
+3));
+
+# 111 "lexer.nml"
+printf;
+
+# 111 "lexer.nml"
+"%d %d %d %d\n";
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+f0 (
+# 111 "lexer.nml"
+());
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+f1 (
+# 111 "lexer.nml"
+1);
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+f2 (
+# 111 "lexer.nml"
+1) (
+# 111 "lexer.nml"
+2);
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+f3 (
+# 111 "lexer.nml"
+1) (
+# 111 "lexer.nml"
+2) (
+# 111 "lexer.nml"
+3);
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"%d %d %d %d\n")  (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+f0 (
+# 111 "lexer.nml"
+()))  (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+f1 (
+# 111 "lexer.nml"
+1))  (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+f2  (
+# 111 "lexer.nml"
+1) (
+# 111 "lexer.nml"
+2)) (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+f3  (
+# 111 "lexer.nml"
+1)  (
+# 111 "lexer.nml"
+2) (
+# 111 "lexer.nml"
+3));
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"%d %d %d %d\n")  (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+f0 (
+# 111 "lexer.nml"
+()))  (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+f1 (
+# 111 "lexer.nml"
+1))  (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+f2  (
+# 111 "lexer.nml"
+1) (
+# 111 "lexer.nml"
+2)) (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+f3  (
+# 111 "lexer.nml"
+1)  (
+# 111 "lexer.nml"
+2) (
+# 111 "lexer.nml"
+3));
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf (
+# 111 "lexer.nml"
+"%d\n") (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+f3 (
+# 111 "lexer.nml"
+(- 
+# 111 "lexer.nml"
+1)) (
+# 111 "lexer.nml"
+(- 
+# 111 "lexer.nml"
+2)) (
+# 111 "lexer.nml"
+(- 
+# 111 "lexer.nml"
+3)));
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"%d\n") (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+f3  (
+# 111 "lexer.nml"
+(- 
+# 111 "lexer.nml"
+1))  (
+# 111 "lexer.nml"
+(- 
+# 111 "lexer.nml"
+2)) (
+# 111 "lexer.nml"
+(- 
+# 111 "lexer.nml"
+3)));
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"%d\n") (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+f3  (
+# 111 "lexer.nml"
+(- 
+# 111 "lexer.nml"
+1))  (
+# 111 "lexer.nml"
+(- 
+# 111 "lexer.nml"
+2)) (
+# 111 "lexer.nml"
+(- 
+# 111 "lexer.nml"
+3)));
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf (
+# 111 "lexer.nml"
+"%d+%d=%d\n") (
+# 111 "lexer.nml"
+a) (
+# 111 "lexer.nml"
+b) (
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+a + 
+# 111 "lexer.nml"
+b));
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"%d+%d=%d\n")  (
+# 111 "lexer.nml"
+a)  (
+# 111 "lexer.nml"
+b) (
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+a + 
+# 111 "lexer.nml"
+b));
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"%d+%d=%d\n")  (
+# 111 "lexer.nml"
+a)  (
+# 111 "lexer.nml"
+b) (
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+a + 
+# 111 "lexer.nml"
+b))
+;;
+
+# 111 "lexer.nml"
+let if_else = 
+# 111 "lexer.nml"
+(fun 
+# 111 "lexer.nml"
+() -> 
+# 111 "lexer.nml"
+
+  
+# 111 "lexer.nml"
+(if 
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+a < 
+# 111 "lexer.nml"
+10) then (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf (
+# 111 "lexer.nml"
+"b1\n"))  );
+  
+# 111 "lexer.nml"
+(if 
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+a < 
+# 111 "lexer.nml"
+10) then (
+# 111 "lexer.nml"
+
+    
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf (
+# 111 "lexer.nml"
+"b2\n")
+)  );
+  
+# 111 "lexer.nml"
+(if 
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+a < 
+# 111 "lexer.nml"
+10) then (
+# 111 "lexer.nml"
+
+    
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf (
+# 111 "lexer.nml"
+"b2\n");
+    
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf (
+# 111 "lexer.nml"
+"b3\n")
+)  );
+  
+# 111 "lexer.nml"
+(if 
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+a > 
+# 111 "lexer.nml"
+10) then (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf (
+# 111 "lexer.nml"
+"a\n")  )else(
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf (
+# 111 "lexer.nml"
+"b3\n")));
+  
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf (
+# 111 "lexer.nml"
+(if 
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+a < 
+# 111 "lexer.nml"
+1) then (
+# 111 "lexer.nml"
+"a\n"  )else(
+# 111 "lexer.nml"
+"b1\n")))
+);;
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+if_else (
+# 111 "lexer.nml"
+());;
+
+# 111 "lexer.nml"
+let recursive_function = 
+# 111 "lexer.nml"
+(fun 
+# 111 "lexer.nml"
+() -> 
+# 111 "lexer.nml"
+
+  
+# 111 "lexer.nml"
+let rec (fib:((int))->(int)) = 
+# 111 "lexer.nml"
+begin fun t1'  -> match t1' with
+    | (
+# 111 "lexer.nml"
+n) -> (
+
+# 111 "lexer.nml"
+
+      
+# 111 "lexer.nml"
+(if 
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+n = 
+# 111 "lexer.nml"
+0) then (
+# 111 "lexer.nml"
+0      )else(
+# 111 "lexer.nml"
+(if 
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+n = 
+# 111 "lexer.nml"
+1) then (
+# 111 "lexer.nml"
+1        )else(
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+fib (
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+n - 
+# 111 "lexer.nml"
+2)) + 
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+fib (
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+n - 
+# 111 "lexer.nml"
+1)))))))
     )
    end  in
-  printf  ("fib 10 %d\n") (fib (10))
-);;
-recursive_function (());;
-let tuple = (fun () -> 
-  let (addt:((int * int))->(int)) = begin fun t1'  -> match t1' with
-  | (a , b) -> (
+  
+# 111 "lexer.nml"
 
-    (a + b)
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"fib 10 %d\n") (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+fib (
+# 111 "lexer.nml"
+10))
+);;
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+recursive_function (
+# 111 "lexer.nml"
+());;
+
+# 111 "lexer.nml"
+let tuple = 
+# 111 "lexer.nml"
+(fun 
+# 111 "lexer.nml"
+() -> 
+# 111 "lexer.nml"
+
+  
+# 111 "lexer.nml"
+let (addt:((int * int))->(int)) = 
+# 111 "lexer.nml"
+begin fun t1'  -> match t1' with
+  | (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+a , 
+# 111 "lexer.nml"
+b) -> (
+
+# 111 "lexer.nml"
+
+    
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+a + 
+# 111 "lexer.nml"
+b)
   )
  end  in
-  let (f2:((int * int))->(((int * int))->(int))) = begin fun t1' t2'  -> match t1',t2' with
-  | (a , b),(c , d) -> (
+  
+# 111 "lexer.nml"
+let (f2:((int * int))->(((int * int))->(int))) = 
+# 111 "lexer.nml"
+begin fun t1' t2'  -> match t1',t2' with
+  | (
+# 111 "lexer.nml"
 
-    ((a * b) + (c * d))
+# 111 "lexer.nml"
+a , 
+# 111 "lexer.nml"
+b),(
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+c , 
+# 111 "lexer.nml"
+d) -> (
+
+# 111 "lexer.nml"
+
+    
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+a * 
+# 111 "lexer.nml"
+b) + 
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+c * 
+# 111 "lexer.nml"
+d))
   )
  end  in
-  printf ("%d\n") (f2 (1 , 2) (3 , 4));
-  printf  ("%d\n") (f2  (1 , 2) (3 , 4))
-);;
-tuple (());;
-let pattern_match = (fun () -> 
-  let rec (fib:((int))->(int)) = begin fun t1'  -> match t1' with
-    | (n) -> (
+  
+# 111 "lexer.nml"
 
-      (match n with | (0) -> (
-        0
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf (
+# 111 "lexer.nml"
+"%d\n") (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+f2 (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+1 , 
+# 111 "lexer.nml"
+2) (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+3 , 
+# 111 "lexer.nml"
+4));
+  
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"%d\n") (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+f2  (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+1 , 
+# 111 "lexer.nml"
+2) (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+3 , 
+# 111 "lexer.nml"
+4))
+);;
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+tuple (
+# 111 "lexer.nml"
+());;
+
+# 111 "lexer.nml"
+let pattern_match = 
+# 111 "lexer.nml"
+(fun 
+# 111 "lexer.nml"
+() -> 
+# 111 "lexer.nml"
+
+  
+# 111 "lexer.nml"
+let rec (fib:((int))->(int)) = 
+# 111 "lexer.nml"
+begin fun t1'  -> match t1' with
+    | (
+# 111 "lexer.nml"
+n) -> (
+
+# 111 "lexer.nml"
+
       
-)| (1) -> (
-        1
+# 111 "lexer.nml"
+(match 
+# 111 "lexer.nml"
+n with | (
+# 111 "lexer.nml"
+0) -> (
+# 111 "lexer.nml"
+
+        
+# 111 "lexer.nml"
+0
       
-)| (n) -> (
-        (fib ((n - 2)) + fib ((n - 1)))
+)| (
+# 111 "lexer.nml"
+1) -> (
+# 111 "lexer.nml"
+
+        
+# 111 "lexer.nml"
+1
+      
+)| (
+# 111 "lexer.nml"
+n) -> (
+# 111 "lexer.nml"
+
+        
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+fib (
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+n - 
+# 111 "lexer.nml"
+2)) + 
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+fib (
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+n - 
+# 111 "lexer.nml"
+1)))
       
 ))
     )
    end  in ()
 );;
-pattern_match (());;
-let parcial_function = (fun () -> 
-  let rec (fib:((int))->(int)) = begin fun t1'  -> match t1' with
-    | (0) -> (
 
-      0
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+pattern_match (
+# 111 "lexer.nml"
+());;
+
+# 111 "lexer.nml"
+let parcial_function = 
+# 111 "lexer.nml"
+(fun 
+# 111 "lexer.nml"
+() -> 
+# 111 "lexer.nml"
+
+  
+# 111 "lexer.nml"
+let rec (fib:((int))->(int)) = 
+# 111 "lexer.nml"
+begin fun t1'  -> match t1' with
+    | (
+# 111 "lexer.nml"
+0) -> (
+
+# 111 "lexer.nml"
+
+      
+# 111 "lexer.nml"
+0
     )
-    | (1) -> (
+    | (
+# 111 "lexer.nml"
+1) -> (
 
-      1
+# 111 "lexer.nml"
+
+      
+# 111 "lexer.nml"
+1
     )
-    | (n) -> (
+    | (
+# 111 "lexer.nml"
+n) -> (
 
-      (fib ((n - 2)) + fib ((n - 1)))
+# 111 "lexer.nml"
+
+      
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+fib (
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+n - 
+# 111 "lexer.nml"
+2)) + 
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+fib (
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+n - 
+# 111 "lexer.nml"
+1)))
     )
    end  in
-  printf  ("fib 10 = %d\n") (fib (10));
-  let (llor:((int * int))->(int)) = begin fun t1'  -> match t1' with
-  | (0 , 0) -> (
+  
+# 111 "lexer.nml"
 
-    let a = 1 in
-    let b = 2 in
-    (a lor b)
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"fib 10 = %d\n") (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+fib (
+# 111 "lexer.nml"
+10));
+  
+# 111 "lexer.nml"
+let (llor:((int * int))->(int)) = 
+# 111 "lexer.nml"
+begin fun t1'  -> match t1' with
+  | (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+0 , 
+# 111 "lexer.nml"
+0) -> (
+
+# 111 "lexer.nml"
+
+    
+# 111 "lexer.nml"
+let a = 
+# 111 "lexer.nml"
+1 in
+    
+# 111 "lexer.nml"
+let b = 
+# 111 "lexer.nml"
+2 in
+    
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+a lor 
+# 111 "lexer.nml"
+b)
   )
-  | (a , b) -> (
+  | (
+# 111 "lexer.nml"
 
-    (a lor b)
+# 111 "lexer.nml"
+a , 
+# 111 "lexer.nml"
+b) -> (
+
+# 111 "lexer.nml"
+
+    
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+a lor 
+# 111 "lexer.nml"
+b)
   )
  end  in
-  printf  ("llor %d\n") (llor (1 , 2))
+  
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"llor %d\n") (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+llor (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+1 , 
+# 111 "lexer.nml"
+2))
 );;
-parcial_function (());;
-let list = (fun () -> 
-  iter (begin fun t1'  -> match t1' with
-    | (x) -> (
 
-      printf ("%d\n") (x)
-    )
-   end ) ([1; 2; 3; 4]);
-  iter (begin fun t1'  -> match t1' with
-    | (x) -> (
+# 111 "lexer.nml"
 
-      printf  ("%d\n") (x)
-    )
-   end ) ([1; 2; 3; 4]);
-  iter (begin fun t1'  -> match t1' with
-    | (x) -> (
+# 111 "lexer.nml"
+parcial_function (
+# 111 "lexer.nml"
+());;
 
-      printf  ("%d\n") (x)
-    )
-   end ) ([1; 2; 3; 4]);
-  iter  (begin fun t1'  -> match t1' with
-    | (x) -> (
+# 111 "lexer.nml"
+let list = 
+# 111 "lexer.nml"
+(fun 
+# 111 "lexer.nml"
+() -> 
+# 111 "lexer.nml"
 
-      printf  ("%d\n") (x)
-    )
-   end ) ([1; 2; 3; 4]);
-  iter (begin fun t1'  -> match t1' with
-    | (x) -> (
+  
+# 111 "lexer.nml"
 
-      printf  ("%d\n") (x)
-    )
-   end ) ([1; 2; 3; 4]);
-  iter (begin fun t1'  -> match t1' with
-    | (x) -> (
+# 111 "lexer.nml"
 
-      printf  ("%d\n") (x)
-    )
-   end ) ([1; 2; 3; 4]);
-  iter (begin fun t1'  -> match t1' with
-    | (x) -> (
+# 111 "lexer.nml"
+iter (
+# 111 "lexer.nml"
+begin fun t1'  -> match t1' with
+    | (
+# 111 "lexer.nml"
+x) -> (
 
-      printf  ("%d\n") (x)
-    )
-   end ) ([1; 2; 3; 4]);
-  iter (begin fun t1'  -> match t1' with
-    | (x) -> (
+# 111 "lexer.nml"
 
-      printf  ("%d\n") (x)
-    )
-   end ) (map (begin fun t1'  -> match t1' with
-    | (x) -> (
+      
+# 111 "lexer.nml"
 
-      (x * 10)
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf (
+# 111 "lexer.nml"
+"%d\n") (
+# 111 "lexer.nml"
+x)
     )
-   end ) ([1; 2; 3; 4]))
+   end ) (
+# 111 "lexer.nml"
+[
+# 111 "lexer.nml"
+1; 
+# 111 "lexer.nml"
+2; 
+# 111 "lexer.nml"
+3; 
+# 111 "lexer.nml"
+4]);
+  
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+iter (
+# 111 "lexer.nml"
+begin fun t1'  -> match t1' with
+    | (
+# 111 "lexer.nml"
+x) -> (
+
+# 111 "lexer.nml"
+
+      
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"%d\n") (
+# 111 "lexer.nml"
+x)
+    )
+   end ) (
+# 111 "lexer.nml"
+[
+# 111 "lexer.nml"
+1; 
+# 111 "lexer.nml"
+2; 
+# 111 "lexer.nml"
+3; 
+# 111 "lexer.nml"
+4]);
+  
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+iter (
+# 111 "lexer.nml"
+begin fun t1'  -> match t1' with
+    | (
+# 111 "lexer.nml"
+x) -> (
+
+# 111 "lexer.nml"
+
+      
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"%d\n") (
+# 111 "lexer.nml"
+x)
+    )
+   end ) (
+# 111 "lexer.nml"
+[
+# 111 "lexer.nml"
+1; 
+# 111 "lexer.nml"
+2; 
+# 111 "lexer.nml"
+3; 
+# 111 "lexer.nml"
+4]);
+  
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+iter  (
+# 111 "lexer.nml"
+begin fun t1'  -> match t1' with
+    | (
+# 111 "lexer.nml"
+x) -> (
+
+# 111 "lexer.nml"
+
+      
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"%d\n") (
+# 111 "lexer.nml"
+x)
+    )
+   end ) (
+# 111 "lexer.nml"
+[
+# 111 "lexer.nml"
+1; 
+# 111 "lexer.nml"
+2; 
+# 111 "lexer.nml"
+3; 
+# 111 "lexer.nml"
+4]);
+  
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+iter (
+# 111 "lexer.nml"
+begin fun t1'  -> match t1' with
+    | (
+# 111 "lexer.nml"
+x) -> (
+
+# 111 "lexer.nml"
+
+      
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"%d\n") (
+# 111 "lexer.nml"
+x)
+    )
+   end ) (
+# 111 "lexer.nml"
+[
+# 111 "lexer.nml"
+1; 
+# 111 "lexer.nml"
+2; 
+# 111 "lexer.nml"
+3; 
+# 111 "lexer.nml"
+4]);
+  
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+iter (
+# 111 "lexer.nml"
+begin fun t1'  -> match t1' with
+    | (
+# 111 "lexer.nml"
+x) -> (
+
+# 111 "lexer.nml"
+
+      
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"%d\n") (
+# 111 "lexer.nml"
+x)
+    )
+   end ) (
+# 111 "lexer.nml"
+[
+# 111 "lexer.nml"
+1; 
+# 111 "lexer.nml"
+2; 
+# 111 "lexer.nml"
+3; 
+# 111 "lexer.nml"
+4]);
+  
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+iter (
+# 111 "lexer.nml"
+begin fun t1'  -> match t1' with
+    | (
+# 111 "lexer.nml"
+x) -> (
+
+# 111 "lexer.nml"
+
+      
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"%d\n") (
+# 111 "lexer.nml"
+x)
+    )
+   end ) (
+# 111 "lexer.nml"
+[
+# 111 "lexer.nml"
+1; 
+# 111 "lexer.nml"
+2; 
+# 111 "lexer.nml"
+3; 
+# 111 "lexer.nml"
+4]);
+  
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+iter (
+# 111 "lexer.nml"
+begin fun t1'  -> match t1' with
+    | (
+# 111 "lexer.nml"
+x) -> (
+
+# 111 "lexer.nml"
+
+      
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"%d\n") (
+# 111 "lexer.nml"
+x)
+    )
+   end ) (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+map (
+# 111 "lexer.nml"
+begin fun t1'  -> match t1' with
+    | (
+# 111 "lexer.nml"
+x) -> (
+
+# 111 "lexer.nml"
+
+      
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+x * 
+# 111 "lexer.nml"
+10)
+    )
+   end ) (
+# 111 "lexer.nml"
+[
+# 111 "lexer.nml"
+1; 
+# 111 "lexer.nml"
+2; 
+# 111 "lexer.nml"
+3; 
+# 111 "lexer.nml"
+4]))
 );;
-list (());;
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+list (
+# 111 "lexer.nml"
+());;
 type a = {x:int;y:int};;
-let record = (fun () -> 
-  let (a:a) = {x=1;y=2} in
-  printf  ("%d\n") ((a . x));
-  printf  ("%d\n") (({x=(1 + (2 * 3));y=
-let a = 1 in
-a
-} . x));
-  let aa = begin fun t1'  -> match t1' with
-  | ({x}) -> (
 
-    printf  ("%d\n") (x)
+# 111 "lexer.nml"
+let record = 
+# 111 "lexer.nml"
+(fun 
+# 111 "lexer.nml"
+() -> 
+# 111 "lexer.nml"
+
+  
+# 111 "lexer.nml"
+let (a:a) = 
+# 111 "lexer.nml"
+{x=
+# 111 "lexer.nml"
+1;y=
+# 111 "lexer.nml"
+2} in
+  
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"%d\n") (
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+a . 
+# 111 "lexer.nml"
+x));
+  
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"%d\n") (
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+{x=
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+1 + 
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+2 * 
+# 111 "lexer.nml"
+3));y=
+# 111 "lexer.nml"
+
+
+# 111 "lexer.nml"
+let a = 
+# 111 "lexer.nml"
+1 in
+
+# 111 "lexer.nml"
+a
+} . 
+# 111 "lexer.nml"
+x));
+  
+# 111 "lexer.nml"
+let aa = 
+# 111 "lexer.nml"
+begin fun t1'  -> match t1' with
+  | (
+# 111 "lexer.nml"
+{x}) -> (
+
+# 111 "lexer.nml"
+
+    
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"%d\n") (
+# 111 "lexer.nml"
+x)
   )
  end  in ()
 );;
-record (());;
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+record (
+# 111 "lexer.nml"
+());;
 type e = EUnit|EInt of (int)|EAdd of (e * e);;
-let variant = (fun () -> 
-  let rec (eval:(e)->(int)) = begin fun t1'  -> match t1' with
-    | (EUnit) -> (
 
-      0
+# 111 "lexer.nml"
+let variant = 
+# 111 "lexer.nml"
+(fun 
+# 111 "lexer.nml"
+() -> 
+# 111 "lexer.nml"
+
+  
+# 111 "lexer.nml"
+let rec (eval:(e)->(int)) = 
+# 111 "lexer.nml"
+begin fun t1'  -> match t1' with
+    | (
+# 111 "lexer.nml"
+EUnit) -> (
+
+# 111 "lexer.nml"
+
+      
+# 111 "lexer.nml"
+0
     )
-    | (EInt (i)) -> (
+    | (
+# 111 "lexer.nml"
 
-      i
+# 111 "lexer.nml"
+EInt (
+# 111 "lexer.nml"
+i)) -> (
+
+# 111 "lexer.nml"
+
+      
+# 111 "lexer.nml"
+i
     )
-    | (EAdd (a , b)) -> (
+    | (
+# 111 "lexer.nml"
 
-      (eval (a) + eval (b))
+# 111 "lexer.nml"
+EAdd (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+a , 
+# 111 "lexer.nml"
+b)) -> (
+
+# 111 "lexer.nml"
+
+      
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+eval (
+# 111 "lexer.nml"
+a) + 
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+eval (
+# 111 "lexer.nml"
+b))
     )
    end  in
-  printf  ("1+2=%d\n") (eval (EAdd (EInt (1) , EInt (2))))
+  
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"1+2=%d\n") (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+eval (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+EAdd (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+EInt (
+# 111 "lexer.nml"
+1) , 
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+EInt (
+# 111 "lexer.nml"
+2))))
 );;
-variant (());;
-let reference = (fun () -> 
-  let a = (ref 1) in
-  (a := 2);
-  printf  ("%d\n") ((! a));
-  incr (a);
-  printf  ("%d\n") ((! a));
-  let b = (ref 1) in
-  incr (b);
-  printf  ("++ %d\n") ((! b));
-  decr (b);
-  printf  ("-- %d\n") ((! b))
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+variant (
+# 111 "lexer.nml"
+());;
+
+# 111 "lexer.nml"
+let reference = 
+# 111 "lexer.nml"
+(fun 
+# 111 "lexer.nml"
+() -> 
+# 111 "lexer.nml"
+
+  
+# 111 "lexer.nml"
+let a = 
+# 111 "lexer.nml"
+(ref 
+# 111 "lexer.nml"
+1) in
+  
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+a := 
+# 111 "lexer.nml"
+2);
+  
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"%d\n") (
+# 111 "lexer.nml"
+(! 
+# 111 "lexer.nml"
+a));
+  
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+incr (
+# 111 "lexer.nml"
+a);
+  
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"%d\n") (
+# 111 "lexer.nml"
+(! 
+# 111 "lexer.nml"
+a));
+  
+# 111 "lexer.nml"
+let b = 
+# 111 "lexer.nml"
+(ref 
+# 111 "lexer.nml"
+1) in
+  
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+incr (
+# 111 "lexer.nml"
+b);
+  
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"++ %d\n") (
+# 111 "lexer.nml"
+(! 
+# 111 "lexer.nml"
+b));
+  
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+decr (
+# 111 "lexer.nml"
+b);
+  
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"-- %d\n") (
+# 111 "lexer.nml"
+(! 
+# 111 "lexer.nml"
+b))
 );;
-reference (());;
-let closure = (fun () -> 
-  let block = (fun sp -> (fun f -> 
-    printf ("{\n");
-    f ((sp ^ "  "));
-    printf  ("%s}\n") (sp)
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+reference (
+# 111 "lexer.nml"
+());;
+
+# 111 "lexer.nml"
+let closure = 
+# 111 "lexer.nml"
+(fun 
+# 111 "lexer.nml"
+() -> 
+# 111 "lexer.nml"
+
+  
+# 111 "lexer.nml"
+let block = 
+# 111 "lexer.nml"
+(fun 
+# 111 "lexer.nml"
+sp -> 
+# 111 "lexer.nml"
+(fun 
+# 111 "lexer.nml"
+f -> 
+# 111 "lexer.nml"
+
+    
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf (
+# 111 "lexer.nml"
+"{\n");
+    
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+f (
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+sp ^ 
+# 111 "lexer.nml"
+"  "));
+    
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"%s}\n") (
+# 111 "lexer.nml"
+sp)
   )) in
-  let p = printf in
-  p  ("def %s() ") ("a");
-  block ("") (begin fun t1'  -> match t1' with
-    | (sp) -> (
+  
+# 111 "lexer.nml"
+let p = 
+# 111 "lexer.nml"
+printf in
+  
+# 111 "lexer.nml"
 
-      p  ("%sdef %s() ")  (sp) ("b");
-      block (sp) (begin fun t1'  -> match t1' with
-        | (sp) -> (
+# 111 "lexer.nml"
+p  (
+# 111 "lexer.nml"
+"def %s() ") (
+# 111 "lexer.nml"
+"a");
+  
+# 111 "lexer.nml"
 
-          p  ("%sprogram2()\n") (sp);
-          p  ("%sprogram2()\n") (sp)
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+block (
+# 111 "lexer.nml"
+"") (
+# 111 "lexer.nml"
+begin fun t1'  -> match t1' with
+    | (
+# 111 "lexer.nml"
+sp) -> (
+
+# 111 "lexer.nml"
+
+      
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+p  (
+# 111 "lexer.nml"
+"%sdef %s() ")  (
+# 111 "lexer.nml"
+sp) (
+# 111 "lexer.nml"
+"b");
+      
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+block (
+# 111 "lexer.nml"
+sp) (
+# 111 "lexer.nml"
+begin fun t1'  -> match t1' with
+        | (
+# 111 "lexer.nml"
+sp) -> (
+
+# 111 "lexer.nml"
+
+          
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+p  (
+# 111 "lexer.nml"
+"%sprogram2()\n") (
+# 111 "lexer.nml"
+sp);
+          
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+p  (
+# 111 "lexer.nml"
+"%sprogram2()\n") (
+# 111 "lexer.nml"
+sp)
         )
        end );
-      p  ("%sprogram()\n") (sp)
+      
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+p  (
+# 111 "lexer.nml"
+"%sprogram()\n") (
+# 111 "lexer.nml"
+sp)
     )
    end );
-  let block = (fun sp -> (fun f -> 
-    printf ("{\n");
-    f ((sp ^ "  "));
-    printf  ("%s}\n") (sp)
+  
+# 111 "lexer.nml"
+let block = 
+# 111 "lexer.nml"
+(fun 
+# 111 "lexer.nml"
+sp -> 
+# 111 "lexer.nml"
+(fun 
+# 111 "lexer.nml"
+f -> 
+# 111 "lexer.nml"
+
+    
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf (
+# 111 "lexer.nml"
+"{\n");
+    
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+f (
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+sp ^ 
+# 111 "lexer.nml"
+"  "));
+    
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"%s}\n") (
+# 111 "lexer.nml"
+sp)
   )) in
-  let p = printf in
-  p  ("def %s() ") ("a");
-  block ("") (begin fun t1'  -> match t1' with
-    | (sp) -> (
+  
+# 111 "lexer.nml"
+let p = 
+# 111 "lexer.nml"
+printf in
+  
+# 111 "lexer.nml"
 
-      p  ("%sdef %s() ")  (sp) ("b");
-      block (sp) (begin fun t1'  -> match t1' with
-        | (sp) -> (
+# 111 "lexer.nml"
+p  (
+# 111 "lexer.nml"
+"def %s() ") (
+# 111 "lexer.nml"
+"a");
+  
+# 111 "lexer.nml"
 
-          p  ("%sprogram2()\n") (sp);
-          p  ("%sprogram2()\n") (sp)
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+block (
+# 111 "lexer.nml"
+"") (
+# 111 "lexer.nml"
+begin fun t1'  -> match t1' with
+    | (
+# 111 "lexer.nml"
+sp) -> (
+
+# 111 "lexer.nml"
+
+      
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+p  (
+# 111 "lexer.nml"
+"%sdef %s() ")  (
+# 111 "lexer.nml"
+sp) (
+# 111 "lexer.nml"
+"b");
+      
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+block (
+# 111 "lexer.nml"
+sp) (
+# 111 "lexer.nml"
+begin fun t1'  -> match t1' with
+        | (
+# 111 "lexer.nml"
+sp) -> (
+
+# 111 "lexer.nml"
+
+          
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+p  (
+# 111 "lexer.nml"
+"%sprogram2()\n") (
+# 111 "lexer.nml"
+sp);
+          
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+p  (
+# 111 "lexer.nml"
+"%sprogram2()\n") (
+# 111 "lexer.nml"
+sp)
         )
        end );
-      p  ("%sprogram()\n") (sp)
+      
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+p  (
+# 111 "lexer.nml"
+"%sprogram()\n") (
+# 111 "lexer.nml"
+sp)
     )
    end )
 );;
-closure (());;
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+closure (
+# 111 "lexer.nml"
+());;
+
+# 111 "lexer.nml"
 let list_type = 
-let ls = [1; 2; 3] in
-iter (begin fun t1'  -> match t1' with
-  | (l) -> (
+# 111 "lexer.nml"
 
-    printf  ("%d,") (l)
+
+# 111 "lexer.nml"
+let ls = 
+# 111 "lexer.nml"
+[
+# 111 "lexer.nml"
+1; 
+# 111 "lexer.nml"
+2; 
+# 111 "lexer.nml"
+3] in
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+iter (
+# 111 "lexer.nml"
+begin fun t1'  -> match t1' with
+  | (
+# 111 "lexer.nml"
+l) -> (
+
+# 111 "lexer.nml"
+
+    
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"%d,") (
+# 111 "lexer.nml"
+l)
   )
- end ) (ls);
-printf ("\n");
-let (ls:(int) list) = [1; 2; 3] in
-iter (begin fun t1'  -> match t1' with
-  | (l) -> (
+ end ) (
+# 111 "lexer.nml"
+ls);
 
-    printf  ("%d,") (l)
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf (
+# 111 "lexer.nml"
+"\n");
+
+# 111 "lexer.nml"
+let (ls:(int) list) = 
+# 111 "lexer.nml"
+[
+# 111 "lexer.nml"
+1; 
+# 111 "lexer.nml"
+2; 
+# 111 "lexer.nml"
+3] in
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+iter (
+# 111 "lexer.nml"
+begin fun t1'  -> match t1' with
+  | (
+# 111 "lexer.nml"
+l) -> (
+
+# 111 "lexer.nml"
+
+    
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"%d,") (
+# 111 "lexer.nml"
+l)
   )
- end ) (ls);
-printf ("\n");
-let (ls:((int * int)) list) = [1 , 2; 3 , 4] in
-iter (begin fun t1'  -> match t1' with
-  | (l , r) -> (
+ end ) (
+# 111 "lexer.nml"
+ls);
 
-    printf  ("(%d,%d);")  (l) (r)
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf (
+# 111 "lexer.nml"
+"\n");
+
+# 111 "lexer.nml"
+let (ls:((int * int)) list) = 
+# 111 "lexer.nml"
+[
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+1 , 
+# 111 "lexer.nml"
+2; 
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+3 , 
+# 111 "lexer.nml"
+4] in
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+iter (
+# 111 "lexer.nml"
+begin fun t1'  -> match t1' with
+  | (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+l , 
+# 111 "lexer.nml"
+r) -> (
+
+# 111 "lexer.nml"
+
+    
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"(%d,%d);")  (
+# 111 "lexer.nml"
+l) (
+# 111 "lexer.nml"
+r)
   )
- end ) (ls);
-printf ("\n");
-let rec f = begin fun t1'  -> match t1' with
-  | ([]) -> (
+ end ) (
+# 111 "lexer.nml"
+ls);
 
-    ()
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf (
+# 111 "lexer.nml"
+"\n");
+
+# 111 "lexer.nml"
+let rec f = 
+# 111 "lexer.nml"
+begin fun t1'  -> match t1' with
+  | (
+# 111 "lexer.nml"
+[]) -> (
+
+# 111 "lexer.nml"
+
+    
+# 111 "lexer.nml"
+()
   )
-  | ((x :: xs)) -> (
+  | (
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+x :: 
+# 111 "lexer.nml"
+xs)) -> (
 
-    printf  ("%d,\n") (x);
-    f (xs)
+# 111 "lexer.nml"
+
+    
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"%d,\n") (
+# 111 "lexer.nml"
+x);
+    
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+f (
+# 111 "lexer.nml"
+xs)
   )
  end  in
-f ([1; 2; 3]);
-printf  ("1+20=%d\n") ((1 + 20))
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+f (
+# 111 "lexer.nml"
+[
+# 111 "lexer.nml"
+1; 
+# 111 "lexer.nml"
+2; 
+# 111 "lexer.nml"
+3]);
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"1+20=%d\n") (
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+1 + 
+# 111 "lexer.nml"
+20))
 ;;
+
+# 111 "lexer.nml"
 let whens = 
-let rec (fib:((int))->(int)) = begin fun t1'  -> match t1' with
-  | (n) when (n = 0) -> (
+# 111 "lexer.nml"
 
-    0
+
+# 111 "lexer.nml"
+let rec (fib:((int))->(int)) = 
+# 111 "lexer.nml"
+begin fun t1'  -> match t1' with
+  | (
+# 111 "lexer.nml"
+n) when 
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+n = 
+# 111 "lexer.nml"
+0) -> (
+
+# 111 "lexer.nml"
+
+    
+# 111 "lexer.nml"
+0
   )
-  | (n) when (n = 1) -> (
+  | (
+# 111 "lexer.nml"
+n) when 
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+n = 
+# 111 "lexer.nml"
+1) -> (
 
-    1
+# 111 "lexer.nml"
+
+    
+# 111 "lexer.nml"
+1
   )
-  | (n) -> (
+  | (
+# 111 "lexer.nml"
+n) -> (
 
-    (fib ((n - 2)) + fib ((n - 1)))
+# 111 "lexer.nml"
+
+    
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+fib (
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+n - 
+# 111 "lexer.nml"
+2)) + 
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+fib (
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+n - 
+# 111 "lexer.nml"
+1)))
   )
  end  in
-printf  ("fib 11 %d\n") (fib (11))
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"fib 11 %d\n") (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+fib (
+# 111 "lexer.nml"
+11))
 ;;
 module A = struct
-let a = 1234;;
-let inc = (fun k -> (k + 1))
+
+# 111 "lexer.nml"
+let a = 
+# 111 "lexer.nml"
+1234;;
+
+# 111 "lexer.nml"
+let inc = 
+# 111 "lexer.nml"
+(fun 
+# 111 "lexer.nml"
+k -> 
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+k + 
+# 111 "lexer.nml"
+1))
 end;;
+
+# 111 "lexer.nml"
 let _ = 
-printf  ("A.a = %d A.inc(10) = %d\n")  ((A . a)) ((A . inc (10)))
+# 111 "lexer.nml"
+
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"A.a = %d A.inc(10) = %d\n")  (
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+A . 
+# 111 "lexer.nml"
+a)) (
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+A . 
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+inc (
+# 111 "lexer.nml"
+10)))
 ;;
 class ab = object
-val a = 123
-method c = a
+val a = 
+# 111 "lexer.nml"
+123
+method c = 
+# 111 "lexer.nml"
+a
 end;;
+
+# 111 "lexer.nml"
 let _ = 
-printf  ("ab.a = %d\n") (((new ab) # c))
+# 111 "lexer.nml"
+
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"ab.a = %d\n") (
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+(new 
+# 111 "lexer.nml"
+ab) # 
+# 111 "lexer.nml"
+c))
 ;;
 class abc (b:int)(c:int) = object
-method c = b
+method c = 
+# 111 "lexer.nml"
+b
 end;;
+
+# 111 "lexer.nml"
 let _ = 
-printf  ("ab.a = %d\n") (((new abc  (10) (20)) # c));
-printf  ("ab.a = %d\n") (((2 * 3) + 1))
+# 111 "lexer.nml"
+
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"ab.a = %d\n") (
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+(new 
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+abc  (
+# 111 "lexer.nml"
+10) (
+# 111 "lexer.nml"
+20)) # 
+# 111 "lexer.nml"
+c));
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"ab.a = %d\n") (
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+2 * 
+# 111 "lexer.nml"
+3) + 
+# 111 "lexer.nml"
+1))
 ;;
 class fib (x:int) = object
-method apply = (match x with | (0) -> (
-  0
+method apply = 
+# 111 "lexer.nml"
+(match 
+# 111 "lexer.nml"
+x with | (
+# 111 "lexer.nml"
+0) -> (
+# 111 "lexer.nml"
 
-)| (1) -> (
-  1
+  
+# 111 "lexer.nml"
+0
 
-)| (n) -> (
-  (((new fib ((x - 2))) # apply) + ((new fib ((x - 1))) # apply))
+)| (
+# 111 "lexer.nml"
+1) -> (
+# 111 "lexer.nml"
+
+  
+# 111 "lexer.nml"
+1
+
+)| (
+# 111 "lexer.nml"
+n) -> (
+# 111 "lexer.nml"
+
+  
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+(new 
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+fib (
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+x - 
+# 111 "lexer.nml"
+2))) # 
+# 111 "lexer.nml"
+apply) + 
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+(new 
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+fib (
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+x - 
+# 111 "lexer.nml"
+1))) # 
+# 111 "lexer.nml"
+apply))
 
 ))
 end;;
+
+# 111 "lexer.nml"
 let _ = 
-printf  ("A.a = %d\n") (((new fib (10)) # apply));
-printf  ("%d %d\n")  (((1 + 2) - 3)) ((- 1))
+# 111 "lexer.nml"
+
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"A.a = %d\n") (
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+(new 
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+fib (
+# 111 "lexer.nml"
+10)) # 
+# 111 "lexer.nml"
+apply));
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"%d %d\n")  (
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+1 + 
+# 111 "lexer.nml"
+2) - 
+# 111 "lexer.nml"
+3)) (
+# 111 "lexer.nml"
+(- 
+# 111 "lexer.nml"
+1))
 ;;
+
+# 111 "lexer.nml"
 let array_and_loop = 
-let a = [|1; 2; 3|] in
-printf  ("%d%d%d\n")  (a .(0))  (a .(1)) (a .(2));
-for i = 0 to 3 do 
-printf  ("%d\n") (i)
+# 111 "lexer.nml"
+
+
+# 111 "lexer.nml"
+let a = 
+# 111 "lexer.nml"
+[|
+# 111 "lexer.nml"
+1; 
+# 111 "lexer.nml"
+2; 
+# 111 "lexer.nml"
+3|] in
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"%d%d%d\n")  (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+a .(
+# 111 "lexer.nml"
+0))  (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+a .(
+# 111 "lexer.nml"
+1)) (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+a .(
+# 111 "lexer.nml"
+2));
+
+# 111 "lexer.nml"
+for i = 
+# 111 "lexer.nml"
+0 to 
+# 111 "lexer.nml"
+3 do 
+# 111 "lexer.nml"
+
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"%d\n") (
+# 111 "lexer.nml"
+i)
  done;
-for i = 10 downto 1 do 
-printf  ("%d\n") (i)
+
+# 111 "lexer.nml"
+for i = 
+# 111 "lexer.nml"
+10 downto 
+# 111 "lexer.nml"
+1 do 
+# 111 "lexer.nml"
+
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"%d\n") (
+# 111 "lexer.nml"
+i)
  done;
-let i = (ref 0) in
-while ((! i) < 3) do 
-incr (i);
-printf  ("while %d\n") ((! i))
+
+# 111 "lexer.nml"
+let i = 
+# 111 "lexer.nml"
+(ref 
+# 111 "lexer.nml"
+0) in
+
+# 111 "lexer.nml"
+while 
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+(! 
+# 111 "lexer.nml"
+i) < 
+# 111 "lexer.nml"
+3) do 
+# 111 "lexer.nml"
+
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+incr (
+# 111 "lexer.nml"
+i);
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"while %d\n") (
+# 111 "lexer.nml"
+(! 
+# 111 "lexer.nml"
+i))
  done
 ;;
+
+# 111 "lexer.nml"
 let variants = 
-let rec eval = begin fun t1'  -> match t1' with
-  | (`int (n)) -> (
+# 111 "lexer.nml"
 
-    n
+
+# 111 "lexer.nml"
+let rec eval = 
+# 111 "lexer.nml"
+begin fun t1'  -> match t1' with
+  | (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+`int (
+# 111 "lexer.nml"
+n)) -> (
+
+# 111 "lexer.nml"
+
+    
+# 111 "lexer.nml"
+n
   )
-  | (`add (a , b)) -> (
+  | (
+# 111 "lexer.nml"
 
-    (eval (a) + eval (b))
+# 111 "lexer.nml"
+`add (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+a , 
+# 111 "lexer.nml"
+b)) -> (
+
+# 111 "lexer.nml"
+
+    
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+eval (
+# 111 "lexer.nml"
+a) + 
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+eval (
+# 111 "lexer.nml"
+b))
   )
-  | (`mul (a , b)) -> (
+  | (
+# 111 "lexer.nml"
 
-    (eval (a) * eval (b))
+# 111 "lexer.nml"
+`mul (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+a , 
+# 111 "lexer.nml"
+b)) -> (
+
+# 111 "lexer.nml"
+
+    
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+eval (
+# 111 "lexer.nml"
+a) * 
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+eval (
+# 111 "lexer.nml"
+b))
   )
  end  in
-printf  ("%d\n") (eval (`add (`mul (`int (10) , `int (20)) , `int (20))))
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"%d\n") (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+eval (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+`add (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+`mul (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+`int (
+# 111 "lexer.nml"
+10) , 
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+`int (
+# 111 "lexer.nml"
+20)) , 
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+`int (
+# 111 "lexer.nml"
+20))))
 ;;
+
+# 111 "lexer.nml"
 let keyword_params = 
-let f = (fun ?(a:int=(1)) ~(b:int) ~(c) d -> (((a + b) + c) + d)) in
-printf  ("%d\n") (f  ~a:(1)  ~b:(2)  ~c:(5) (3));
-let f = (fun ?(a:int=(1)) ~(b:int) ~(c) d -> (((a + b) + c) + d)) in
-printf  ("%d\n") (f  ~a:(1)  ~b:(2)  ~c:(5) (3))
+# 111 "lexer.nml"
+
+
+# 111 "lexer.nml"
+let f = 
+# 111 "lexer.nml"
+(fun 
+# 111 "lexer.nml"
+?(a:int=(
+# 111 "lexer.nml"
+1)) 
+# 111 "lexer.nml"
+~(b:int) 
+# 111 "lexer.nml"
+~(c) 
+# 111 "lexer.nml"
+d -> 
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+a + 
+# 111 "lexer.nml"
+b) + 
+# 111 "lexer.nml"
+c) + 
+# 111 "lexer.nml"
+d)) in
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"%d\n") (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+f  ~a:(
+# 111 "lexer.nml"
+1)  ~b:(
+# 111 "lexer.nml"
+2)  ~c:(
+# 111 "lexer.nml"
+5) (
+# 111 "lexer.nml"
+3));
+
+# 111 "lexer.nml"
+let f = 
+# 111 "lexer.nml"
+(fun 
+# 111 "lexer.nml"
+?(a:int=(
+# 111 "lexer.nml"
+1)) 
+# 111 "lexer.nml"
+~(b:int) 
+# 111 "lexer.nml"
+~(c) 
+# 111 "lexer.nml"
+d -> 
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+a + 
+# 111 "lexer.nml"
+b) + 
+# 111 "lexer.nml"
+c) + 
+# 111 "lexer.nml"
+d)) in
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"%d\n") (
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+f  ~a:(
+# 111 "lexer.nml"
+1)  ~b:(
+# 111 "lexer.nml"
+2)  ~c:(
+# 111 "lexer.nml"
+5) (
+# 111 "lexer.nml"
+3))
 ;;
+
+# 111 "lexer.nml"
 let floats = 
-let n = 1.234000 in
-let m = (n +. 10.500000) in
-printf  ("%f\n") (m)
+# 111 "lexer.nml"
+
+
+# 111 "lexer.nml"
+let n = 
+# 111 "lexer.nml"
+1.234000 in
+
+# 111 "lexer.nml"
+let m = 
+# 111 "lexer.nml"
+(
+# 111 "lexer.nml"
+n +. 
+# 111 "lexer.nml"
+10.500000) in
+
+# 111 "lexer.nml"
+
+# 111 "lexer.nml"
+printf  (
+# 111 "lexer.nml"
+"%f\n") (
+# 111 "lexer.nml"
+m)
 
