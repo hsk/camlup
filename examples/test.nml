@@ -308,7 +308,6 @@ record() = {
   aa = {|{:x}=>printf("%d\n" x)}
 
   aa({:x=1 y=2})
-
 } record()
 
 e type | EUnit | EInt(int) | EAdd(e, e)
@@ -469,7 +468,6 @@ _ = {
 
   printf("A.a = %d\n" new fib(10)->apply)
   printf("%d %d\n" 1+2-3;-1)
-
 }
 
 array_and_loop = {
