@@ -1,20 +1,41 @@
-# newml
+# newml(仮)
 
 新しいML言語
 
 newmlはOCamlへのトランスレータ言語です。
 
-Scalaライクな文法をOCamlに導入します。
-Scalaには似ていますが、OCamlに合わせてカスタマイズしており、
-C言語風に記述出来てより使いやすくする事を目標としています。
+newmlを使う事でC言語ライクな文法でOCamlのプログラムを記述出来ます。
 
-## ビルド
+## ビルド&インストール
+
+### Mac OSX
+
+あらかじめ、OCamlをインストールしておきます。
+
+#### ビルド
 
 ocamlとUnix環境のmakeがある環境で以下のコマンドを実行します。
 
     $ make
 
 と入力します。
+
+#### インストール
+
+    $ make install
+
+と実行すると、/usr/local/binにnmlcがコピーされインストールが完了します。
+
+### Windows
+
+1. OCamlをインストールします。
+2. nmlc.exeを以下のURLからダウンロードして、パスを通します。
+
+https://github.com/hsk/newml/blob/master/nmlc.exe?raw=true
+
+※新しいWindowsの場合は認証が必要です。
+問題は無いはずですが、ウィルスチェックを行ってから実行してください。
+プログラムはソースを読み込みmlファイルを出力し、ocamlを実行するのみです。
 
 ## Hello World
 
