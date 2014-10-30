@@ -1,0 +1,9 @@
+Printf.printf("%d\n")(1)
+Printf.printf("%d %d %d %d\n")(1)(2)(3)(4)
+Printf.printf("%d %d %d %d\n" 1 2 3 4)
+Printf.printf("%d\n" 1+1)
+Printf.printf("%d\n" 1+2*3)
+Printf.printf("%d\n"; -1-2+10/5)
+Printf.printf("%d\n"
+	-1)
+
