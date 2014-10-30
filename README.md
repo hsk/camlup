@@ -140,3 +140,6 @@ printf("%d\n" f2(1,2 3,4))
 
 [examples/test.nml](examples/test.nml)とその変換結果[examples/test.ml](examples/test.ml) を参考にしてください。
 
+# License
+
+MIT Licence
