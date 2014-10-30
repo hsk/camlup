@@ -11,7 +11,7 @@ let render = (fun () ->
   (Glut . swapBuffers (()))
 );;
 let _ = 
-let _ = (Glut . init ((Sys . argv))) in
+(Glut . init ((Sys . argv)));
 (Glut . initDisplayMode ~double_buffer:(true) (()));
 let _ = (Glut . createWindow ~title:("OpenGL Demo")) in
 (GlMat . mode (`modelview));
