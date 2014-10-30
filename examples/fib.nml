@@ -1,0 +1,22 @@
+
+open Printf
+
+def fib = {
+  | 0 => 0
+  | 1 => 1
+  | n => fib(n-2) + fib(n-1)
+}
+
+printf("fib 10 %d\n" fib(10))
+
+fib class(x:int) {
+  def apply =
+    x match {
+      | 0 => 0
+      | 1 => 1
+      | n => new fib(x-2)->apply +
+             new fib(x-1)->apply
+    }
+}
+
+printf("object fib 10 = %d\n" new fib(10)->apply)
