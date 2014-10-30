@@ -34,6 +34,7 @@ rule token = parse
   | "this" { THIS }
   | "class" { CLASS }
   | "trait" { TRAIT }
+  | "<-" { ARROWASSIGN }
   | "<:" { IMPLEMENT }
   | ":>" { RIMPLEMENT }
   | "=>" { ARROW }
@@ -90,7 +91,6 @@ rule token = parse
   | ',' { COMMA }
   | ':' { COLON }
   | ":=" { COLONASSIGN }
-  | "<-" { ARROWASSIGN }
   | '#' { REF }
   | "#=" { REFASSIGN }
   | "def" { DEF }
@@ -99,20 +99,26 @@ rule token = parse
   | ['`' 'a'-'z' 'A'-'Z' '_']['a'-'z' 'A'-'Z' '_' '0'-'9']*
       { VAR(Lexing.lexeme lexbuf) }
   | eof { EOF }
-  | _ { failwith
-        (Printf.sprintf "unknown token %s near characters %d-%d"
+  | _
+    {
+      failwith (
+        Printf.sprintf "unknown token %s line %d"
           (Lexing.lexeme lexbuf)
-          (Lexing.lexeme_start lexbuf)
-          (Lexing.lexeme_end lexbuf)) }
+          !lineno
+      )
+    }
 
 and open_ = parse
   | space+ { open_ lexbuf }
   | ['a'-'z' 'A'-'Z' '_' '.']* { OPEN(Lexing.lexeme lexbuf) }
-  | _ { failwith
-        (Printf.sprintf "unknown token %s near characters %d-%d"
-          (Lexing.lexeme lexbuf)
-          (Lexing.lexeme_start lexbuf)
-          (Lexing.lexeme_end lexbuf)) }
+  | _
+    {
+      failwith (
+        Printf.sprintf "unknown token %s near line %d"
+        (Lexing.lexeme lexbuf)
+        !lineno
+      )
+    }
 
 and comment = parse
   | "*/" { () }

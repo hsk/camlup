@@ -81,6 +81,7 @@ let rec loop1 f = function
 %token INC DEC NOT
 %token WHEN
 %token FOR WHILE TO UNTIL DOWNTO
+
 %right LIST
 %nonassoc ELSE
 %right ASSIGN COLONASSIGN REFASSIGN ARROWASSIGN
@@ -245,6 +246,7 @@ exp:
   | exp COMMA exp { EBin(p(), $1, ",", $3) }
   | exp ADDLIST exp { EBin(p(), $1, "::", $3) }
   | exp MEMBER exp { EBin(p(), $1, "#", $3) }
+  | exp ARROWASSIGN exp { EBin(p(), $1, "<-", $3) }
   | exp FARROW exp { ECall(p(), $3, [$1]) }
 
   | exp COLONASSIGN exp
@@ -257,6 +259,7 @@ exp:
   | exp MATCH LBRACE fns RBRACE { EMatch(e_pos($1), $1, $4) }
   | IF LPAREN exp RPAREN exp1 ELSE exp1 { EIf(p(),$3, $5, $7) }
   | IF LPAREN exp RPAREN exp1 %prec LIST { EIf(p(),$3, $5, EEmpty(p())) }
+
   | FOR LPAREN VAR ARROWASSIGN exp TO exp RPAREN exp
     {
       EFor(p(),$3, $5, $7, 1, $9)
@@ -348,8 +351,4 @@ stmts:
 
 prog:
   | stmts { Prog $1 }
-  | error
-      { failwith
-        (Printf.sprintf "parse error near characters %d-%d"
-          (Parsing.symbol_start ())
-          (Parsing.symbol_end ())) }
+  | error { failwith (Printf.sprintf "parse error line %d" !lineno) }

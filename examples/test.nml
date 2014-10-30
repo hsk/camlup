@@ -474,12 +474,13 @@ array_and_loop = {
   a = [| 1; 2; 3]
   printf("%d%d%d\n" a[0] a[1] a[2])
 
-  for (i <- 0 to 3) {
-    printf("%d\n" i)
+  a[0] <- 100
+  for (i <- 0 to 2) {
+    printf("for %d\n" a[i])
   }
 
   for (i <- 10 downto 1) {
-    printf("%d\n" i)
+    printf("for %d\n" i)
   }
 
   i = & 0
