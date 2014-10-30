@@ -7,6 +7,17 @@ let rec print_ls sp sep p ppf = function
   | x::xs ->
     fprintf ppf "%a%s%a" (p sp) x sep (print_ls sp sep p) xs
 
+
+let last_line = ref 0
+
+let print_line ppf e =
+  let line = (e_pos e) in
+  if(!last_line <> line) then (
+    fprintf ppf "\n# %d \"?\"\n" line;
+    last_line := line
+  )
+
+
 let rec print_t pp sp ppf = function
   | TEmpty -> ()
   | Ty(s) ->
@@ -32,30 +43,30 @@ let rec print_t pp sp ppf = function
       (print_t "" "") t
 
 let rec print_e sp ppf e = 
-    fprintf ppf "\n# 111 \"lexer.nml\"\n";
+  print_line ppf e;
 
   match e with
-  | EEmpty ->
+  | EEmpty(_) ->
 
     ()
-  | EUnit ->
+  | EUnit(_) ->
 
     fprintf ppf "()"
-  | EInt i ->
+  | EInt(_,i) ->
     fprintf ppf "%d"
       i
-  | EFloat i ->
+  | EFloat(_,i) ->
     fprintf ppf "%f"
       i
-  | EStr i ->
+  | EStr(_,i) ->
     fprintf ppf "%s"
       i
-  | EVar i ->
+  | EVar(_,i) ->
     fprintf ppf "%s"
       i
-  | ETy(named,i,t,e) ->
+  | ETy(_,named,i,t,e) ->
     (match e with
-    | EEmpty ->
+    | EEmpty(_) ->
       if named then fprintf ppf "~";
       fprintf ppf "(%s%s%a)"
         i
@@ -71,24 +82,24 @@ let rec print_e sp ppf e =
     )
 
 
-  | EBin(e1,",",e2) ->
+  | EBin(_,e1,",",e2) ->
     fprintf ppf "%a %s %a"
       (print_e sp) e1
       ","
       (print_e sp) e2
-  | ETuple(ls) ->
+  | ETuple(_,ls) ->
     fprintf ppf "(%a)"
       (print_ls "" ", " print_e) ls
-  | EBin(e1,op,e2) ->
+  | EBin(_,e1,op,e2) ->
     fprintf ppf "(%a %s %a)"
       (print_e sp) e1
       op
       (print_e sp) e2
-  | EPre(op,e1) ->
+  | EPre(_,op,e1) ->
     fprintf ppf "(%s %a)" 
       op
       (print_e "") e1
-  | ECall(e1,es) ->
+  | ECall(_,e1,es) ->
     let rec print_ls sp sep p ppf = function
       | [] -> ()
       | [x] -> fprintf ppf "%a" (p sp) x
@@ -99,7 +110,7 @@ let rec print_e sp ppf e =
           (print_ls sp sep p) xs
     in
     let print_e2 sp ppf = function
-      | ELet (id, _, e) ->
+      | ELet (_,id, _, e) ->
         fprintf ppf "~%s:(%a)"
           id
           (print_e "") e
@@ -109,7 +120,7 @@ let rec print_e sp ppf e =
     fprintf ppf "%a %a"
       (print_e sp) e1
       (print_ls sp " " (print_e2)) es
-  | EIndex(e1,es) ->
+  | EIndex(_,e1,es) ->
     let rec print_ls sp sep p ppf = function
       | [] -> ()
       | [x] -> fprintf ppf ".(%a)" (p sp) x
@@ -123,18 +134,18 @@ let rec print_e sp ppf e =
       (print_e sp) e1
       (print_ls sp " " (print_e)) es
 
-  | EIf(e1, e2, EEmpty) ->
+  | EIf(_,e1, e2, EEmpty _) ->
     fprintf ppf "(if %a then (%a)%s)"
       (print_e "") e1
       (print_e_block sp "\n") e2
       sp
-  | EIf(e1, e2, e3) ->
+  | EIf(_,e1, e2, e3) ->
     fprintf ppf "(if %a then (%a%s)else(%a))"
       (print_e "" ) e1
       (print_e_block sp "\n") e2 
       sp
       (print_e_block sp "") e3 
-  | EFun (its, t, e) ->
+  | EFun (_,its, t, e) ->
     let rec print_ls sep p ppf = function
       | [] -> ()
       | [x] -> fprintf ppf "%a" (p sp) x
@@ -150,12 +161,12 @@ let rec print_e sp ppf e =
       (print_e_block sp "\n") e
       sp
   | EPtn _ -> assert false
-  | EPFun (ls) ->
+  | EPFun (_,ls) ->
     fprintf ppf "begin fun ";
 
     begin match List.hd ls with
-      | EFun(its, t, e)
-      | EPtn(its, t, _, e) ->
+      | EFun(_,its, t, e)
+      | EPtn(_,its, t, _, e) ->
         let _ = List.fold_left(fun n b ->
             fprintf ppf "t%d' " n;
             n + 1
@@ -171,7 +182,7 @@ let rec print_e sp ppf e =
     end;
     fprintf ppf " with\n";
     List.iter begin function
-      | EFun(its, t, e) ->
+      | EFun(_,its, t, e) ->
         let rec print_ls sp sep p ppf = function
           | [] -> ()
           | [x] -> fprintf ppf "(%a)" (p sp) x
@@ -188,7 +199,7 @@ let rec print_e sp ppf e =
           (print_t (if t=TEmpty then "" else ":") "") t
           (print_e_block sp "\n") e
           sp
-      | EPtn(its, t, w, e) ->
+      | EPtn(_,its, t, w, e) ->
         let rec print_ls sp sep p ppf = function
           | [] -> ()
           | [x] -> fprintf ppf "(%a)" (p sp) x
@@ -210,12 +221,12 @@ let rec print_e sp ppf e =
       | _ -> assert false
     end ls;
     fprintf ppf "%s end " sp
-  | EMatch (e,ls) ->
+  | EMatch (_,e,ls) ->
     fprintf ppf "(match %a with "
       (print_e "") e
       ;
     List.iter begin function
-      | EFun(its, t, e) ->
+      | EFun(_,its, t, e) ->
         let rec print_ls sep p ppf = function
           | [] -> ()
           | [x] -> fprintf ppf "(%a)" p x
@@ -230,7 +241,7 @@ let rec print_e sp ppf e =
           (print_t (if t=TEmpty then "" else ":") "") t
           (print_e_block sp "\n") e
           sp
-      | EPtn(its, t, w, e) ->
+      | EPtn(_,its, t, w, e) ->
         let rec print_ls sep p ppf = function
           | [] -> ()
           | [x] -> fprintf ppf "(%a)" p x
@@ -251,16 +262,16 @@ let rec print_e sp ppf e =
         assert false
     end ls;
     fprintf ppf ")"
-  | ERecord(ls) ->
+  | ERecord(_,ls) ->
     fprintf ppf "{%a}"
       (print_ls sp ";"
         (fun sp ppf -> function
-          | (s,EEmpty) -> fprintf ppf "%s" s
+          | (s,EEmpty(_)) -> fprintf ppf "%s" s
           | (s,e) -> fprintf ppf "%s=%a" s (print_e "") e
         )
       )
       ls
-  | EBlock ls ->
+  | EBlock(_, ls) ->
     let rec loop e = match e with
       | [] -> ()
       | [ELetRec _ as e] | [ELet _ as e] ->
@@ -276,32 +287,32 @@ let rec print_e sp ppf e =
     in
     fprintf ppf "\n";
     loop ls
-  | EList ls ->
+  | EList (_, ls) ->
     fprintf ppf "[%a]"
       (print_ls "" "; " (print_e)) ls
-  | EArray ls ->
+  | EArray (_, ls) ->
     fprintf ppf "[|%a|]"
       (print_ls "" "; " (print_e)) ls
-  | ELet (id, TEmpty, e) ->
+  | ELet (_,id, TEmpty, e) ->
     fprintf ppf "let %s = %a"
       id
       (print_e "") e
-  | ELet (id, t, e) ->
+  | ELet (_,id, t, e) ->
     fprintf ppf "let (%s:%a) = %a"
       id
       (print_t "" "") t
       (print_e "") e
-  | ELetRec (id, TEmpty, e) ->
+  | ELetRec (_,id, TEmpty, e) ->
     fprintf ppf "let rec %s = %a"
       id
       (print_e sp) e
-  | ELetRec (id, t, e) ->
+  | ELetRec (_,id, t, e) ->
     fprintf ppf "let rec (%s:%a) = %a"
       id
       (print_t "" "") t
       (print_e sp) e
 
-  | EFor(id, start, end1, step1, e) ->
+  | EFor(_,id, start, end1, step1, e) ->
     if(step1 < 0) then
       fprintf ppf "for %s = %a downto %a do %a done@?"
         id
@@ -314,7 +325,7 @@ let rec print_e sp ppf e =
         (print_e sp) start
         (print_e sp) end1
         (print_e sp) e
-  | EWhile(e1,e2) ->
+  | EWhile(_,e1,e2) ->
     fprintf ppf "while %a do %a done@?"
         (print_e sp) e1
         (print_e sp) e2
@@ -345,8 +356,8 @@ let rec print_s sp ppf (s:s):unit =
         id
         (print_t sp "") t
         (print_e sp) e
-    | SAnd(e1, SExp(ELetRec(id, TEmpty, e)))
-    | SAnd(e1, SExp(ELet(id, TEmpty, e))) ->
+    | SAnd(e1, SExp(ELetRec(_,id, TEmpty, e)))
+    | SAnd(e1, SExp(ELet(_,id, TEmpty, e))) ->
       fprintf ppf "%a\n"
         (print_s sp) e1;
       fprintf ppf "\n%sand %s = %a"
@@ -415,21 +426,23 @@ let rec print_s sp ppf (s:s):unit =
       fprintf ppf "\n%send" sp
 
   and print_member sp ppf s = 
-    let print_e2 sp ppf = function
-      | ELet (id, TEmpty, e) ->
+    let print_e2 sp ppf e = 
+      print_line ppf e;
+      match e with
+      | ELet (_,id, TEmpty, e) ->
         fprintf ppf "val %s = %a"
           id
           (print_e "") e
-      | ELet (id, t, e) ->
+      | ELet (_,id, t, e) ->
         fprintf ppf "val (%s:%a) = %a"
           id
           (print_t "" "") t
           (print_e "") e
-      | ELetRec (id, TEmpty, e) ->
+      | ELetRec (_,id, TEmpty, e) ->
         fprintf ppf "method %s = %a"
           id
           (print_e sp) e
-      | ELetRec (id, t, e) ->
+      | ELetRec (_,id, t, e) ->
         fprintf ppf "method (%s:%a) = %a"
           id
           (print_t "" "") t

@@ -24,8 +24,11 @@ functions() = {
 curry_function = {
 
   f0:()=>int= {|() => 0 }
+  printf("%d\n")(f0())
   f0():int= { 0 }
+  printf("%d\n")(f0())
   f0():int= 0 
+  printf("%d\n")(f0())
   f0()= 0 
 
   printf("%d\n")(f0())
@@ -33,8 +36,11 @@ curry_function = {
   printf("%d\n" f0())
 
   f1:(int)=>int={|a => a }
+  printf("%d\n" f1(1))
   f1(a:int):int={ a }
+  printf("%d\n" f1(1))
   f1(a:int):int= a
+  printf("%d\n" f1(1))
   f1(a:int)= a
 
   printf("%d\n")(f1(1))
@@ -42,9 +48,13 @@ curry_function = {
   printf("%d\n" f1(1))
 
   f2:int(int)(int)={| a b => a + b }
+  printf("%d\n" f2(1 2))
   f2(a:int):(int)=>int={| b => a + b }
+  printf("%d\n" f2(1 2))
   f2(a:int)(b:int):int={a + b}
+  printf("%d\n" f2(1 2))
   f2(a:int; b:int):int= a + b
+  printf("%d\n" f2(1 2))
   f2(a:int b:int)= a + b
 
   printf("%d\n")(f2(1)(2))
@@ -52,22 +62,32 @@ curry_function = {
   printf("%d\n" f2(1 2))
 
   f3:int(int int int)={| a b c => a + b + c }
+  printf("%d\n" f3(1 2 3))
   f3(a:int):int(int int)={| b c => a + b + c}
+  printf("%d\n" f3(1 2 3))
   f3(a:int)(b:int):int(int)={| c => a + b + c}
+  printf("%d\n" f3(1 2 3))
   f3(a:int)(b:int)(c:int):int={a + b + c}
+  printf("%d\n" f3(1 2 3))
   f3(a:int; b:int; c:int):int= a + b + c
+  printf("%d\n" f3(1 2 3))
   f3(a:int b:int c:int)= a + b + c
 
   printf("%d\n")(f3(1)(2)(3))
   printf("%d\n"; f3(1; 2; 3))
   printf("%d\n" f3(1 2 3))
 
-  printf
-    ("%d %d %d %d\n")
-    (f0())
-    (f1(1))
-    (f2(1)(2))
-    (f3(1)(2)(3))
+  printf(
+    "%d %d %d %d\n"
+  )(
+    f0()
+  )(
+    f1(1)
+  )(
+    f2(1)(2)
+  )(
+    f3(1)(2)(3)
+  )
 
   printf(
     "%d %d %d %d\n";
@@ -130,6 +150,8 @@ tuple() = {
   addt:(int,int)=>int = {| a,b =>
     a + b
   }
+  printf("%d\n" addt(1, 2))
+
   /*
   addt(int:a,int:b):int= a + b
   */
@@ -211,6 +233,8 @@ pattern_match() = {
     }
   }
 
+  printf("fib 10 %d\n" fib(10))
+
   /*
   def fib(n:int):int = {
     n match {
@@ -282,6 +306,9 @@ record() = {
   printf("%d\n"; {:x=1+2*3 y={a=1 a}}.x)
 
   aa = {|{:x}=>printf("%d\n" x)}
+
+  aa({:x=1 y=2})
+
 } record()
 
 e type | EUnit | EInt(int) | EAdd(e, e)

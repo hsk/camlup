@@ -3,43 +3,45 @@ open Ast
 
 let lineno = ref 1
 
+let p() = !lineno
+
 let e2t = function
-  | EVar(e) -> TEmpty
-  | ELet(_,t,_) -> t
-  | ELetRec(_,t,_) -> t
-  | EUnit -> TUnit
+  | EVar(_,e) -> TEmpty
+  | ELet(_,_,t,_) -> t
+  | ELetRec(_,_,t,_) -> t
+  | EUnit(_) -> TUnit
   | _ -> assert false
 
 let e2id = function
-  | EVar(i) -> i
-  | ELet(i,_,_) -> i
-  | ELetRec(i,_,_) -> i
+  | EVar(_,i) -> i
+  | ELet(_,i,_,_) -> i
+  | ELetRec(_,i,_,_) -> i
   | _ -> assert false
 
 let e2e = function
-  | ELet(e,t,e2) -> ETy(false,e,t,e2)
-  | ELetRec(e,t,e2) -> ETy(true,e,t,e2)
+  | ELet(p,e,t,e2) -> ETy(p,false,e,t,e2)
+  | ELetRec(p,e,t,e2) -> ETy(p,true,e,t,e2)
   | e -> e
 
 let rec loop f = function 
-  | EVar(id),t,b -> f(id, t, b)
-  | ECall((e:e), ls), (t:t), b ->
+  | EVar(p,id),t,b -> f(p,id, t, b)
+  | ECall(p,(e:e), ls), (t:t), b ->
     let (lt:t) = List.fold_left (fun (t:t) (l:e)  ->
       TFun(e2t l, t)
     ) (t:t) ls in
     let le = List.map (fun (l:e) ->
       e2e l
     ) ls in
-    loop f (e, lt, EFun(le, TEmpty, b))
+    loop f (e, lt, EFun(p,le, TEmpty, b))
   | _ -> assert false
 
 let rec loop1 f = function 
-  | EVar(id),b -> f(id, TEmpty, b)
-  | ECall((e:e), ls), b ->
+  | EVar(p,id),b -> f(p,id, TEmpty, b)
+  | ECall(p,(e:e), ls), b ->
     let le = List.map (fun (l:e) ->
       e2e l
     ) ls in
-    loop1 f (e, EFun(le, TEmpty, b))
+    loop1 f (e, EFun(p,le, TEmpty, b))
   | _ -> assert false
 
 %}
@@ -156,7 +158,7 @@ defrecs:
 
 record:
   | VAR ASSIGN exp1 { ($1, $3) }
-  | VAR { ($1, EEmpty)}
+  | VAR { ($1, EEmpty(p()))}
 
 records:
   | record { [$1] }
@@ -171,148 +173,148 @@ variants:
   | variant OR variants { $1::$3 }
 
 exp:
-  | INT { EInt($1) }
-  | FLOAT { EFloat($1) }
-  | VAR { EVar($1) }
-  | STR { EStr($1) }
+  | INT { EInt(p(),$1) }
+  | FLOAT { EFloat(p(),$1) }
+  | VAR { EVar(p(),$1) }
+  | STR { EStr(p(),$1) }
 
-  | LPAREN RPAREN { EUnit }
+  | LPAREN RPAREN { EUnit(p()) }
   | LPAREN exp RPAREN { $2 }
 
-  | LBRACE fns RBRACE { EPFun($2) }
-  | LBRACE exps RBRACE { EBlock($2) }
-  | LBRACE COLON records RBRACE { ERecord($3) }
+  | LBRACE fns RBRACE { EPFun(p(),$2) }
+  | LBRACE exps RBRACE { EBlock(p(),$2) }
+  | LBRACE COLON records RBRACE { ERecord(p(),$3) }
 
-  | LBRACK RBRACK { EList[] }
-  | LBRACK exps RBRACK { EList $2 }
-  | LBRACK OR RBRACK { EArray[] }
-  | LBRACK OR exps RBRACK { EArray $3 }
+  | LBRACK RBRACK { EList(p(),[]) }
+  | LBRACK exps RBRACK { EList(p(), $2) }
+  | LBRACK OR RBRACK { EArray(p(),[]) }
+  | LBRACK OR exps RBRACK { EArray(p(),$3) }
 
   | SEMI exp { $2 }
   | SUB exp {
       match $2 with
-      | EFloat(f) -> EFloat(-. f)
-      | _ -> EPre("-", $2)
+      | EFloat(p,f) -> EFloat(p,-. f)
+      | e -> EPre(e_pos(e), "-", $2)
     }
-  | DEC exp { ECall(EVar("decr"), [$2]) }
-  | INC exp { ECall(EVar("incr"), [$2]) }
+  | DEC exp { ECall(p(), EVar(p(),"decr"), [$2]) }
+  | INC exp { ECall(p(), EVar(p(),"incr"), [$2]) }
 
-  | AMP exp { EPre("ref", $2) }
-  | MUL exp { EPre("!", $2) }
-  | NOT exp { EPre("not", $2) }
-  | NEW exp { EPre("new", $2) }
-  | exp XOR exp { EBin($1, "^", $3) }
+  | AMP exp { EPre(p(), "ref", $2) }
+  | MUL exp { EPre(p(), "!", $2) }
+  | NOT exp { EPre(p(), "not", $2) }
+  | NEW exp { EPre(p(), "new", $2) }
+  | exp XOR exp { EBin(p(), $1, "^", $3) }
 
-  | exp LOR exp { EBin($1, "||", $3) }
-  | exp LAMP exp { EBin($1, "&&", $3) }
+  | exp LOR exp { EBin(p(), $1, "||", $3) }
+  | exp LAMP exp { EBin(p(), $1, "&&", $3) }
 
-  | exp OR exp { EBin($1, "lor", $3) }
+  | exp OR exp { EBin(p(), $1, "lor", $3) }
 
-  | exp HAT exp { EBin($1, "lxor", $3) }
+  | exp HAT exp { EBin(p(), $1, "lxor", $3) }
 
-  | exp AMP exp { EBin($1, "land", $3) }
+  | exp AMP exp { EBin(p(), $1, "land", $3) }
 
-  | exp EEQ exp { EBin($1, "==", $3) }
-  | exp ENE exp { EBin($1, "!=", $3) }
-  | exp EQ exp { EBin($1, "=", $3) }
-  | exp NE exp { EBin($1, "<>", $3) }
+  | exp EEQ exp { EBin(p(), $1, "==", $3) }
+  | exp ENE exp { EBin(p(), $1, "!=", $3) }
+  | exp EQ exp { EBin(p(), $1, "=", $3) }
+  | exp NE exp { EBin(p(), $1, "<>", $3) }
 
-  | exp LT exp { EBin($1, "<", $3) }
-  | exp GT exp { EBin($1, ">", $3) }
-  | exp LE exp { EBin($1, "<=", $3) }
-  | exp GE exp { EBin($1, ">=", $3) }
+  | exp LT exp { EBin(p(), $1, "<", $3) }
+  | exp GT exp { EBin(p(), $1, ">", $3) }
+  | exp LE exp { EBin(p(), $1, "<=", $3) }
+  | exp GE exp { EBin(p(), $1, ">=", $3) }
 
-  | exp ADD exp { EBin($1, "+", $3) }
-  | exp SUB exp { EBin($1, "-", $3) }
+  | exp ADD exp { EBin(p(), $1, "+", $3) }
+  | exp SUB exp { EBin(p(), $1, "-", $3) }
 
-  | exp MUL exp { EBin($1, "*", $3) }
-  | exp DIV exp { EBin($1, "/", $3) }
-  | exp MOD exp { EBin($1, "mod", $3) }
+  | exp MUL exp { EBin(p(), $1, "*", $3) }
+  | exp DIV exp { EBin(p(), $1, "/", $3) }
+  | exp MOD exp { EBin(p(), $1, "mod", $3) }
 
-  | exp FADD exp { EBin($1, "+.", $3) }
-  | exp FSUB exp { EBin($1, "-.", $3) }
+  | exp FADD exp { EBin(p(), $1, "+.", $3) }
+  | exp FSUB exp { EBin(p(), $1, "-.", $3) }
 
-  | exp FMUL exp { EBin($1, "*.", $3) }
-  | exp FDIV exp { EBin($1, "/.", $3) }
-  | exp FPOW exp { EBin($1, "**", $3) }
+  | exp FMUL exp { EBin(p(), $1, "*.", $3) }
+  | exp FDIV exp { EBin(p(), $1, "/.", $3) }
+  | exp FPOW exp { EBin(p(), $1, "**", $3) }
 
-  | exp SHL exp { EBin($1, "asl", $3) }
-  | exp SHR exp { EBin($1, "asr", $3) }
+  | exp SHL exp { EBin(p(), $1, "asl", $3) }
+  | exp SHR exp { EBin(p(), $1, "asr", $3) }
 
-  | exp DOT exp { EBin($1, ".", $3) }
-  | exp COMMA exp { EBin($1, ",", $3) }
-  | exp ADDLIST exp { EBin($1, "::", $3) }
-  | exp MEMBER exp { EBin($1, "#", $3) }
-  | exp FARROW exp { ECall($3, [$1]) }
+  | exp DOT exp { EBin(p(), $1, ".", $3) }
+  | exp COMMA exp { EBin(p(), $1, ",", $3) }
+  | exp ADDLIST exp { EBin(p(), $1, "::", $3) }
+  | exp MEMBER exp { EBin(p(), $1, "#", $3) }
+  | exp FARROW exp { ECall(p(), $3, [$1]) }
 
   | exp COLONASSIGN exp
     {
       match $1 with
-        | EPre("!", a) -> EBin(a, ":=", $3)
-        | _ -> EBin($1, ":=", $3)
+        | EPre(p, "!", a) -> EBin(p, a, ":=", $3)
+        | _ -> EBin(e_pos($1), $1, ":=", $3)
     }
 
-  | exp MATCH LBRACE fns RBRACE { EMatch($1, $4) }
-  | IF LPAREN exp RPAREN exp1 ELSE exp1 { EIf($3, $5, $7) }
-  | IF LPAREN exp RPAREN exp1 %prec LIST { EIf($3, $5, EEmpty) }
+  | exp MATCH LBRACE fns RBRACE { EMatch(e_pos($1), $1, $4) }
+  | IF LPAREN exp RPAREN exp1 ELSE exp1 { EIf(p(),$3, $5, $7) }
+  | IF LPAREN exp RPAREN exp1 %prec LIST { EIf(p(),$3, $5, EEmpty(p())) }
   | FOR LPAREN VAR ARROWASSIGN exp TO exp RPAREN exp
     {
-      EFor($3, $5, $7, 1, $9)
+      EFor(p(),$3, $5, $7, 1, $9)
     }
   | FOR LPAREN VAR ARROWASSIGN exp DOWNTO exp RPAREN exp
     {
-      EFor($3, $5, $7, -1, $9)
+      EFor(p(),$3, $5, $7, -1, $9)
     }
   | FOR LPAREN VAR ARROWASSIGN exp UNTIL exp RPAREN exp
     {
-      EFor($3, $5, EBin($7, "-", EInt 1), 1, $9)
+      EFor(p(),$3, $5, EBin(e_pos($7), $7, "-", EInt(e_pos($7), 1)), 1, $9)
     }
-  | WHILE LPAREN exp RPAREN exp { EWhile($3, $5) }
+  | WHILE LPAREN exp RPAREN exp { EWhile(p(), $3, $5) }
 
-  | exp LBRACE fns RBRACE %prec CALL { ECall($1, [EPFun($3)]) }
-  | exp LBRACE exps RBRACE %prec CALL { ECall($1, [EBlock($3)]) }
+  | exp LBRACE fns RBRACE %prec CALL { ECall(p(),$1, [EPFun(p(),$3)]) }
+  | exp LBRACE exps RBRACE %prec CALL { ECall(p(),$1, [EBlock(p(),$3)]) }
 
-  | exp LBRACK RBRACK %prec CALL { EIndex($1, []) }
-  | exp LBRACK exps RBRACK %prec CALL { EIndex($1, $3) }
+  | exp LBRACK RBRACK %prec CALL { EIndex(p(),$1, []) }
+  | exp LBRACK exps RBRACK %prec CALL { EIndex(p(),$1, $3) }
 
-  | exp LPAREN exps RPAREN %prec CALL { ECall($1, $3) }
-  | exp LPAREN RPAREN %prec CALL { ECall($1, [EUnit]) }
+  | exp LPAREN exps RPAREN %prec CALL { ECall(p(),$1, $3) }
+  | exp LPAREN RPAREN %prec CALL { ECall(p(),$1, [EUnit(e_pos($1))]) }
 
-  |     VAR ASSIGN exp { ELet($1, TEmpty, $3) }
-  | DEF VAR ASSIGN exp { ELetRec($2, TEmpty, $4) }
+  |     VAR ASSIGN exp { ELet(p(),$1, TEmpty, $3) }
+  | DEF VAR ASSIGN exp { ELetRec(p(),$2, TEmpty, $4) }
 
-  |     exp ASSIGN exp { loop1 (fun(a,b,c)->ELet(a,b,c)) ($1, $3) }
-  | DEF exp ASSIGN exp { loop1 (fun(a,b,c)->ELetRec(a,b,c)) ($2,$4) }
-  |     exp REFASSIGN exp { loop1 (fun(a,b,c)->ELet(a,b,c)) ($1,EPre("ref", $3)) }
+  |     exp ASSIGN exp { loop1 (fun(p,a,b,c)->ELet(p,a,b,c)) ($1, $3) }
+  | DEF exp ASSIGN exp { loop1 (fun(p,a,b,c)->ELetRec(p,a,b,c)) ($2, $4) }
+  |     exp REFASSIGN exp { loop1 (fun(p,a,b,c)->ELet(p,a,b,c)) ($1,EPre(p(),"ref", $3)) }
 
-  |     exp COLON typ ASSIGN exp { loop(fun(a,b,c)->ELet(a,b,c)) ($1,$3,$5) }
-  | DEF exp COLON typ ASSIGN exp { loop(fun(a,b,c)->ELetRec(a,b,c)) ($2,$4,$6) }
+  |     exp COLON typ ASSIGN exp { loop(fun(p,a,b,c)->ELet(p,a,b,c)) ($1,$3,$5) }
+  | DEF exp COLON typ ASSIGN exp { loop(fun(p,a,b,c)->ELetRec(p,a,b,c)) ($2,$4,$6) }
   |     exp COLON typ
     {
       match $1 with
-      | ELetRec(id,_,e) -> ELetRec(id, $3, e)
-      | _ -> ELet(e2id $1, $3, EEmpty)
+      | ELetRec(p,id,_,e) -> ELetRec(p, id, $3, e)
+      | _ -> ELet(e_pos($1), e2id $1, $3, EEmpty(e_pos($1)))
     }
   | XOR exp
     {
       match $2 with
-      | ELetRec(id,t,e) -> ELetRec(id, t, e)
-      | ELet(id,t,e) -> ELetRec(id, t, e)
-      | _ -> ELetRec(e2id $2, TEmpty, EEmpty)
+      | ELetRec(p,id,t,e) -> ELetRec(p,id, t, e)
+      | ELet(p,id,t,e) -> ELetRec(p,id, t, e)
+      | _ -> ELetRec(e_pos($2),e2id $2, TEmpty, EEmpty(e_pos($2)))
     }
   | REF exp
     {
       match $2 with
-      | ELetRec(id,t,e) -> ELetRec(id, t, e)
-      | ELet(id,t,e) -> ELetRec(id, t, e)
-      | _ -> ELetRec(e2id $2, TEmpty, EEmpty)
+      | ELetRec(p,id,t,e) -> ELetRec(p,id, t, e)
+      | ELet(p,id,t,e) -> ELetRec(p,id, t, e)
+      | _ -> ELetRec(e_pos($2), e2id $2, TEmpty, EEmpty(e_pos($2)))
     }
 
 
 
 fn:
-  | OR exps ARROW exps { EFun($2, TEmpty, EBlock($4)) }
-  | OR exps WHEN exp ARROW exps { EPtn($2, TEmpty, $4, EBlock($6)) }
+  | OR exps ARROW exps { EFun(e_pos(List.hd $2), $2, TEmpty, EBlock(e_pos(List.hd $4),$4)) }
+  | OR exps WHEN exp ARROW exps { EPtn(e_pos(List.hd $2), $2, TEmpty, $4, EBlock(e_pos(List.hd $6), $6)) }
 
 fn1:
   | fn { $1 }

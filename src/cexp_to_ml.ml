@@ -1,28 +1,30 @@
 open Cexp
 open Ast
 
+let p() = 0
+
 let rec exp = function
   | CInt s ->
-    EInt(s)
+    EInt(p(),s)
   | CStr s ->
-    EStr(s)
+    EStr(p(),s)
   | CId id ->
-    EVar(id)
+    EVar(p(),id)
 
   | CBin(CMsg(CId(f),"(",prm,")"),COp("="), e) ->
-    ELetRec(f, TEmpty, EFun(addEmpty (exps prm),TEmpty,exp e))
+    ELetRec(p(),f, TEmpty, EFun(p(),addEmpty (exps prm),TEmpty,exp e))
   | CBin(CId(i),COp("="),b) ->
-    ELet(i, TEmpty, exp b)
+    ELet(p(),i, TEmpty, exp b)
   | CBin(CId(i),COp("#="),b) ->
-    ELet(i, TEmpty, EPre("ref", exp b))
+    ELet(p(),i, TEmpty, EPre(p(),"ref", exp b))
   | CBin(CPre(COp("def"),CId(i)),COp("="),b) ->
-    ELetRec(i, TEmpty, exp b)
+    ELetRec(p(),i, TEmpty, exp b)
   | CBin(e,COp("match"),b) ->
     begin match exp b with
-    | EPFun ls ->
-      EMatch(exp e, ls)
-    | EBlock ls ->
-      EMatch(exp e, ls)
+    | EPFun(p,ls) ->
+      EMatch(p,exp e, ls)
+    | EBlock(p,ls) ->
+      EMatch(p,exp e, ls)
     | _ ->
       Cexp.print Format.std_formatter b;
       assert false
@@ -30,40 +32,40 @@ let rec exp = function
 
   | CBin(a,COp(","),b) ->
     begin match (exp b) with
-      | ETuple(bs) -> ETuple((exp a) :: bs)
-      | b -> ETuple([exp a; b])
+      | ETuple(p,bs) -> ETuple(p,(exp a) :: bs)
+      | b -> ETuple(p(),[exp a; b])
     end
   | CBin(a,COp(op),b) ->
-    EBin(exp a, op, exp b)
+    EBin(p(), exp a, op, exp b)
 
   | CPst(CPrn("(",es,")"),COp("?")) ->
-    EFun(exps es, TEmpty, EBlock[])
+    EFun(p(),exps es, TEmpty, EBlock(p(),[]))
   | CPst(e,COp("?")) ->
-    EFun([exp e], TEmpty, EBlock[])
+    EFun(p(),[exp e], TEmpty, EBlock(p(),[]))
 
   | CPre(COp("&"),b) ->
-    EPre("ref", exp b)
+    EPre(p(),"ref", exp b)
   | CPre(COp("*"),b) ->
-    EPre("!", exp b)
+    EPre(p(),"!", exp b)
   | CPre(COp(op),b) ->
-    EPre(op, exp b)
+    EPre(p(),op, exp b)
 
   | CMsg(i,"(",CList(ls), ")") ->
-    ECall(exp i, addEmpty(List.map exp ls))
+    ECall(p(), exp i, addEmpty(List.map exp ls))
   | CMsg(i,"[",ls, "]") ->
-    ECall(exp i, [EList(exps ls)])
+    ECall(p(), exp i, [EList(p(), exps ls)])
   | CMsg(i,"{",ls, "}") ->
-    ECall(exp i, [exp (CPrn("{",ls,"}"))])
+    ECall(p(), exp i, [exp (CPrn("{",ls,"}"))])
 
   | CSt(COp("if"),"(",CList[e],")",CBin(e2,COp("else"),e3)) ->
-    EIf(exp e, exp e2, exp e3)
+    EIf(p(), exp e, exp e2, exp e3)
   | CSt(COp("if"),"(",e,")",e2) ->
-    EIf(exp e, exp e2, EEmpty)
+    EIf(p(), exp e, exp e2, EEmpty(p()))
 
   | CPrn("(",cs,")") ->
-    EBlock(exps cs)
+    EBlock(p(), exps cs)
   | CPrn("[",cs,"]") ->
-    EList(exps cs)
+    EList(p(), exps cs)
   | CPrn("{",cs,"}") ->
     begin match cs with
       | CList((_::COp("?")::_) as xs) ->
@@ -76,39 +78,39 @@ let rec exp = function
           begin match (ls, e) with
             | ls,EFun _ ->
               e :: ls
-            | EFun(p,t, EBlock(xs))::ls, e ->
-              EFun(p,t, EBlock(xs@[e]))::ls
+            | EFun(p,p1,t, EBlock(bp,xs))::ls, e ->
+              EFun(p,p1,t, EBlock(bp,xs@[e]))::ls
             | ls,e ->
               e::ls
           end
         ) [] (exps2 xs) in
-        EPFun(List.rev ls)
+        EPFun(p(), List.rev ls)
       | CList(cs) ->
         let cs = List.map(function
           | CBin(CId(x),COp("="), c) -> (x, exp c)
-          | CId(x) -> (x, EEmpty)
+          | CId(x) -> (x, EEmpty(p()))
           | e ->
             Cexp.print Format.std_formatter e;
             assert false
         ) cs in
-        ERecord(cs)
+        ERecord(p(),cs)
       | _ ->
-        EBlock(exps cs)
+        EBlock(p(),exps cs)
     end
 
   | CList(ls) ->
-    EList(List.map exp ls)
+    EList(p(), List.map exp ls)
 
   | CUnit ->
-    EEmpty
+    EEmpty(p())
 
   | e ->
     Cexp.print Format.str_formatter e;
-    EVar(Format.flush_str_formatter())
+    EVar(p(),Format.flush_str_formatter())
 
 and addEmpty e =
   match e with
-  | [] -> [EEmpty]
+  | [] -> [EEmpty(p())]
   | prm -> prm
 
 and exps = function
