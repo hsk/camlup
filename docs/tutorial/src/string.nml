@@ -1,0 +1,8 @@
+// string.nml
+open Printf
+strings = {
+  s = "abc"
+  printf("%s\n" s)
+  printf("%s\n" "abc" ~ "def")
+}
+
