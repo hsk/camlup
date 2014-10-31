@@ -1,0 +1,12 @@
+// variant.nml
+open Printf
+
+variants = {
+
+  def eval = {
+    | `int(n) => n
+    | `add(a,b) => eval(a) + eval(b)
+    | `mul(a,b) => eval(a) * eval(b)
+  }
+  printf("%d\n" eval(`add(`mul(`int(10),`int(20)),`int(20))))
+}

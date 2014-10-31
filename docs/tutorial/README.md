@@ -1170,8 +1170,7 @@ https://github.com/hsk/newml/blob/master/nmlc.exe?raw=true
 
     }
 
-  TODO:オブジェクトだよ。ドラえもん。うーと、なんだっけ？
-  ムータぶるな引数は
+  mutableな引数は
 
     a class(x&int) {
       z & x
@@ -1179,17 +1178,15 @@ https://github.com/hsk/newml/blob/master/nmlc.exe?raw=true
       - y = x
     }
 
-  とかく事でzはmutableです。あと、型変数
+  とかく事で`z`はmutableです。あと、型変数
 
     a class['a](x:'a) {
       + x = x
     }
 
-  等と書くと、'aの型は多相になります。
+  等と書くと、`'a`の型は多相になります。
 
   以下のコードはsrcディレクトリから参照、ダウンロード出来ます。
-
-
 
     // objects.nml
     ab class {
