@@ -81,10 +81,12 @@ let rec loop1 f = function
 %token INC DEC NOT
 %token WHEN
 %token FOR WHILE TO UNTIL DOWNTO
+%token AS
 
 %right LIST
 %nonassoc ELSE
 %right ASSIGN COLONASSIGN REFASSIGN ARROWASSIGN
+%left AS
 %left COMMA
 %right CAST
 %right ADDLIST
@@ -241,6 +243,7 @@ exp:
 
   | exp SHL exp { EBin(p(), $1, "asl", $3) }
   | exp SHR exp { EBin(p(), $1, "asr", $3) }
+  | exp AS exp { EBin(p(), $1, "as", $3) }
 
   | exp DOT exp { EBin(p(), $1, ".", $3) }
   | exp COMMA exp { EBin(p(), $1, ",", $3) }

@@ -27,10 +27,9 @@
     - [ ] 22 モジュール
     - [ ] 23 クラス
     - [ ] 24 多相ヴァリアント
-    - [x] 25 キーワード引数
+    - [x] 25 ラベル引数
   - [ ] 問題を洗い出す
     - [ ] コメントは分ける
-
   - [ ] 修正する
   - [ ] 仕様変更に対応する
 
@@ -80,7 +79,7 @@
 
 ## 4. 算術式とカリー化、改行、セミコロン
 
-  `arith.ml`と言うファイルを作成し以下の内容を記述して保存します。
+  `arith.nml`と言うファイルを作成し以下の内容を記述して保存します。
 
     Printf.printf("%d\n")(1)
     Printf.printf("%d %d %d %d\n")(1)(2)(3)(4)
@@ -89,11 +88,11 @@
     Printf.printf("%d\n" 1+2*3)
     Printf.printf("%d\n"; -1-2+10/5)
     Printf.printf("%d\n"
-    -1)
+                  -1)
 
   実行すると
 
-    $ nmlc -run arith.ml
+    $ nmlc -run arith.nml
     1
     1 2 3 4
     1 2 3 4
@@ -329,7 +328,6 @@
   また、elseは省略可能です。 elseが省略されたif式はunitを返します。
 
     if (a > 10) { printf("a\n") }
-
 
   この章のサンプルはif_else.nmlをご覧下さい。
 
@@ -701,26 +699,69 @@
   パターンマッチはswitch文を強力にした物です。
   パターンマッチを使うとフィボナッチ関数を以下のように記述出来ます。
 
-    def fib(n) = {
-      n match {
-        | 0 => 0
-        | 1 => 1
-        | n => fib(n-2) + fib(n-1)
+    match_fib = {
+      def fib(n) = {
+        n match {
+          | 0 => 0
+          | 1 => 1
+          | n => fib(n-2) + fib(n-1)
+        }
       }
+      printf("fib 10=%d\n" fib(10))
     }
-    printf("fib 10=%d" fib(10))
 
-  newmlのパターンマッチは=>移行の式の連続を実行しますが、次のパターンの処理は実行しません。
+  newmlのパターンマッチは `=>` 移行の式の連続を実行しますが、次のパターンの処理は実行しません。
 
-    whens = {
+    match_block = {
+
+      x = 1 match {
+        | 0 => 0
+        | n =>
+          a = n * n
+          b = n + n
+          a + b
+      }
+
+      printf("x=%d\n" x)
+    }
+
+  whenを使うとパターンマッチ以外の条件を付ける事が出来ます。
+
+    match_whens = {
 
       def fib:(int)=>int={
         | n when n == 0 => 0
         | n when n == 1 => 1
         | n => fib(n-2) + fib(n-1)
       }
-      printf("fib 11 %d\n" fib(11))
+      printf("fib 10 %d\n" fib(10))
     }
+
+  タプルを使う事も出来ます。
+
+    match_tuple = {
+
+      x = (1,2) match {
+        | (a,b) when a == 1 => a+b
+        | (a,b) => a * b
+      }
+
+      printf("x=%d\n" x)
+    }
+
+  `as`を使ってパターンの一部に名前を付ける事が出来ます。
+
+    match_as = {
+      x = ("add", 1, 2) match {
+        | ("add" as id, a, b) =>
+          printf("%s" id)
+          a + b
+        | (id,a,b) => a + b
+      }
+      printf("add 1 + 2 = %d\n" x)
+    }
+
+  この章のサンプルは[src/match.nml](src/match.nml)からダウンロード出来ます。
 
 ## 17. クロージャ
 
@@ -925,18 +966,17 @@
 
 ## 21. 代数データ型
 
-    e type | EUnit | EInt(int) | EAdd(e, e)
+  代数データ型はC言語のenumを強力にした物です。
+  代数データ型とパターンマッチの組み合わせは非常に強力な力を言語に与えます。
 
-    variant() = {
+    e type | Int(int) | Add(e, e)
 
-      def eval:e=>int={
-        | EUnit => 0
-        | EInt(i) => i
-        | EAdd(a, b) => eval(a) + eval(b)
-      }
+    def eval = {
+      | Int(i) => i
+      | Add(a, b) => eval(a) + eval(b)
+    }
 
-      printf("1+2=%d\n" eval(EAdd(EInt(1), EInt(2))))
-    } variant()
+    printf("1+2=%d\n" eval(Add(Int(1), Int(2))))
 
 ## 22. モジュール
 
@@ -950,8 +990,111 @@
       printf("A.a = %d A.inc(10) = %d\n" A.a A.inc(10))
     }
 
-## 23. クラス
+## 23. オブジェクト指向
 
+  newmlはOCamlをバックエンドに使っているのでOCamlのOのオブジェクト指向を使う事が出来ます。
+  クラスは以下のように記述します。
+
+    ab class {
+      // private member
+      a = 123
+      // public method
+      def c = a
+    }
+
+  変数のメンバーは自動的にプライベートになります。
+  メソッドはdefを付けて記述します。
+
+  使い方は以下のようにnewして->でメソッドを呼び出します。引数が無い場合は()が無くても
+  メソッドは動作します。
+
+    _ = {
+
+      printf("ab.a = %d\n" new ab->c)
+    }
+
+  また、コンストラクタの引数を以下のように記述して受け取る事が出来ます。
+
+    abc class(b:int c:int) {
+      // public method
+      def c = b
+    }
+
+  この例では受け取ったbの値をcメソッドで見る事が出来ます。
+
+    _ = {
+      printf("ab.a = %d\n" new abc(10 20)->c)
+    }
+
+  オブジェクト指向を使って以下のようにフィボナッチ数列の計算をする事が出来ます。
+
+    fib class(x:int) {
+      def apply =
+        x match {
+          | 0 => 0
+          | 1 => 1
+          | n => new fib(x-2)->apply +
+                 new fib(x-1)->apply
+        }
+    }
+
+    _ = {
+
+      printf("A.a = %d\n" new fib(10)->apply)
+
+    }
+
+  現在はまだ実装していませんが、以下のように+をプリフィックスとするとパブリックなメソッドになり
+  `-`をプリフィックスとするとプライベートなメソッドになる予定です。
+
+    a class(x:int) {
+      z = x
+      + x = this->y
+      - y = x
+    }
+
+    _ = {
+
+      printf("a->x = %d\n" new a(10)->x)
+
+    }
+
+  書き換え可能な変数は以下のように:の箇所に&を書く事で可能です。
+
+    a class(x&int) {
+      z = x
+      + x = this->y
+      - y = x
+    }
+
+    _ = {
+
+      printf("a->x = %d\n" new a(10)->x)
+
+    }
+
+  TODO:オブジェクトだよ。ドラえもん。うーと、なんだっけ？
+  ムータぶるな引数は
+
+    a class(x&int) {
+      z & x
+      + x = this->y
+      - y = x
+    }
+
+  とかく事でzはmutableです。あと、型変数
+
+    a class['a](x:'a) {
+      + x = x
+    }
+
+  等と書くと、'aの型は多相になります。
+
+  以下のコードはsrcディレクトリから参照、ダウンロード出来ます。
+
+
+
+    // objects.nml
     ab class {
       // private member
       a = 123
@@ -976,7 +1119,6 @@
     _ = {
 
       printf("ab.a = %d\n" new abc(10 20)->c)
-      printf("ab.a = %d\n" 2*3+1)
     }
 
     fib class(x:int) {
@@ -992,7 +1134,6 @@
     _ = {
 
       printf("A.a = %d\n" new fib(10)->apply)
-      printf("%d %d\n" 1+2-3;-1)
 
     }
 
@@ -1011,19 +1152,17 @@
       printf("%d\n" eval(`add(`mul(`int(10),`int(20)),`int(20))))
     }
 
-## 25. キーワード引数
+## 25. ラベル引数
 
-  TODO:キーワードで良いのか？調べる。
-  TODO:仕様を#か、~か確定する。
+  TODO:ラベルで良いのか？調べる。
+  
 
-  キーワードを使って、名前指定の関数定義が出来ます。
-  OCamlでは~と?を使い分けていましたが、~か#のどちらかで統一する予定です。
+  ラベルを使って、名前指定の関数定義が出来ます。
+  #を付けて変数を宣言する事でラベル変数になります。
   名前指定の関数呼び出しは、a=1のように=を使って引数を指定します。
+  また、デフォルトの引数を付ける事で引数を省略出来ます。
 
     keyword_params = {
       f(#a:int=1 #b:int #c d) = a+b+c+d
-      printf("%d\n" f(a=1 b=2 c=5 3))
-
-      f(~a:int=1; ~b:int; ~c; d) = a+b+c+d
       printf("%d\n" f(a=1 b=2 c=5 3))
     }

@@ -1,0 +1,56 @@
+// match.nml
+open Printf
+
+match_fib = {
+  def fib(n) = {
+    n match {
+      | 0 => 0
+      | 1 => 1
+      | n => fib(n-2) + fib(n-1)
+    }
+  }
+  printf("fib 10=%d\n" fib(10))
+}
+
+match_block = {
+
+  x = 1 match {
+    | 0 => 0
+    | n =>
+      a = n * n
+      b = n + n
+      a + b
+  }
+
+  printf("x=%d\n" x)
+}
+
+match_whens = {
+
+  def fib:(int)=>int={
+    | n when n == 0 => 0
+    | n when n == 1 => 1
+    | n => fib(n-2) + fib(n-1)
+  }
+  printf("fib 10 %d\n" fib(10))
+}
+
+match_tuple = {
+
+  x = (1,2) match {
+    | (a,b) when a == 1 => a+b
+    | (a,b) => a * b
+  }
+
+  printf("x=%d\n" x)
+}
+
+match_as = {
+  x = ("add", 1, 2) match {
+    | ("add" as id, a, b) =>
+      printf("%s" id)
+      a + b
+    | (id,a,b) => a + b
+  }
+  printf("add 1 + 2 = %d\n" x)
+}

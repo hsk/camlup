@@ -47,6 +47,7 @@ rule token = parse
   | "::" { ADDLIST }
   | "case" { CASE }
   | "match" { MATCH }
+  | "as" { AS }
   | "when" { WHEN }
   | "type" { TYPE }
   | "module" { MODULE }

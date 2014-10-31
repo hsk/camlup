@@ -43,6 +43,7 @@ https://github.com/hsk/newml/blob/master/nmlc.exe?raw=true
 open Printf
 printf("hello world!\n")
 ```
+
 hello.nml
 
 ```
@@ -117,7 +118,6 @@ printf("%d\n" f2(1,2 3,4))
     - [ ] 型パラメータ
     - [ ] mutableなフィールド
     - [ ] 値の設定
-
 - [x] ブロック
 - [x] 名前付き引数
 - [ ] オブジェクト指向
