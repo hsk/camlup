@@ -1,0 +1,13 @@
+// if_else.nml
+open Printf
+
+if_else = {
+  a = 0
+
+  if (a < 10) printf("b1\n")
+  if (a < 10) { printf("b2\n") }
+  if (a < 10) { printf("b2\n") printf("b3\n") }
+  if (a > 10) printf("a\n") else printf("b3\n")
+
+  printf(if (a < 1) "a\n" else "b1\n")
+}

@@ -1,0 +1,21 @@
+// floats.nml
+open Printf
+floats = {
+  n = 1.234
+  m = n +. 10.5
+  printf("%f\n" m)
+  m = n -. 1.1
+  printf("%f\n" m)
+  m = n *. 0.1
+  printf("%f\n" m)
+
+  m = n /. 0.1
+  printf("%f\n" m)
+
+  m = -. n
+  printf("%f\n" m)
+
+  m = n ** 2.0
+  printf("%f\n" m)
+
+}

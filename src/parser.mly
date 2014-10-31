@@ -199,6 +199,9 @@ exp:
       | EFloat(p,f) -> EFloat(p,-. f)
       | e -> EPre(e_pos(e), "-", $2)
     }
+
+  | FSUB exp { EPre(p(), "-.", $2) }
+
   | DEC exp { ECall(p(), EVar(p(),"decr"), [$2]) }
   | INC exp { ECall(p(), EVar(p(),"incr"), [$2]) }
 
