@@ -330,6 +330,9 @@ https://github.com/hsk/newml/blob/master/nmlc.exe?raw=true
       printf("%s\n" "abc" ~ "def")
     }
 
+  この章のサンプルは[src/string.nml](src/string.nml)からダウンロード出来ます。
+
+
   [↑](#チュートリアル)
 
 ## 10. bool if else
