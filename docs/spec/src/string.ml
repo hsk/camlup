@@ -1,16 +1,31 @@
 open Printf;;
 
-# 7 "?"
+# 12 "?"
 let _ = 
-# 6 "?"
+# 11 "?"
 
 
 # 3 "?"
-printf ("\"\n");
+printf ("\\ back slash\n");
 
 # 4 "?"
-printf ("tab \t\r\n\b\n");
+printf ("\" double quote\n");
 
 # 5 "?"
+printf ("\' single quote\n");
+
+# 6 "?"
+printf ("\n lf\n");
+
+# 7 "?"
+printf ("\r cr\n");
+
+# 8 "?"
+printf ("\t tab\n");
+
+# 9 "?"
+printf ("\b backspace\n");
+
+# 10 "?"
 printf ("abc \097\098\099\n")
 

@@ -1,6 +1,11 @@
 open Printf
 _ = {
-  printf("\"\n")
-  printf("tab \t\r\n\b\n")
+  printf("\\ back slash\n")
+  printf("\" double quote\n")
+  printf("\' single quote\n")
+  printf("\n lf\n")
+  printf("\r cr\n")
+  printf("\t tab\n")
+  printf("\b backspace\n")
   printf("abc \097\098\099\n")
 }
