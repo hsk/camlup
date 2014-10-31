@@ -1064,20 +1064,23 @@ https://github.com/hsk/newml/blob/master/nmlc.exe?raw=true
       printf("A.a = %d A.inc(10) = %d\n" A.a A.inc(10))
     }
 
-  Mapモジュールはファンクタとして定義されています。ファンクタはモジュールを使って作成出来るのですが、とりあえず使ってみましょう。
+  Mapモジュールはファンクタとして定義されています。ファンクタはモジュールを使って作成出来るのでとりあえず使ってみましょう。
   
-    M module Map.Make(String)
+    M module = Map.Make(String)
   
-  以上のように記述することで、MapファンクタにStringのモジュールを渡す事で、stringから別な型へのMapのモジュールを作成出来ます。Mモジュールは以下のようにして使います。
+  以上のように、MapファンクタにStringのモジュールを渡すことで、stringから別な型へのMapのモジュールを作成出来ます。Mモジュールは以下のようにして使います。
   
     module_map = {
       dic = M.empty
       dic = M.add("a" 1 dic)
       dic = M.add("b" 2 dic)
-      printf("%d\n" M.find("a" dic))
+      printf("a %d\n" M.find("a" dic))
+      printf("b %d\n" M.find("b" dic))
     }
     
   newmlのMapはOCamlのMapをそのまま使っているので詳しくはOCamlの[Mapのチュートリアル](https://ocaml.org/learn/tutorials/map.ja.html)等を参照してください。
+
+  この章のサンプルは[src/module.nml](src/module.nml)からダウンロード出来ます。
   
   [↑](#チュートリアル)
 

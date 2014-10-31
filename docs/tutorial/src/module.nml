@@ -1,0 +1,23 @@
+// module.nml
+
+open Printf
+
+A module {
+  a = 1234
+  inc(k) = k + 1
+}
+
+_ = {
+
+  printf("A.a = %d A.inc(10) = %d\n" A.a A.inc(10))
+}
+
+M module = Map.Make(String)
+
+module_map = {
+  dic = M.empty
+  dic = M.add("a" 1 dic)
+  dic = M.add("b" 2 dic)
+  printf("a %d\n" M.find("a" dic))
+  printf("b %d\n" M.find("b" dic))
+}

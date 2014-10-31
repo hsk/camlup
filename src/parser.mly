@@ -333,6 +333,7 @@ fns:
 
 stmt:
   | VAR MODULE LBRACE stmts RBRACE { SModule($1, $4) }
+  | VAR MODULE ASSIGN exp { SModuleExp($1, $4) }
   | VAR CLASS LBRACE stmts RBRACE { SClass($1, [], $4) }
   | VAR CLASS LPAREN RPAREN LBRACE stmts RBRACE { SClass($1, [], $6) }
   | VAR CLASS LPAREN defrecs RPAREN LBRACE stmts RBRACE { SClass($1, $4, $7) }
@@ -345,7 +346,7 @@ stmt:
 
 stmt1:
   | stmt { $1 }
-  | SEMI stmt { $2 }
+  | SEMI stmt1 { $2 }
   | stmt1 SEMI { $1 }
 
 stmts:

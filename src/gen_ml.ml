@@ -406,6 +406,13 @@ let rec print_s sp ppf (s:s):unit =
       print_ls sp ";;\n" print ppf ss;
       fprintf ppf "\n%send" sp
 
+    | SModuleExp(name, e) ->
+      fprintf ppf "%smodule %s = %a"
+        sp
+        name
+        (print_e "") e
+      ;
+
     | SClass(name, [], ss) ->
       fprintf ppf "%sclass %s = object\n"
         sp
