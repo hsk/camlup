@@ -4,9 +4,8 @@
 
 ## 0.0.3
 
-moduleのMapファンクタの生成に対応
-詳しくは[チュートリアル](https://github.com/hsk/newml/blob/master/docs/tutorial/README.md#22-%E3%83%A2%E3%82%B8%E3%83%A5%E3%83%BC%E3%83%AB)を参照してください。
-
+- moduleのMapファンクタの生成に対応
+	詳しくは[チュートリアル](https://github.com/hsk/newml/blob/master/docs/tutorial/README.md#22-%E3%83%A2%E3%82%B8%E3%83%A5%E3%83%BC%E3%83%AB)を参照してください。
 - コメント後にパースエラーになってしまう不具合対策
 - モジュールドキュメントの追加
 - 文字列内のエスケープ文字対応
