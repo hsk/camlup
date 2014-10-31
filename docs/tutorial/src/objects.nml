@@ -1,0 +1,45 @@
+// objects.nml
+
+open Printf
+
+ab class {
+  // private member
+  a = 123
+  // public method
+  def c = a
+
+  /*
+  // private method
+  - d = 10
+  */
+}
+_ = {
+
+  printf("ab.a = %d\n" new ab->c)
+}
+
+abc class(b:int c:int) {
+  // public method
+  def c = b
+}
+
+_ = {
+
+  printf("ab.a = %d\n" new abc(10 20)->c)
+}
+
+fib class(x:int) {
+  def apply =
+    x match {
+      | 0 => 0
+      | 1 => 1
+      | n => new fib(x-2)->apply +
+             new fib(x-1)->apply
+    }
+}
+
+_ = {
+
+  printf("A.a = %d\n" new fib(10)->apply)
+
+}

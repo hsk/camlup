@@ -1189,12 +1189,15 @@ https://github.com/hsk/newml/blob/master/nmlc.exe?raw=true
   以下のコードはsrcディレクトリから参照、ダウンロード出来ます。
 
     // objects.nml
+    
+    open Printf
+    
     ab class {
       // private member
       a = 123
       // public method
       def c = a
-
+      
       /*
       // private method
       - d = 10
@@ -1248,6 +1251,8 @@ https://github.com/hsk/newml/blob/master/nmlc.exe?raw=true
       printf("%d\n" eval(`add(`mul(`int(10),`int(20)),`int(20))))
     }
 
+  この章のサンプルは[src/variant.nml](src/variant.nml)からダウンロード出来ます。
+  
   [↑](#チュートリアル)
 
 ## 25. ラベル引数
