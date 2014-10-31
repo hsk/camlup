@@ -104,7 +104,7 @@ https://github.com/hsk/newml/blob/master/nmlc.exe?raw=true
     $ nmlc -run hello02.nml
     $
 
-  TODO: 保存されたmlについて書く
+  この章のサンプルは[src/hello.nml](src/hello.nml)および、[src/hello02.nml](src/hello02.nml)からダウンロード出来ます。
 
   [↑](#チュートリアル)
 
@@ -172,6 +172,8 @@ https://github.com/hsk/newml/blob/master/nmlc.exe?raw=true
 
   のように記述しても接続しないように出来ます。
 
+  この章のサンプルは[src/arith.nml](src/arith.nml)からダウンロード出来ます。
+
   [↑](#チュートリアル)
 
 ## 5. コメント
@@ -187,6 +189,8 @@ https://github.com/hsk/newml/blob/master/nmlc.exe?raw=true
 
     // 1 line comment
 
+  この章のサンプルは[src/comment.nml](src/comment.nml)からダウンロード出来ます。
+
   [↑](#チュートリアル)
 
 ## 6. open
@@ -197,6 +201,8 @@ https://github.com/hsk/newml/blob/master/nmlc.exe?raw=true
     open Printf
     Printf.printf("%d\n" 10)
     printf("%d\n" 10)
+
+  この章のサンプルは[src/open.nml](src/open.nml)からダウンロード出来ます。
 
   [↑](#チュートリアル)
 
@@ -214,6 +220,8 @@ https://github.com/hsk/newml/blob/master/nmlc.exe?raw=true
   使用しない値は`_ = 値`とすることで捨てる事が出来ます。
 
     _ = 3
+
+  この章のサンプルは[src/variable.nml](src/variable.nml)からダウンロード出来ます。
 
   [↑](#チュートリアル)
 
@@ -390,6 +398,8 @@ https://github.com/hsk/newml/blob/master/nmlc.exe?raw=true
 
       printf(if (a < 1) "a\n" else "b1\n")
     }
+
+  この章のサンプルは[src/if_else.nml](src/if_else.nml)からダウンロード出来ます。
 
   [↑](#チュートリアル)
 
@@ -1189,15 +1199,15 @@ https://github.com/hsk/newml/blob/master/nmlc.exe?raw=true
   以下のコードはsrcディレクトリから参照、ダウンロード出来ます。
 
     // objects.nml
-    
+
     open Printf
-    
+
     ab class {
       // private member
       a = 123
       // public method
       def c = a
-      
+
       /*
       // private method
       - d = 10
