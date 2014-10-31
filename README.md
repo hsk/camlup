@@ -102,10 +102,10 @@ printf("%d\n" f2(1,2 3,4))
     - [ ] 文字列のエスケープ
 - [x] 変数
 - [x] if else 式
-- [ ] match 式
+- [x] match 式
     - [x] int,string,list,variant,tuple
     - [x] ネストしたマッチ
-    - [ ] match式のas
+    - [x] match式のas
 - [x] for,while式
 - [x] パーシャルファンクション
 - [x] 配列
