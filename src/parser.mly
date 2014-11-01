@@ -109,10 +109,11 @@ let rec loop1 f = function
 %left SEMI
 %left MEMBER FARROW
 %left NEW
+%left LBRACK RBRACK
 %left DOT
 %right ARROW
 %left AT
-%left LPAREN RPAREN LBRACE RBRACE LBRACK RBRACK
+%left LPAREN RPAREN LBRACE RBRACE
 %left CALL
 %left prec_name
 
@@ -132,12 +133,12 @@ typ:
       in loop $3
     }
   | typ LBRACK typs RBRACK { TGen($1, $3) }
-  | LPAREN typs RPAREN { TTuple($2)}
+  | LPAREN typs RPAREN { TTuple($2) }
   | LPAREN RPAREN { TUnit }
 
 typ2:
   | typ { $1 }
-  | typ typ2 { TFun($1, $2)}
+  | typ typ2 { TFun($1, $2) }
 
 typs:
   | typ { [$1]}
@@ -155,9 +156,14 @@ defrec:
   | VAR COLON typ { ($1, $3) }
   | VAR COLON typ SEMI { ($1, $3) }
 
+defrec1:
+  | SEMI defrec1 { $2 }
+  | defrec1 SEMI { $1 }
+  | defrec { $1 }
+
 defrecs:
-  | defrec { [$1] }
-  | defrec defrecs %prec LIST { $1::$2 }
+  | defrec1 { [$1] }
+  | defrec1 defrecs %prec LIST { $1::$2 }
 
 record:
   | VAR ASSIGN exp1 { ($1, $3) }
@@ -200,60 +206,60 @@ exp:
       | e -> EPre(e_pos(e), "-", $2)
     }
 
-  | FSUB exp { EPre(p(), "-.", $2) }
+  | FSUB exp { EPre(e_pos($2), "-.", $2) }
 
-  | DEC exp { ECall(p(), EVar(p(),"decr"), [$2]) }
-  | INC exp { ECall(p(), EVar(p(),"incr"), [$2]) }
+  | DEC exp { ECall(e_pos($2), EVar(e_pos($2),"decr"), [$2]) }
+  | INC exp { ECall(e_pos($2), EVar(e_pos($2),"incr"), [$2]) }
 
-  | AMP exp { EPre(p(), "ref", $2) }
-  | MUL exp { EPre(p(), "!", $2) }
-  | NOT exp { EPre(p(), "not", $2) }
-  | NEW exp { EPre(p(), "new", $2) }
-  | exp XOR exp { EBin(p(), $1, "^", $3) }
+  | AMP exp { EPre(e_pos($2), "ref", $2) }
+  | MUL exp { EPre(e_pos($2), "!", $2) }
+  | NOT exp { EPre(e_pos($2), "not", $2) }
+  | NEW exp { EPre(e_pos($2), "new", $2) }
+  | exp XOR exp { EBin(e_pos($1), $1, "^", $3) }
 
-  | exp LOR exp { EBin(p(), $1, "||", $3) }
-  | exp LAMP exp { EBin(p(), $1, "&&", $3) }
+  | exp LOR exp { EBin(e_pos($1), $1, "||", $3) }
+  | exp LAMP exp { EBin(e_pos($1), $1, "&&", $3) }
 
-  | exp OR exp { EBin(p(), $1, "lor", $3) }
+  | exp OR exp { EBin(e_pos($1), $1, "lor", $3) }
 
-  | exp HAT exp { EBin(p(), $1, "lxor", $3) }
+  | exp HAT exp { EBin(e_pos($1), $1, "lxor", $3) }
 
-  | exp AMP exp { EBin(p(), $1, "land", $3) }
+  | exp AMP exp { EBin(e_pos($1), $1, "land", $3) }
 
-  | exp EEQ exp { EBin(p(), $1, "==", $3) }
-  | exp ENE exp { EBin(p(), $1, "!=", $3) }
-  | exp EQ exp { EBin(p(), $1, "=", $3) }
-  | exp NE exp { EBin(p(), $1, "<>", $3) }
+  | exp EEQ exp { EBin(e_pos($1), $1, "==", $3) }
+  | exp ENE exp { EBin(e_pos($1), $1, "!=", $3) }
+  | exp EQ exp { EBin(e_pos($1), $1, "=", $3) }
+  | exp NE exp { EBin(e_pos($1), $1, "<>", $3) }
 
-  | exp LT exp { EBin(p(), $1, "<", $3) }
-  | exp GT exp { EBin(p(), $1, ">", $3) }
-  | exp LE exp { EBin(p(), $1, "<=", $3) }
-  | exp GE exp { EBin(p(), $1, ">=", $3) }
+  | exp LT exp { EBin(e_pos($1), $1, "<", $3) }
+  | exp GT exp { EBin(e_pos($1), $1, ">", $3) }
+  | exp LE exp { EBin(e_pos($1), $1, "<=", $3) }
+  | exp GE exp { EBin(e_pos($1), $1, ">=", $3) }
 
-  | exp ADD exp { EBin(p(), $1, "+", $3) }
-  | exp SUB exp { EBin(p(), $1, "-", $3) }
+  | exp ADD exp { EBin(e_pos($1), $1, "+", $3) }
+  | exp SUB exp { EBin(e_pos($1), $1, "-", $3) }
 
-  | exp MUL exp { EBin(p(), $1, "*", $3) }
-  | exp DIV exp { EBin(p(), $1, "/", $3) }
-  | exp MOD exp { EBin(p(), $1, "mod", $3) }
+  | exp MUL exp { EBin(e_pos($1), $1, "*", $3) }
+  | exp DIV exp { EBin(e_pos($1), $1, "/", $3) }
+  | exp MOD exp { EBin(e_pos($1), $1, "mod", $3) }
 
-  | exp FADD exp { EBin(p(), $1, "+.", $3) }
-  | exp FSUB exp { EBin(p(), $1, "-.", $3) }
+  | exp FADD exp { EBin(e_pos($1), $1, "+.", $3) }
+  | exp FSUB exp { EBin(e_pos($1), $1, "-.", $3) }
 
-  | exp FMUL exp { EBin(p(), $1, "*.", $3) }
-  | exp FDIV exp { EBin(p(), $1, "/.", $3) }
-  | exp FPOW exp { EBin(p(), $1, "**", $3) }
+  | exp FMUL exp { EBin(e_pos($1), $1, "*.", $3) }
+  | exp FDIV exp { EBin(e_pos($1), $1, "/.", $3) }
+  | exp FPOW exp { EBin(e_pos($1), $1, "**", $3) }
 
-  | exp SHL exp { EBin(p(), $1, "asl", $3) }
-  | exp SHR exp { EBin(p(), $1, "asr", $3) }
-  | exp AS exp { EBin(p(), $1, "as", $3) }
+  | exp SHL exp { EBin(e_pos($1), $1, "asl", $3) }
+  | exp SHR exp { EBin(e_pos($1), $1, "asr", $3) }
+  | exp AS exp { EBin(e_pos($1), $1, "as", $3) }
 
-  | exp DOT exp { EBin(p(), $1, ".", $3) }
-  | exp COMMA exp { EBin(p(), $1, ",", $3) }
-  | exp ADDLIST exp { EBin(p(), $1, "::", $3) }
-  | exp MEMBER exp { EBin(p(), $1, "#", $3) }
-  | exp ARROWASSIGN exp { EBin(p(), $1, "<-", $3) }
-  | exp FARROW exp { ECall(p(), $3, [$1]) }
+  | exp DOT exp { EBin(e_pos($1), $1, ".", $3) }
+  | exp COMMA exp { EBin(e_pos($1), $1, ",", $3) }
+  | exp ADDLIST exp { EBin(e_pos($1), $1, "::", $3) }
+  | exp MEMBER exp { EBin(e_pos($1), $1, "#", $3) }
+  | exp ARROWASSIGN exp { EBin(e_pos($1), $1, "<-", $3) }
+  | exp FARROW exp { ECall(e_pos($1), $3, [$1]) }
 
   | exp COLONASSIGN exp
     {
@@ -263,41 +269,41 @@ exp:
     }
 
   | exp MATCH LBRACE fns RBRACE { EMatch(e_pos($1), $1, $4) }
-  | IF LPAREN exp RPAREN exp1 ELSE exp1 { EIf(p(),$3, $5, $7) }
-  | IF LPAREN exp RPAREN exp1 %prec LIST { EIf(p(),$3, $5, EEmpty(p())) }
+  | IF LPAREN exp RPAREN exp1 ELSE exp1 { EIf(e_pos($3),$3, $5, $7) }
+  | IF LPAREN exp RPAREN exp1 %prec LIST { EIf(e_pos($3),$3, $5, EEmpty(p())) }
 
   | FOR LPAREN VAR ARROWASSIGN exp TO exp RPAREN exp
     {
-      EFor(p(),$3, $5, $7, 1, $9)
+      EFor(e_pos($5),$3, $5, $7, 1, $9)
     }
   | FOR LPAREN VAR ARROWASSIGN exp DOWNTO exp RPAREN exp
     {
-      EFor(p(),$3, $5, $7, -1, $9)
+      EFor(e_pos($5),$3, $5, $7, -1, $9)
     }
   | FOR LPAREN VAR ARROWASSIGN exp UNTIL exp RPAREN exp
     {
-      EFor(p(),$3, $5, EBin(e_pos($7), $7, "-", EInt(e_pos($7), 1)), 1, $9)
+      EFor(e_pos($5),$3, $5, EBin(e_pos($7), $7, "-", EInt(e_pos($7), 1)), 1, $9)
     }
-  | WHILE LPAREN exp RPAREN exp { EWhile(p(), $3, $5) }
+  | WHILE LPAREN exp RPAREN exp { EWhile(e_pos($3), $3, $5) }
 
-  | exp LBRACE fns RBRACE %prec CALL { ECall(p(),$1, [EPFun(p(),$3)]) }
-  | exp LBRACE exps RBRACE %prec CALL { ECall(p(),$1, [EBlock(p(),$3)]) }
+  | exp LBRACE fns RBRACE %prec CALL { ECall(e_pos($1), $1, [EPFun(p(),$3)]) }
+  | exp LBRACE exps RBRACE %prec CALL { ECall(e_pos($1), $1, [EBlock(p(),$3)]) }
 
-  | exp LBRACK RBRACK %prec CALL { EIndex(p(),$1, []) }
-  | exp LBRACK exps RBRACK %prec CALL { EIndex(p(),$1, $3) }
+  | exp LBRACK RBRACK %prec CALL { EIndex(e_pos($1),$1, []) }
+  | exp LBRACK exps RBRACK %prec CALL { EIndex(e_pos($1),$1, $3) }
 
-  | exp LPAREN exps RPAREN %prec CALL { ECall(p(),$1, $3) }
-  | exp LPAREN RPAREN %prec CALL { ECall(p(),$1, [EUnit(e_pos($1))]) }
+  | exp LPAREN exps RPAREN %prec CALL { ECall(e_pos($1),$1, $3) }
+  | exp LPAREN RPAREN %prec CALL { ECall(e_pos($1),$1, [EUnit(e_pos($1))]) }
 
-  |     VAR ASSIGN exp { ELet(p(),$1, TEmpty, $3) }
-  | DEF VAR ASSIGN exp { ELetRec(p(),$2, TEmpty, $4) }
+  |     VAR ASSIGN exp { ELet(e_pos($3),$1, TEmpty, $3) }
+  | DEF VAR ASSIGN exp { ELetRec(e_pos($4),$2, TEmpty, $4) }
 
-  |     exp ASSIGN exp { loop1 (fun(p,a,b,c)->ELet(p,a,b,c)) ($1, $3) }
-  | DEF exp ASSIGN exp { loop1 (fun(p,a,b,c)->ELetRec(p,a,b,c)) ($2, $4) }
-  |     exp REFASSIGN exp { loop1 (fun(p,a,b,c)->ELet(p,a,b,c)) ($1,EPre(p(),"ref", $3)) }
+  |     exp ASSIGN exp { loop1 (fun(p,a,b,c)->ELet(e_pos($1),a,b,c)) ($1, $3) }
+  | DEF exp ASSIGN exp { loop1 (fun(p,a,b,c)->ELetRec(e_pos($2),a,b,c)) ($2, $4) }
+  |     exp REFASSIGN exp { loop1 (fun(p,a,b,c)->ELet(e_pos($1),a,b,c)) ($1,EPre(e_pos($3),"ref", $3)) }
 
-  |     exp COLON typ ASSIGN exp { loop(fun(p,a,b,c)->ELet(p,a,b,c)) ($1,$3,$5) }
-  | DEF exp COLON typ ASSIGN exp { loop(fun(p,a,b,c)->ELetRec(p,a,b,c)) ($2,$4,$6) }
+  |     exp COLON typ ASSIGN exp { loop(fun(p,a,b,c)->ELet(e_pos($1),a,b,c)) ($1,$3,$5) }
+  | DEF exp COLON typ ASSIGN exp { loop(fun(p,a,b,c)->ELetRec(e_pos($2),a,b,c)) ($2,$4,$6) }
   |     exp COLON typ
     {
       match $1 with
@@ -318,8 +324,6 @@ exp:
       | ELet(p,id,t,e) -> ELetRec(p,id, t, e)
       | _ -> ELetRec(e_pos($2), e2id $2, TEmpty, EEmpty(e_pos($2)))
     }
-
-
 
 fn:
   | OR exps ARROW exps { EFun(e_pos(List.hd $2), $2, TEmpty, EBlock(e_pos(List.hd $4),$4)) }
@@ -345,7 +349,7 @@ stmt:
   | DEF VAR ASSIGN exp { SLetRec($2, TEmpty, $4) }
   | OPEN { SOpen($1) }
   | VAR TYPE LBRACE defrecs RBRACE { STypeRec($1, $4) }
-  | VAR TYPE OR variants { STypeVariant($1, $4)}
+  | VAR TYPE OR variants { STypeVariant($1, $4) }
 
 stmt1:
   | stmt { $1 }

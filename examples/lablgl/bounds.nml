@@ -1,0 +1,90 @@
+// bounce.ml
+
+rsize = 25.0
+
+state type {
+  pos: array[float]
+  step: array[float]
+  viewsize: array[float]
+}
+
+s = {: pos = [|0.0; 0.0]; step = [|3.0; 3.0]; viewsize = [|100.0; 100.0] }
+
+// windowWidth, windowHeight
+render_scene() = {
+  GlClear.clear([`color])
+  GlDraw.color(1.0, 0.0, 0.0)
+  GlDraw.rect((s.pos[0], s.pos[1]); (s.pos[0] +. rsize, s.pos[1] -.rsize))
+  Glut.swapBuffers()
+}
+
+def timer(#value) = {
+  // 画角の端に到達したら反射
+  x = s.pos[0]
+  y = s.pos[1]
+  if (x < -.s.viewsize[0] || s.viewsize[0] < x +. rsize) s.step[0] <- -.s.step[0]
+  if (y -. rsize < -.s.viewsize[1] || s.viewsize[1] < y) s.step[1] <- -.s.step[1]
+  s.pos[0] <- x +. s.step[0]
+  s.pos[1] <- y +. s.step[1]
+
+  // 反射処理中の描画領域の大きさ変更でクリッピング領域を外れる場合に対応
+
+  if (s.viewsize[0] +. s.step[0] < s.pos[0] +. rsize)
+    s.pos[0] <- s.viewsize[0] -. rsize -. 1.0
+  else if (x +. s.step[0] < -.s.viewsize[0])
+    s.pos[0] <- -.s.viewsize[0] -. 1.0
+
+  if (s.viewsize[1] +. s.step[1] < s.pos[1])
+     s.pos[1] <- s.viewsize[1] -. 1.0
+  else if (y -. rsize < -.s.viewsize[1] -. s.step[1])
+     s.pos[1] <- -.s.viewsize[1] +. rsize -. 1.0
+
+  // 新しい座標設定で再描画
+  Glut.postRedisplay()
+  Glut.timerFunc(ms= 33; cb= timer; value= 1)
+}
+
+// 描画状態の設定
+setup_rc() = {
+  GlClear.color(alpha=1.0; (0.0, 0.0, 1.0))
+}
+
+change_size(#w; #h) = {
+  h = max(h; 1)
+  GlDraw.viewport(x=0; y=0; w=w; h=h)
+
+  GlMat.mode(`projection)
+  GlMat.load_identity()
+
+  ortho = GlMat.ortho(z=(1.0, -1.0))
+  aspect_ratio = float(w) /. float(h)
+  if (aspect_ratio < 1.0) {
+    s.viewsize[0] <- 100.0
+    s.viewsize[1] <- 100.0 /. aspect_ratio
+    x = (-100.0, 100.0)
+    y = (-.s.viewsize[0], s.viewsize[1])
+    ortho(x=x; y=y)
+  } else {
+    s.viewsize[0] <- 100.0 *. aspect_ratio
+    s.viewsize[1] <- 100.0
+    x = (-.s.viewsize[0], s.viewsize[1])
+    y = (-100.0, 100.0)
+    ortho(x=x; y=y)
+  }
+
+  GlMat.mode(`modelview)
+  GlMat.load_identity()
+}
+
+_ = {
+  _ = Glut.init(Sys.argv)
+  Glut.initDisplayMode(double_buffer= true; alpha= true)()
+  Glut.initWindowSize(w= 400; h= 300)
+  _ = Glut.createWindow("Bounce")
+  Glut.displayFunc(render_scene)
+  Glut.reshapeFunc(change_size)
+  Glut.timerFunc(ms= 33; cb= timer; value= 1)
+  setup_rc()
+  Glut.mainLoop()
+}
+
