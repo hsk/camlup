@@ -58,8 +58,8 @@ render_scene() = {
       GlDraw.begins(`triangle_fan)
       GlDraw.vertex3(0.0, 0.0, 75.0)
       while (*angle <= 2.0 *. pi) {
-        x = 50.0 *. sin (*angle)
-        y = 50.0 *. cos (*angle)
+        x = 50.0 *. sin(*angle)
+        y = 50.0 *. cos(*angle)
         GlDraw.color(alt_color())
         GlDraw.vertex2(x, y)
         angle := *angle +. pi /. 8.0

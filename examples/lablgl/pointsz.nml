@@ -10,17 +10,17 @@ open M
 r = 50.0
 
 width_step = 0.5
-width = & width_step
+width = &width_step
 
 render_scene() = {
   width := width_step
   GlClear.clear([`color])
   _ = {
-  GlMat.push()
+    GlMat.push()
     GlMat.rotate3(angle=rot[0]; around_xaxis)
     GlMat.rotate3(angle=rot[1]; around_yaxis)
     max = 120
-    for(i <- 0 to max) {
+    for (i <- 0 to max) {
       t = float(i) /. 20.0 *. pi
       x = r *. sin(t)
       y = r *. cos(t)
