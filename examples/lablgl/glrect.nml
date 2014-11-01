@@ -1,4 +1,7 @@
-// glrect.nml
+/**
+ * glrect.nml
+ * original code: https://github.com/wakita/OpenGL.ML/blob/master/chapt02/glrect.ml
+ */
 
 display() = {
    GlClear.clear([`color])

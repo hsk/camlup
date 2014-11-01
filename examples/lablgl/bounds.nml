@@ -1,4 +1,7 @@
-// bounce.ml
+/**
+ * bounce.ml
+ * original code: https://github.com/wakita/OpenGL.ML/blob/master/chapt02/bounce.ml
+ */
 
 rsize = 25.0
 
