@@ -43,5 +43,5 @@ setup() = {
 }
 
 _ = {
-	main(title="Line Width Example" setup=setup render_scene)
+  main(title="Line Width Example" setup=setup render_scene)
 }

@@ -1,11 +1,12 @@
 /**
  * simple.nml
+ *
  * original code: https://github.com/wakita/OpenGL.ML/blob/master/chapt02/simple.ml
  */
 _ = {
   _ = Glut.init(Sys.argv)
-  Glut.initDisplayMode(double_buffer = false alpha = true)()
-  _ = Glut.createWindow(title = "Simple")
+  Glut.initDisplayMode(double_buffer=false alpha=true)()
+  _ = Glut.createWindow(title="Simple")
   Glut.displayFunc{| () =>
     GlClear.clear([`color])
     Gl.flush()

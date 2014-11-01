@@ -1,5 +1,6 @@
 /**
- * bounce.ml
+ * bounce.nml
+ *
  * original code: https://github.com/wakita/OpenGL.ML/blob/master/chapt02/bounce.ml
  */
 
@@ -38,9 +39,9 @@ def timer(#value) = {
     s.pos[0] <- -.s.viewsize[0] -. 1.0
 
   if (s.viewsize[1] +. s.step[1] < s.pos[1])
-     s.pos[1] <- s.viewsize[1] -. 1.0
+    s.pos[1] <- s.viewsize[1] -. 1.0
   else if (y -. rsize < -.s.viewsize[1] -. s.step[1])
-     s.pos[1] <- -.s.viewsize[1] +. rsize -. 1.0
+    s.pos[1] <- -.s.viewsize[1] +. rsize -. 1.0
 
   // 新しい座標設定で再描画
   Glut.postRedisplay()

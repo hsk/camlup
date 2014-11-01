@@ -1,13 +1,14 @@
 /**
  * glrect.nml
+ *
  * original code: https://github.com/wakita/OpenGL.ML/blob/master/chapt02/glrect.ml
  */
 
 display() = {
-   GlClear.clear([`color])
-   GlDraw.color(1.0, 0.0, 0.0)
-   GlDraw.rect((-25.0, 25.0); (25.0, -25.0))
-   Gl.flush()
+  GlClear.clear([`color])
+  GlDraw.color(1.0, 0.0, 0.0)
+  GlDraw.rect((-25.0, 25.0); (25.0, -25.0))
+  Gl.flush()
 }
 
 setup() = {

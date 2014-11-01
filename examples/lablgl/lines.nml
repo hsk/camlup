@@ -1,5 +1,5 @@
 /**
- * lines.ml
+ * lines.nml
  *
  * original code: https://github.com/wakita/OpenGL.ML/blob/master/chapt03/lines.ml
  * Demonstrates primitive GlDraw.lines
