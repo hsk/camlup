@@ -12,7 +12,7 @@ r = 50.0
 width_step = 0.5
 width = & width_step
 
-render_scene () = {
+render_scene() = {
   width := width_step
   GlClear.clear([`color])
   _ = {

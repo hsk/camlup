@@ -26,6 +26,7 @@ alt_color = {
       (0.0, 1.0, 0.0)
   }
 }
+
 menu(#value) = {
   value match {
     | 0 | 1 | 2 -> toggle(value)

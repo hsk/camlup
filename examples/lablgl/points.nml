@@ -10,7 +10,7 @@ open M
 
 r = 50.0
 
-render_scene () = {
+render_scene() = {
   GlClear.clear([`color])
   _ = {
     GlMat.push()

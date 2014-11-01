@@ -9,8 +9,8 @@ open M
 
 r = 50.0
 
-render_scene () = {
-  GlClear.clear([`color]); // 画面消去
+render_scene() = {
+  GlClear.clear([`color]) // 画面消去
 
   // 行列の状態を保存して回転を開始
   _ = {
