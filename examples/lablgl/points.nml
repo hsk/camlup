@@ -1,0 +1,39 @@
+/**
+ * points.nml
+ *
+ * original code: https://github.com/wakita/OpenGL.ML/blob/master/chapt03/points.ml
+ *
+ * Demonstrates LablGL primitive "GlDraw.begins `points"
+ */
+
+open M
+
+r = 50.0
+
+render_scene () = {
+  GlClear.clear([`color])
+  _ = {
+    GlMat.push()
+    GlMat.rotate3(angle=rot[0]; around_xaxis)
+    GlMat.rotate3(angle=rot[1]; around_yaxis)
+    _ = {
+      GlDraw.begins(`points)
+      max = 120
+      for(i <- 0 to max) {
+        t = float(i) /. 20.0 *. pi
+        x = r *. sin(t)
+        y = r *. cos(t)
+        z = -50.0 +. 100.0 *. float(i) /. float(max)
+        GlDraw.vertex3(x, y, z)
+      }
+    }
+    GlDraw.ends()
+    GlMat.pop()
+  }
+  Glut.swapBuffers()
+}
+
+_ = {
+  M.main(title= "Points Example"; render_scene)
+}
+

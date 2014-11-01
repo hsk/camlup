@@ -1,0 +1,74 @@
+/**
+ * m.nml
+ *
+ * original code: https://github.com/wakita/OpenGL.ML/blob/master/chapt03/m.ml
+ */
+
+pi = acos(-1.0)
+
+around_xaxis = (1.0, 0.0, 0.0)
+around_yaxis = (0.0, 1.0, 0.0)
+
+rot = [| 0.0; 0.0 ]
+
+rotate(i delta) = {
+  rot[i] <- rot[i] +. delta
+}
+
+setup() = {
+  GlClear.color(alpha=1.0; (0.0, 0.0, 0.0))
+  GlDraw.color(0.0, 1.0, 0.0)
+}
+
+special_keys(#key #x #y) = {
+  key match {
+   | Glut.KEY_UP    => rotate(0; -5.0)
+   | Glut.KEY_DOWN  => rotate(0;  5.0)
+   | Glut.KEY_LEFT  => rotate(1; -5.0)
+   | Glut.KEY_RIGHT => rotate(1;  5.0)
+  }
+  Glut.postRedisplay()
+}
+
+change_size(#w #h) = {
+  h = max(h; 1)
+  GlDraw.viewport(x=0; y=0; w=w; h=h)
+  GlMat.mode(`projection)
+  GlMat.load_identity()
+
+  h = float(h)
+  w = float(w)
+  r = 100.0
+  z = (-.r, r)
+  x, y =
+    if (w < h)
+      (-.r, r), (-.r *. h /. w, -.r *. h /. w)
+    else
+      (-.r *. w /. h, r *. w /. h), (-.r, r)
+
+  GlMat.ortho(x=x; y=y; z=z)
+  GlMat.mode(`modelview)
+  GlMat.load_identity()
+}
+
+main(
+  #setup = setup
+  #special_keys = special_keys
+  #change_size = change_size
+  #title
+  render_scene
+) = {
+
+  Glut.init(Sys.argv)
+  Glut.initDisplayMode(double_buffer=true; alpha=false; depth=true)
+  Glut.initWindowSize(w=800; h=600)
+  Glut.createWindow(title)
+
+  Glut.reshapeFunc(change_size)
+  Glut.specialFunc(special_keys)
+  Glut.displayFunc(render_scene)
+
+  setup()
+
+  Glut.mainLoop()
+}

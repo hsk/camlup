@@ -1,0 +1,47 @@
+/**
+ * lstipple.nml
+ *
+ * original code: https://github.com/wakita/OpenGL.ML/blob/master/chapt03/lstipple.ml
+ *
+ * Demonstrates line stippling
+ */
+
+open M
+
+render_scene() = {
+
+  factor = & 3
+  pattern = 0x5555
+
+  GlClear.clear([`color])
+
+  _ = {
+    GlMat.push()
+    GlMat.rotate3(angle=rot[0]; around_xaxis)
+    GlMat.rotate3(angle=rot[1]; around_yaxis)
+
+    for(i <- 0 to 10) {
+      y = float(20 * i - 90)
+      GlDraw.line_stipple(factor= *factor; pattern)
+      _ = {
+        GlDraw.begins(`lines)
+        GlDraw.vertex2(-80.0, y)
+        GlDraw.vertex2(80.0, y)
+        GlDraw.ends()
+      }
+      ++factor
+    }
+    GlMat.pop()
+  }
+  Glut.swapBuffers()
+}
+
+setup() = {
+  GlClear.color(alpha=1.0; (0.0, 0.0, 0.0))
+  GlDraw.color(0.0, 1.0, 0.0)
+  Gl.enable(`line_stipple)
+}
+
+_ = {
+	main(title="Line Width Example" setup=setup render_scene)
+}

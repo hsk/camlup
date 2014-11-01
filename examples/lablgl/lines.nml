@@ -1,0 +1,36 @@
+/**
+ * lines.ml
+ *
+ * original code: https://github.com/wakita/OpenGL.ML/blob/master/chapt03/lines.ml
+ * Demonstrates primitive GlDraw.lines
+ */
+
+open M
+
+r = 50.0
+
+render_scene () = {
+  GlClear.clear([`color]); // 画面消去
+
+  // 行列の状態を保存して回転を開始
+  _ = {
+    GlMat.push()
+    GlMat.rotate3(angle=rot[0]; (1.0, 0.0, 0.0))
+    GlMat.rotate3(angle=rot[1]; (0.0, 1.0, 0.0))
+    _ = {
+      GlDraw.begins(`lines)
+      for (i <- 0 to 20) {
+        angle = float(i) /. 20.0 *. pi
+        x = r *. sin(angle)
+        y = r *. cos(angle)
+        GlDraw.vertex(x=x; y=y)()
+        GlDraw.vertex(x= -.x; y= -.y)()
+      }
+      GlDraw.ends()
+    }
+    GlMat.pop()
+  }
+  Glut.swapBuffers()
+}
+
+_ = M.main(render_scene)
