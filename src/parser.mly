@@ -44,6 +44,14 @@ let rec loop1 f = function
     loop1 f (e, EFun(p,le, TEmpty, b))
   | _ -> assert false
 
+let parse_error1 lineno = 
+  Printf.sprintf
+    ("\n＿人人 人人＿\n＞ 突然の死 ＜ parse error line %d\n￣Y^Y^Y^Y^Y￣\n")
+    lineno
+let parse_error2 str = 
+  Printf.sprintf
+    ("\n＿人人 人人＿\n＞ 突然の死 ＜ %s\n￣Y^Y^Y^Y^Y￣\n")
+    str
 %}
 
 %token <int> INT
@@ -362,4 +370,4 @@ stmts:
 
 prog:
   | stmts { Prog $1 }
-  | error { failwith (Printf.sprintf "parse error line %d" !lineno) }
+  | error { failwith (parse_error1 !lineno) }

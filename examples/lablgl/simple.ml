@@ -1,36 +1,36 @@
 
-# 15 "?"
+# 16 "?"
 let _ = 
 
-# 6 "?"
+# 7 "?"
 let _ = (Glut . init ((Sys . argv))) in
 
-# 7 "?"
+# 8 "?"
 (Glut . initDisplayMode  ~double_buffer:(false) ~alpha:(true) (()));
 
-# 8 "?"
+# 9 "?"
 let _ = (Glut . createWindow ~title:("Simple")) in
 
-# 9 "?"
+# 10 "?"
 (Glut . displayFunc (
-# 12 "?"
+# 13 "?"
 begin fun t1'  -> match t1' with
   | (
-# 9 "?"
+# 10 "?"
 ()) -> (
 
-# 10 "?"
+# 11 "?"
 
     (GlClear . clear ([`color]));
     
-# 11 "?"
+# 12 "?"
 (Gl . flush (()))
   )
  end ));
 
-# 13 "?"
+# 14 "?"
 (GlClear . color  ~alpha:(1.000000) (0.000000 , 0.000000 , 1.000000));
 
-# 14 "?"
+# 15 "?"
 (Glut . mainLoop (()))
 

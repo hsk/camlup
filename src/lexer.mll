@@ -103,9 +103,11 @@ rule token = parse
   | _
     {
       failwith (
-        Printf.sprintf "unknown token %s line %d"
-          (Lexing.lexeme lexbuf)
-          !lineno
+        parse_error2 (
+          Printf.sprintf "unknown token %s line %d"
+            (Lexing.lexeme lexbuf)
+            !lineno
+        )
       )
     }
 
@@ -115,9 +117,11 @@ and open_ = parse
   | _
     {
       failwith (
-        Printf.sprintf "unknown token %s near line %d"
-        (Lexing.lexeme lexbuf)
-        !lineno
+        parse_error2 (
+          Printf.sprintf "unknown token %s near line %d"
+          (Lexing.lexeme lexbuf)
+          !lineno
+        )
       )
     }
 
