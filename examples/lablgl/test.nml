@@ -1,0 +1,37 @@
+/**
+ * test.nml
+ *
+ * original code: http://kwakita.wordpress.com/2010/04/22/my-first-lablgl-demo/
+ */
+
+initialize() = {
+  ignore(Glut.init([| ]))
+  ignore(Glut.createWindow(“Social Cosmo Browser”))
+  GlClear.color(0., 0., 0.)
+
+  Gl.enable(`lighting)
+  GlLight.light(1; `ambient(1., 1., 1., 1.))
+  List.iter(GlLight.light(num=2); [`diffuse(1., 0., 0., 1.) `position( 1., 0., 0., 0.) ])
+  List.iter(GlLight.light(num=3); [`diffuse(0., 0., 1., 1.) `position(-1., 0., 0., 0.) ])
+  List.iter(Gl.enable; [`light1 `light2 `light3 ])
+}
+
+display() = {
+  GlClear.clear([`color])
+  Glut.solidTeapot(0.5)
+  Gl.flush()
+}
+
+keyboard(#key; #x; #y) = {
+  if (key == int_of_char('q')) exit(0)
+  GlMat.rotate(angle=2.0; x=0.25; y=0.5; z=1.0)()
+  display()
+}
+
+_ = {
+  initialize()
+  Glut.displayFunc(cb=display)
+  Glut.keyboardFunc(keyboard)
+  Glut.mainLoop()
+}
+
