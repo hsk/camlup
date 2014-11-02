@@ -1,4 +1,4 @@
-let version = "0.0.3.1"
+let version = "0.0.3"
 let parse input =
   let inp = open_in input in
   let lexbuf = Lexing.from_channel inp in
