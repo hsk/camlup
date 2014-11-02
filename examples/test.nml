@@ -3,8 +3,14 @@ open List
 
 variable : int = 2
 a = 1
-b = 2
+b = 0xABCDEF09
+c = 0XABCDEF09
+d = 0o01234567
+e = 0O01234567
+f = 0b10101010
+g = 0B10101010
 _ = 3
+
 
 block : unit = {
 
