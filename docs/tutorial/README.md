@@ -37,9 +37,8 @@
 
 ## 1. はじめに
 
-  newmlはOCamlのトランスレータ言語です。
-  OCamlの多くのチュートリアルはOCamlTopのREPLで実行するのですが、ここではファイルに保存してコンパイルして実行するスタイルで説明します。
-
+  CamlupはOCamlのトランスレータ言語です。
+  
   [↑](#チュートリアル)
 
 ## 2. インストール
@@ -67,7 +66,7 @@ ocamlとUnix環境のmakeがある環境で以下のコマンドを実行しま�
 1. OCamlをインストールします。
 2. nmlc.exeを以下のURLからダウンロードして、パスを通します。
 
-https://github.com/hsk/newml/blob/master/nmlc.exe?raw=true
+https://github.com/hsk/camlup/blob/master/nmlc.exe?raw=true
 
 ※新しいWindowsの場合は認証が必要です。
 問題は無いはずですが、ウィルスチェックを行ってから実行してください。
@@ -93,13 +92,13 @@ https://github.com/hsk/newml/blob/master/nmlc.exe?raw=true
     Hello world!
     $
 
-  newmlでは多くのC言語系統の言語と同じように関数呼び出しに()が必須です。
+  camlupでは多くのC言語系統の言語と同じように関数呼び出しに()が必須です。
 
 
     // hello02.nml
     print_string "Hello world!\n"
 
-  OCamlでは以上のようなプログラムが実行出来ますが、newmlでは、２つの式 `print_string` と `"Hello world!\n"`のように認識されます。そのため、何も起こりません。
+  OCamlでは以上のようなプログラムが実行出来ますが、camlupでは、２つの式 `print_string` と `"Hello world!\n"`のように認識されます。そのため、何も起こりません。
 
     $ nmlc -run hello02.nml
     $
@@ -135,7 +134,7 @@ https://github.com/hsk/newml/blob/master/nmlc.exe?raw=true
 
   と表示されます。Printf.printfを使うとC言語のprintfと同じような出力フォーマットで出力する事が出来ます。
   C言語系統の言語と違って、引数の区切り文字`,`が無い事に注意してください。
-  newml(OCaml)では、printf関数はカリー化された関数です。したがって、
+  camlup(OCaml)では、printf関数はカリー化された関数です。したがって、
 
     Printf.printf("%d\n")(1)
 
@@ -144,7 +143,7 @@ https://github.com/hsk/newml/blob/master/nmlc.exe?raw=true
 
     Printf.printf("%d %d %d %d\n")(1)(2)(3)(4)
 
-  そこで、newmlではこの括弧を省略する事が出来ます。
+  そこで、camlupではこの括弧を省略する事が出来ます。
 
     Printf.printf("%d %d %d %d\n" 1 2 3 4)
 
@@ -165,7 +164,7 @@ https://github.com/hsk/newml/blob/master/nmlc.exe?raw=true
 
     Printf.printf("%d\n"; -1-2+10/5)
 
-  newmlでは改行も、`;`と同じ意味を持つので
+  camlupでは改行も、`;`と同じ意味を持つので
 
     Printf.printf("%d\n"
         -1)
@@ -227,7 +226,7 @@ https://github.com/hsk/newml/blob/master/nmlc.exe?raw=true
 
 ## 8. ブロック
 
-  newmlでは`{}`で括って複数の式を連続して記述出来ます。
+  camlupでは`{}`で括って複数の式を連続して記述出来ます。
 
     block : unit = {
       printf("test 1\n")
@@ -351,7 +350,7 @@ https://github.com/hsk/newml/blob/master/nmlc.exe?raw=true
     a:bool = true
     b:bool = false
 
-  newmlで`if else`は文ではなく式です。
+  camlupで`if else`は文ではなく式です。
 
     if (a) printf("a\n") else printf("b\n")
 
@@ -511,7 +510,7 @@ https://github.com/hsk/newml/blob/master/nmlc.exe?raw=true
 
 ## 12. 参照
 
-  newmlでは変数を書き換えたい場合には参照を使います。
+  camlupでは変数を書き換えたい場合には参照を使います。
 
     a = & 1
 
@@ -522,7 +521,7 @@ https://github.com/hsk/newml/blob/master/nmlc.exe?raw=true
   `=`演算子は変数あるいは関数の定義につかっているため、代入は`:=`を使って代入出来ます。 
   現在一般的に使われているプログラミング言語では変わっている仕様ですが、
   数学的に見れば、=なのに値が違う方がおかしいと考えればこれで良いのかなと思います。
-  どっちでも良いと言えばどっちでも良い所ですが、newmlは関数型言語なので、書き換え可能な変数は
+  どっちでも良いと言えばどっちでも良い所ですが、camlupは関数型言語なので、書き換え可能な変数は
   若干使いにくくなっています。
 
   参照の中身を見るには`*`を使います。
@@ -580,7 +579,7 @@ https://github.com/hsk/newml/blob/master/nmlc.exe?raw=true
 
 ## 13. 配列とループ
 
-  newmlでも配列を使ったり、ループをする事が可能です。
+  camlupでも配列を使ったり、ループをする事が可能です。
 
   配列は`[|`と `]`で括って初期化出来ます。とじ括弧に`|`は必要ありません。
 
@@ -779,7 +778,7 @@ https://github.com/hsk/newml/blob/master/nmlc.exe?raw=true
       printf("fib 10=%d\n" fib(10))
     }
 
-  newmlのパターンマッチは `=>` 移行の式の連続を実行しますが、次のパターンの処理は実行しません。
+  camlupのパターンマッチは `=>` 移行の式の連続を実行しますが、次のパターンの処理は実行しません。
 
     match_block = {
 
@@ -873,7 +872,7 @@ https://github.com/hsk/newml/blob/master/nmlc.exe?raw=true
 
 ## 18. パーシャルファンクション
 
-  newmlでは１つあるいは複数の値を受け取り、パターンマッチする関数を記述出来ます。
+  camlupでは１つあるいは複数の値を受け取り、パターンマッチする関数を記述出来ます。
 
     def fib:(int)=>int={
       | 0 => 0
@@ -1061,7 +1060,7 @@ https://github.com/hsk/newml/blob/master/nmlc.exe?raw=true
 
 ## 22. モジュール
 
-  newmlはファイル１つが１モジュールとなり、ファイル名の最初の文字を大文字にしたモジュールを構成します。
+  camlupはファイル１つが１モジュールとなり、ファイル名の最初の文字を大文字にしたモジュールを構成します。
   小さなモジュールは以下のようにファイル内にサブモジュールとして作成出来ます。
 
     A module {
@@ -1091,7 +1090,7 @@ https://github.com/hsk/newml/blob/master/nmlc.exe?raw=true
       printf("b %d\n" M.find("b" dic))
     }
     
-  newmlのMapはOCamlのMapをそのまま使っているので詳しくはOCamlの[Mapのチュートリアル](https://ocaml.org/learn/tutorials/map.ja.html)等を参照してください。
+  camlupのMapはOCamlのMapをそのまま使っているので詳しくはOCamlの[Mapのチュートリアル](https://ocaml.org/learn/tutorials/map.ja.html)等を参照してください。
 
   この章のサンプルは[src/module.nml](src/module.nml)からダウンロード出来ます。
   
@@ -1099,7 +1098,7 @@ https://github.com/hsk/newml/blob/master/nmlc.exe?raw=true
 
 ## 23. オブジェクト指向
 
-  newmlはOCamlをバックエンドに使っているのでOCamlのOのオブジェクト指向を使う事が出来ます。
+  camlupはOCamlをバックエンドに使っているのでOCamlのOのオブジェクト指向を使う事が出来ます。
   クラスは以下のように記述します。
 
     ab class {
@@ -1268,7 +1267,6 @@ https://github.com/hsk/newml/blob/master/nmlc.exe?raw=true
 ## 25. ラベル引数
 
   TODO:ラベルで良いのか？調べる。
-  
 
   ラベルを使って、名前指定の関数定義が出来ます。
   #を付けて変数を宣言する事でラベル変数になります。

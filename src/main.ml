@@ -86,10 +86,10 @@ let _ =
       "-v", Arg.Unit(fun()->ver:=true), "show version";
     ]
     (fun s -> files := !files @ [s])
-    ("Newml Compiler (C) Hiroshi Sakurai\n" ^
+    ("Camlup Compiler (C) Hiroshi Sakurai\n" ^
      Printf.sprintf "usage: %s [-run] ...filenames" Sys.argv.(0));
   if !ver then(
-    Printf.printf "NewMLComiler %s\n" version;
+    Printf.printf "Camlup Comiler %s\n" version;
     exit(0)
   );
   List.iter (fun (name) ->
