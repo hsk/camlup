@@ -1,4 +1,4 @@
-# newml(仮)
+# newml(仮) camlup
 
 ![camlup](http://www.afghanistan-today.org/media/slideshows/camel_slide2.jpg)
 
