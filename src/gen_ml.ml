@@ -61,6 +61,9 @@ let rec print_e sp ppf e =
   | EStr(_,i) ->
     fprintf ppf "%s"
       i
+  | EChr(_,i) ->
+    fprintf ppf "%s"
+      i
   | EVar(_,i) ->
     fprintf ppf "%s"
       i

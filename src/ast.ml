@@ -14,6 +14,7 @@ type e =
   | EInt of p * int
   | EFloat of p * float
   | EStr of p * string
+  | EChr of p * string
   | EVar of p * string
   | EBin of p * e * string * e
   | EPre of p * string * e
@@ -41,6 +42,7 @@ let e_pos = function
   | EInt(p,_) -> p
   | EFloat(p,_) -> p
   | EStr(p,_) -> p
+  | EChr(p,_) -> p
   | EVar(p,_) -> p
   | EBin(p,_,_,_) -> p
   | EPre(p,_,_) -> p
@@ -108,6 +110,7 @@ let rec print_e fp = function
   | EInt(_, i) -> fprintf fp "EInt(%d)@?" i
   | EFloat(_, f) -> fprintf fp "EFloat(%f)@?" f
   | EStr(_, s) -> fprintf fp "EStr(\"%s\")@?" s
+  | EChr(_, s) -> fprintf fp "EChr(\"%s\")@?" s
   | EVar(_, s) -> fprintf fp "EVar(\"%s\")@?" s
   | EBin(_, e1, s, e2) ->
     fprintf fp "EBin(%a,\"%s\",%a)@?"

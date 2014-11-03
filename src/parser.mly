@@ -114,6 +114,7 @@ let parse_error2 str =
 %token RETURN
 %token <string> OPEN
 %token <string> STR
+%token <string> CHR
 %token CLASS THIS DOT
 %token IF ELSE
 %token IMPLEMENT RIMPLEMENT TRAIT
@@ -241,7 +242,7 @@ exp:
   | FLOAT { EFloat(p(),$1) }
   | VAR { EVar(p(),$1) }
   | STR { EStr(p(),$1) }
-
+  | CHR { EChr(p(),$1) }
   | LPAREN RPAREN { EUnit(p()) }
   | LPAREN exp RPAREN { check_comma $2 }
 

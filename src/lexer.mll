@@ -100,6 +100,8 @@ rule token = parse
   | "def" { DEF }
   | '=' { ASSIGN }
   | '"' ([^ '"'] | "\\" (['"'  '\'' 'n' 'r' 't' 'b' ] | ['0'-'9'] ['0'-'9'] ['0'-'9']) )* '"' { STR(Lexing.lexeme lexbuf) }
+  | '\'' ([^ '\''] | "\\" (['"'  '\'' 'n' 'r' 't' 'b' ] | ['0'-'9'] ['0'-'9'] ['0'-'9']) )* '\'' { CHR(Lexing.lexeme lexbuf) }
+
   | ['`' 'a'-'z' 'A'-'Z' '_']['a'-'z' 'A'-'Z' '_' '0'-'9']*
       { VAR(Lexing.lexeme lexbuf) }
   | eof { EOF }
