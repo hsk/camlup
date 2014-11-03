@@ -9,12 +9,12 @@ let e2t = function
 | _ -> assert false
 
 let e2id = function
-| EVar(_,i) -> i
+| EVar(_,_) as i -> i
 | ELet(_,i,t,EEmpty(_)) -> i
 | _ -> assert false
 
 let e2e = function
-| ELet(p,e,_,EEmpty(_)) -> EVar(p,e)
+| ELet(p,e,_,EEmpty(_)) -> e
 | ELet(_,e,_,e2) -> assert false
 | e -> e
 
@@ -217,7 +217,7 @@ exp:
   | exp LPAREN exps RPAREN %prec CALL { ECall(p(),$1, $3) }
   | exp LPAREN RPAREN %prec CALL { ECall(p(),$1, [EUnit(p())]) }
 
-  | ID COLONASSIGN exp { ELet(p(),$1, TEmpty, $3) }
+  | ID COLONASSIGN exp { ELet(p(),EVar(p(),$1), TEmpty, $3) }
   /*
   | exp COLONASSIGN exp {
       let rec loop = function 
@@ -234,7 +234,7 @@ exp:
   */
   | exp COLON typ ASSIGN exp {
       let rec loop = function 
-        | EVar(p,id),t,b -> ELet(p,id, t, b)
+        | EVar(p,_) as id,t,b -> ELet(p,id, t, b)
         | ECall(p,(e:e), ls), (t:t), b ->
 
           let (lt:t) = List.fold_left (fun (t:t) (l:e)  ->
@@ -269,13 +269,13 @@ exp:
   | INT { EInt(p(),$1) }
   | ID { EVar(p(),$1) }
   | STRING { EStr(p(),$1) }
-  | DEF ID COLONASSIGN exp { ELetRec(p(),$2, TEmpty, $4) }
+  | DEF ID COLONASSIGN exp { ELetRec(p(),EVar(p(),$2), TEmpty, $4) }
 
-  | DEF ID fns END { ELetRec(p(),$2, TEmpty, EPFun(p(),$3)) }
+  | DEF ID fns END { ELetRec(p(),EVar(p(),$2), TEmpty, EPFun(p(),$3)) }
 
   | DEF prm exps END {
       let rec loop = function 
-        | EVar(p,id),b -> ELetRec(p,id, TEmpty, b)
+        | EVar(p,_) as id,b -> ELetRec(p,id, TEmpty, b)
         | ECall(p,(e:e), ls), b ->
           let le = List.map (fun (l:e) ->
             e2e l
@@ -288,7 +288,7 @@ exp:
 
   | DEF prm COLON typ exps END {
       let rec loop = function 
-        | EVar(p,id),t,b -> ELetRec(p,id, t, b)
+        | EVar(p,_) as id,t,b -> ELetRec(p,id, t, b)
         | ECall(p,(e:e), ls), (t:t), b ->
           let (lt:t) = List.fold_left begin fun (t:t) (l:e)  ->
             TFun(e2t l, t)
@@ -301,9 +301,9 @@ exp:
       in
       loop($2,$4,EBlock(e_pos(List.hd $5),$5))
     }
-    /*
+  /*
   | exp MEMBER exp { ECall(e_pos($3),$3, [$1]) }
-*/
+  */
 fn:
   | OR patterns OR exps { EFun(e_pos(List.hd $2), $2, TEmpty, EBlock(e_pos(List.hd $4), $4)) }
 
@@ -320,7 +320,7 @@ stmt:
   | TYPE ID defrecs END { STypeRec($2, $3)}
   | MODULE ID stmts END { SModule($2, $3) }
   | TYPE ID OR variants END { STypeVariant($2, $4)}
-*/
+  */
 stmts:
   | stmt { [$1] }
   | stmt stmts { $1 :: $2 }
@@ -333,8 +333,8 @@ prm:
 prms:
   | ID { [EVar(p(),$1)] }
   | ID prms { EVar(p(),$1)::$2}
-  | ID COLON typ { [ELet(p(),$1,$3,EEmpty(p()))] }
-  | ID COLON typ prms { ELet(p(),$1,$3,EEmpty(p()))::$4}
+  | ID COLON typ { [ELet(p(),EVar(p(), $1),$3,EEmpty(p()))] }
+  | ID COLON typ prms { ELet(p(),EVar(p(),$1),$3,EEmpty(p()))::$4}
 patterns:
   | pattern { [$1] }
   | pattern patterns { $1::$2 }

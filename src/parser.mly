@@ -13,18 +13,18 @@ let e2t = function
   | _ -> assert false
 
 let e2id = function
-  | EVar(_,i) -> i
+  | EVar(_,i) as e -> e
   | ELet(_,i,_,_) -> i
   | ELetRec(_,i,_,_) -> i
   | _ -> assert false
 
 let e2e = function
-  | ELet(p,e,t,e2) -> ETy(p,false,e,t,e2)
-  | ELetRec(p,e,t,e2) -> ETy(p,true,e,t,e2)
+  | ELet(p,EVar(_,e),t,e2) -> ETy(p,false,e,t,e2)
+  | ELetRec(p,EVar(_,e),t,e2) -> ETy(p,true,e,t,e2)
   | e -> e
 
 let rec loop f = function 
-  | EVar(p,id),t,b -> f(p,id, t, b)
+  | EVar(p,_) as id ,t,b -> f(p, id, t, b)
   | ECall(p,(e:e), ls), (t:t), b ->
     let (lt:t) = List.fold_left (fun (t:t) (l:e)  ->
       TFun(e2t l, t)
@@ -36,7 +36,7 @@ let rec loop f = function
   | _ -> assert false
 
 let rec loop1 f = function 
-  | EVar(p,id),b -> f(p,id, TEmpty, b)
+  | EVar(p,_) as id, b -> f(p,id, TEmpty, b)
   | ECall(p,(e:e), ls), b ->
     let le = List.map (fun (l:e) ->
       e2e l
@@ -303,8 +303,8 @@ exp:
   | exp LPAREN exps RPAREN %prec CALL { ECall(e_pos($1),$1, $3) }
   | exp LPAREN RPAREN %prec CALL { ECall(e_pos($1),$1, [EUnit(e_pos($1))]) }
 
-  |     VAR ASSIGN exp { ELet(e_pos($3),$1, TEmpty, $3) }
-  | DEF VAR ASSIGN exp { ELetRec(e_pos($4),$2, TEmpty, $4) }
+  |     exp ASSIGN exp { ELet(e_pos($3),$1, TEmpty, $3) }
+  | DEF VAR ASSIGN exp { ELetRec(e_pos($4),EVar(e_pos($4), $2), TEmpty, $4) }
 
   |     exp ASSIGN exp { loop1 (fun(p,a,b,c)->ELet(e_pos($1),a,b,c)) ($1, $3) }
   | DEF exp ASSIGN exp { loop1 (fun(p,a,b,c)->ELetRec(e_pos($2),a,b,c)) ($2, $4) }

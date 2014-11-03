@@ -111,8 +111,8 @@ let rec print_e sp ppf e =
     in
     let print_e2 sp ppf = function
       | ELet (_,id, _, e) ->
-        fprintf ppf "~%s:(%a)"
-          id
+        fprintf ppf "~%a:(%a)"
+          (print_e "") id
           (print_e "") e
       | e ->
         fprintf ppf "(%a)" (print_e sp) e
@@ -294,21 +294,21 @@ let rec print_e sp ppf e =
     fprintf ppf "[|%a|]"
       (print_ls "" "; " (print_e)) ls
   | ELet (_,id, TEmpty, e) ->
-    fprintf ppf "let %s = %a"
-      id
+    fprintf ppf "let %a = %a"
+      (print_e "") id
       (print_e "") e
   | ELet (_,id, t, e) ->
-    fprintf ppf "let (%s:%a) = %a"
-      id
+    fprintf ppf "let (%a:%a) = %a"
+      (print_e "") id
       (print_t "" "") t
       (print_e "") e
   | ELetRec (_,id, TEmpty, e) ->
-    fprintf ppf "let rec %s = %a"
-      id
+    fprintf ppf "let rec %a = %a"
+      (print_e "") id
       (print_e sp) e
   | ELetRec (_,id, t, e) ->
-    fprintf ppf "let rec (%s:%a) = %a"
-      id
+    fprintf ppf "let rec (%a:%a) = %a"
+      (print_e "") id
       (print_t "" "") t
       (print_e sp) e
 
@@ -360,9 +360,9 @@ let rec print_s sp ppf (s:s):unit =
     | SAnd(e1, SExp(ELet(_,id, TEmpty, e))) ->
       fprintf ppf "%a\n"
         (print_s sp) e1;
-      fprintf ppf "\n%sand %s = %a"
+      fprintf ppf "\n%sand %a = %a"
         sp
-        id
+        (print_e "") id
         (print_e (sp^"  ")) e
 
     | SAnd(e1, e2) ->
@@ -437,21 +437,21 @@ let rec print_s sp ppf (s:s):unit =
       print_line ppf e;
       match e with
       | ELet (_,id, TEmpty, e) ->
-        fprintf ppf "val %s = %a"
-          id
+        fprintf ppf "val %a = %a"
+          (print_e "") id
           (print_e "") e
       | ELet (_,id, t, e) ->
-        fprintf ppf "val (%s:%a) = %a"
-          id
+        fprintf ppf "val (%a:%a) = %a"
+          (print_e "") id
           (print_t "" "") t
           (print_e "") e
       | ELetRec (_,id, TEmpty, e) ->
-        fprintf ppf "method %s = %a"
-          id
+        fprintf ppf "method %a = %a"
+          (print_e "") id
           (print_e sp) e
       | ELetRec (_,id, t, e) ->
-        fprintf ppf "method (%s:%a) = %a"
-          id
+        fprintf ppf "method (%a:%a) = %a"
+          (print_e "") id
           (print_t "" "") t
           (print_e sp) e
       | _ ->

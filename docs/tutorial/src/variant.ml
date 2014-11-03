@@ -1,14 +1,10 @@
 open Printf;;
 
-# 13 "?"
-let variants = 
 # 12 "?"
+let variants = 
 
-
-# 11 "?"
-let rec eval = 
 # 10 "?"
-begin fun t1'  -> match t1' with
+let rec eval = begin fun t1'  -> match t1' with
   | (
 # 7 "?"
 `int (n)) -> (
@@ -19,21 +15,13 @@ begin fun t1'  -> match t1' with
   )
   | (`add (a , b)) -> (
 
-# 9 "?"
-
-    (
-# 8 "?"
-eval (a) + eval (b))
+    (eval (a) + eval (b))
   )
   | (
 # 9 "?"
 `mul (a , b)) -> (
 
-# 10 "?"
-
-    (
-# 9 "?"
-eval (a) * eval (b))
+    (eval (a) * eval (b))
   )
  end  in
 
