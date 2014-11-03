@@ -1,0 +1,113 @@
+/**
+ * bounce.nml
+ *
+ * original code: https://github.com/wakita/OpenGL.ML/blob/master/chapt02/bounce.ml
+ */
+
+width = 400.0
+height = 400.0
+
+Key module {
+
+  up = & false
+  down = & false
+  left = & false
+  right = & false
+
+  onKeyDown(#key #x #y) = {
+    key match {
+      | Glut.KEY_UP    => up := true
+      | Glut.KEY_DOWN  => down := true
+      | Glut.KEY_LEFT  => left := true
+      | Glut.KEY_RIGHT => right := true
+      | _ => ()
+    }
+    Glut.postRedisplay()
+  }
+
+  onKeyUp(#key #x #y) = {
+    key match {
+      | Glut.KEY_UP    => up := false
+      | Glut.KEY_DOWN  => down := false
+      | Glut.KEY_LEFT  => left := false
+      | Glut.KEY_RIGHT => right := false
+      | _ => ()
+    }
+    Glut.postRedisplay()
+  }
+}
+
+Ship module {
+  rsize = 25.
+  x = & (width -. rsize) /. 2.
+  y = & (height -. rsize *. 2.0)
+  speed = 5.
+
+  move() = {
+
+    x := if(*Key.left)  *x -. speed else *x
+    x := if(*Key.right) *x +. speed else *x
+    y := if(*Key.up)    *y -. speed else *y
+    y := if(*Key.down)  *y +. speed else *y
+
+    x := min(max(*x 0.) width -. rsize)
+    y := min(max(*y 0.) height -. rsize)
+
+  }
+
+  draw() = {
+    GlDraw.rect(
+      *x, *y
+      *x +. rsize, *y +.rsize
+    )
+  }
+}
+
+Game module {
+
+  draw() = {
+    GlClear.clear([`color])
+    GlDraw.color(1.0, 0.0, 0.0)
+    Ship.draw()
+    Glut.swapBuffers()
+  }
+
+  def timer(#value) = {
+    Glut.postRedisplay()
+    Ship.move()
+    Glut.timerFunc(ms = 15 cb = timer value = 1)
+  }
+
+  change_size(#w; #h) = {
+    h = max(h; 1)
+    GlDraw.viewport(x=0; y=0; w=w; h=h)
+
+    GlMat.mode(`projection)
+    GlMat.load_identity()
+
+    ortho = GlMat.ortho(z=(1.0, -1.0))
+    x = (0.0, width)
+    y = (height, -0.0)
+    ortho(x=x; y=y)
+
+    GlMat.mode(`modelview)
+    GlMat.load_identity()
+  }
+
+  main = {
+    _ = Glut.init(Sys.argv)
+    Glut.initDisplayMode(double_buffer = true; alpha= true)()
+    Glut.initWindowSize(w= int_of_float(width); h= int_of_float(height))
+    _ = Glut.createWindow("Game01")
+    Glut.displayFunc(draw)
+    Glut.reshapeFunc(change_size)
+    Glut.specialFunc(Key.onKeyDown)
+    Glut.specialUpFunc(Key.onKeyUp)
+    Glut.timerFunc(ms=33 cb=timer value=1)
+    GlClear.color(alpha=1.0; (0.1, 0.1, 0.1))
+    Glut.mainLoop()
+  }
+}
+
+
+
