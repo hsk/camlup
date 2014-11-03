@@ -31,16 +31,18 @@
 なれた物なので、ただただ、書いて出来た。
 
 
-	f1(a:int)= a
+    f1(a:int)= a
 
 このプログラムが
 
-	Prog([SExp(ELet(ECall(EVar("f1"),[ELet(EVar("a"),Ty("int"),EEmpty())]),TEmpty,EVar("a")))])
+    Prog([SExp(ELet(ECall(EVar("f1"),[ELet(EVar("a"),Ty("int"),EEmpty())]),TEmpty,EVar("a")))])
+
+
 
 と変換されて、OCamlの
 
-	# 22 "?"
-	let f1 ~a:() = a
+    # 22 "?"
+    let f1 ~a:() = a
 
 に変換されている事が分かる。ここまではオッケーっと
 
@@ -52,6 +54,48 @@ gitで戻す。出来た事にする
 パーサの該当箇所を探して直す
 gen_mlを修正する
 名前付きの引数の扱いを変える
+
+元の動きが
+
+    Prog([SExp(ELet(            f1  ,TEmpty,EFun([ETy(false,a,Ty("int"),EEmpty())],TEmpty,EVar("a"))))])
+
+で
+
+    Prog([SExp(ELet(      EVar("f1"),TEmpty,EFun([ETy(false,a,Ty("int"),EEmpty())],TEmpty,EVar("a"))))])
+
+となるのがいいはずなのだけど、
+
+    Prog([SExp(ELet(ECall(EVar("f1"),[ELet(EVar("a"),Ty("int"),EEmpty())]),TEmpty,EVar("a")))])
+
+になっている。
+
+パーサの動きは元々ここの部分で動いている。
+
+	exp = expにマッチして、exp ( exps ) にマッチ VARにマッチ、exp : typにマッチ
+	VARにマッチして、で最終的にELetだったものが、loop1に送られるのが元々の動き。
+
+	exp:
+	  | VAR { EVar(p(),$1) }
+	  | exp LPAREN exps RPAREN %prec CALL { ECall(e_pos($1),$1, $3) }
+	  | exp ASSIGN exp { loop1 (fun(p,a,b,c)->ELet(e_pos($1),a,b,c)) ($1, $3) }
+	  | exp COLON typ
+	    {
+	      match $1 with
+	      | ELetRec(p,id,_,e) -> ELetRec(p, id, $3, e)
+	      | _ -> ELet(e_pos($1), e2id $1, $3, EEmpty(e_pos($1)))
+	    }
+
+	let rec loop1 f = function 
+	  | EVar(p,id),b -> f(p,id, TEmpty, b)
+	  | ECall(p,(e:e), ls), b ->
+	    let le = List.map (fun (l:e) ->
+	      e2e l
+	    ) ls in
+	    loop1 f (e, EFun(p,le, TEmpty, b))
+	  | _ -> assert false
+
+
+
 
 ## 2014.11.02
 

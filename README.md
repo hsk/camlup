@@ -165,7 +165,7 @@ printf("%d\n" f2(1,2 3,4))
 
 - [チュートリアル](docs/tutorial)
 - [言語仕様](docs/spec)
-- [Camlup ドキュメント)](docs)
+- [Camlup ドキュメント](docs)
 
 # License
 

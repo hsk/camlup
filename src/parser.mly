@@ -303,7 +303,7 @@ exp:
   | exp LPAREN exps RPAREN %prec CALL { ECall(e_pos($1),$1, $3) }
   | exp LPAREN RPAREN %prec CALL { ECall(e_pos($1),$1, [EUnit(e_pos($1))]) }
 
-  |     exp ASSIGN exp { ELet(e_pos($3),$1, TEmpty, $3) }
+  |     VAR ASSIGN exp { ELet(e_pos($3),EVar(e_pos($3),$1), TEmpty, $3) }
   | DEF VAR ASSIGN exp { ELetRec(e_pos($4),EVar(e_pos($4), $2), TEmpty, $4) }
 
   |     exp ASSIGN exp { loop1 (fun(p,a,b,c)->ELet(e_pos($1),a,b,c)) ($1, $3) }

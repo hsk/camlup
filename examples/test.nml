@@ -423,7 +423,7 @@ whens = {
   printf("fib 11 %d\n" fib(11))
 }
 
-/*
+
 A module {
   a = 1234
   inc(k) = k + 1
@@ -520,5 +520,5 @@ floats = {
   m = n +. 10.5
   printf("%f\n" m)
 }
-*/
+
 /* /*nested comment*/ */
