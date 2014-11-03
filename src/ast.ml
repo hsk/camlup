@@ -22,7 +22,7 @@ type e =
   | EFun of p * e list * t * e
   | EPFun of p * e list
   | EMatch of p * e * e list
-  | EPtn of p * e list * t * e * e
+  | EPtn of p * e list list * t * e * e
   | EList of p * e list
   | ELet of p * e * t * e
   | ELetRec of p * e * t * e
@@ -139,9 +139,13 @@ let rec print_e fp = function
     fprintf fp "EMatch(%a,[%a])@?"
       print_e e
       (fun fp -> List.iter(print_e fp)) es
-  | EPtn(_, es, t, e1, e2) ->
+  | EPtn(_, ess, t, e1, e2) ->
     fprintf fp "EPtn([%a],%a,%a,%a)@?"
-      (fun fp -> List.iter(print_e fp)) es
+      (fun fp -> List.iter(
+        fun es ->
+          fprintf fp "[%a]@?"
+            (fun fp -> List.iter(fun e-> fprintf fp "%a;@?" print_e e)) es
+      )) ess
       print_t t
       print_e e1
       print_e e2

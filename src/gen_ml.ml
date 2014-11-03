@@ -165,8 +165,7 @@ let rec print_e sp ppf e =
     fprintf ppf "begin fun ";
 
     begin match List.hd ls with
-      | EFun(_,its, t, e)
-      | EPtn(_,its, t, _, e) ->
+      | EPtn(_,[its], t, _, e) ->
         let _ = List.fold_left(fun n b ->
             fprintf ppf "t%d' " n;
             n + 1
@@ -182,7 +181,7 @@ let rec print_e sp ppf e =
     end;
     fprintf ppf " with\n";
     List.iter begin function
-      | EFun(_,its, t, e) ->
+      | EPtn(_,[its], t, w, e) ->
         let rec print_ls sp sep p ppf = function
           | [] -> ()
           | [x] -> fprintf ppf "(%a)" (p sp) x
@@ -193,28 +192,15 @@ let rec print_e sp ppf e =
               (print_ls sp sep p) xs
         in
         let sp = sp ^ "  " in
-        fprintf ppf "%s| %a%a -> (\n%a%s)\n"
+        fprintf ppf "%s| %a%a"
           sp
           (print_ls "" "," print_e) its
-          (print_t (if t=TEmpty then "" else ":") "") t
-          (print_e_block sp "\n") e
-          sp
-      | EPtn(_,its, t, w, e) ->
-        let rec print_ls sp sep p ppf = function
-          | [] -> ()
-          | [x] -> fprintf ppf "(%a)" (p sp) x
-          | x::xs ->
-            fprintf ppf "(%a)%s%a"
-              (p sp) x
-              sep
-              (print_ls sp sep p) xs
-        in
-        let sp = sp ^ "  " in
-        fprintf ppf "%s| %a%a when %a -> (\n%a%s)\n"
-          sp
-          (print_ls "" "," print_e) its
-          (print_t (if t=TEmpty then "" else ":") "") t
-          (print_e_block sp "\n") w
+          (print_t (if t=TEmpty then "" else ":") "") t;
+        (match w with
+        | EEmpty _ -> ()
+        | _ -> fprintf ppf " when %a" (print_e_block sp "\n") w
+        );
+        fprintf ppf " -> (\n%a%s)\n"
           (print_e_block sp "\n") e
           sp
 
@@ -226,7 +212,7 @@ let rec print_e sp ppf e =
       (print_e "") e
       ;
     List.iter begin function
-      | EFun(_,its, t, e) ->
+      | EPtn(_,its, t, w, e) -> (* added when *)
         let rec print_ls sep p ppf = function
           | [] -> ()
           | [x] -> fprintf ppf "(%a)" p x
@@ -236,25 +222,16 @@ let rec print_e sp ppf e =
               sep
               (print_ls sep p) xs
         in
-        fprintf ppf "| %a%a -> (%a%s\n)"
-          (print_ls " " (print_e " ")) its
-          (print_t (if t=TEmpty then "" else ":") "") t
-          (print_e_block sp "\n") e
-          sp
-      | EPtn(_,its, t, w, e) ->
-        let rec print_ls sep p ppf = function
-          | [] -> ()
-          | [x] -> fprintf ppf "(%a)" p x
-          | x::xs ->
-            fprintf ppf "(%a)%s%a"
-              p x
-              sep
-              (print_ls sep p) xs
-        in
-        fprintf ppf "| %a%a when %a -> (%a%s\n)"
-          (print_ls " " (print_e " ")) its
-          (print_t (if t=TEmpty then "" else ":") "") t
-          (print_e_block sp "\n") w
+        List.iter
+          (fun its -> fprintf ppf "| %a"
+            (print_ls " " (print_e " ")) its) its;
+
+        (*print_t ppf (if t=TEmpty then "" else ":") "" t;*)
+        (match w with
+        | EEmpty _ -> ()
+        | _ -> fprintf ppf " when %a" (print_e_block sp "\n") w
+        );
+        fprintf ppf "-> (%a%s\n)"
           (print_e_block sp "\n") e
           sp
       | e ->

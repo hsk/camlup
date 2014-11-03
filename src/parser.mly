@@ -333,9 +333,17 @@ exp:
       | _ -> ELetRec(e_pos($2), e2id $2, TEmpty, EEmpty(e_pos($2)))
     }
 
+ptn:
+  | OR exps { $2 }
+  | SEMI ptn { $2 }
+
+ptns:
+  | ptn { [$1] }
+  | ptn ptns { $1::$2 }
+
 fn:
-  | OR exps ARROW exps { EFun(e_pos(List.hd $2), $2, TEmpty, EBlock(e_pos(List.hd $4),$4)) }
-  | OR exps WHEN exp ARROW exps { EPtn(e_pos(List.hd $2), $2, TEmpty, $4, EBlock(e_pos(List.hd $6), $6)) }
+  | ptns ARROW exps          { EPtn(e_pos(List.hd(List.hd $1)), $1, TEmpty, EEmpty(p()), EBlock(e_pos(List.hd $3),$3)) }
+  | ptns WHEN exp ARROW exps { EPtn(e_pos(List.hd(List.hd $1)), $1, TEmpty, $3, EBlock(e_pos(List.hd $5), $5)) }
 
 fn1:
   | fn { $1 }

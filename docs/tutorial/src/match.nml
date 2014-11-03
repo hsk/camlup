@@ -1,6 +1,6 @@
+
 // match.nml
 open Printf
-
 match_fib = {
   def fib(n) = {
     n match {
@@ -54,3 +54,11 @@ match_as = {
   }
   printf("add 1 + 2 = %d\n" x)
 }
+
+
+x = 1 match {
+  | 1
+  | 2 => 1
+  | _ => 3
+}
+Printf.printf("x=%d\n" x)

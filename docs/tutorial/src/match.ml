@@ -1,9 +1,7 @@
 open Printf;;
 
-# 14 "?"
-let match_fib = 
 # 13 "?"
-
+let match_fib = 
 
 # 5 "?"
 let rec fib = (fun n -> 
@@ -13,22 +11,18 @@ let rec fib = (fun n ->
 # 6 "?"
 (match n with | (
 # 7 "?"
-0) -> (
+0)-> (
     0
   
 )| (
 # 8 "?"
-1) -> (
+1)-> (
     1
   
 )| (
 # 9 "?"
-n) -> (
-# 10 "?"
-
-    (
-# 9 "?"
-fib ((n - 2)) + fib ((n - 1)))
+n)-> (
+    (fib ((n - 2)) + fib ((n - 1)))
   
 ))
 ) in
@@ -37,41 +31,27 @@ fib ((n - 2)) + fib ((n - 1)))
 printf  ("fib 10=%d\n") (fib (10))
 ;;
 
-# 27 "?"
-let match_block = 
 # 26 "?"
+let match_block = 
 
-
-# 24 "?"
-let x = 
 # 17 "?"
-(match 1 with | (
+let x = (match 1 with | (
 # 18 "?"
-0) -> (
+0)-> (
   0
 
 )| (
 # 19 "?"
-n) -> (
-# 21 "?"
-
-  let a = (
+n)-> (
 # 20 "?"
-n * 
+
+  let a = (n * 
 # 21 "?"
 n) in
-  
-# 22 "?"
-let b = (
-# 21 "?"
-n + 
+  let b = (n + 
 # 22 "?"
 n) in
-  
-# 23 "?"
-(
-# 22 "?"
-a + 
+  (a + 
 # 23 "?"
 b)
 
@@ -81,10 +61,8 @@ b)
 printf  ("x=%d\n") (x)
 ;;
 
-# 37 "?"
-let match_whens = 
 # 36 "?"
-
+let match_whens = 
 
 # 30 "?"
 let rec (fib:((int))->(int)) = 
@@ -106,11 +84,7 @@ n) when (n = 1) -> (
 # 33 "?"
 n) -> (
 
-# 34 "?"
-
-    (
-# 33 "?"
-fib ((n - 2)) + fib ((n - 1)))
+    (fib ((n - 2)) + fib ((n - 1)))
   )
  end  in
 
@@ -118,31 +92,19 @@ fib ((n - 2)) + fib ((n - 1)))
 printf  ("fib 10 %d\n") (fib (10))
 ;;
 
-# 47 "?"
-let match_tuple = 
 # 46 "?"
+let match_tuple = 
 
-
-# 44 "?"
-let x = 
 # 40 "?"
-(match 1 , 2 with | (
+let x = (match 1 , 2 with | (
 # 41 "?"
-a , b) when (a = 1) -> (
-# 42 "?"
-
-  (
-# 41 "?"
-a + 
+a , b) when (a = 1)-> (
+  (a + 
 # 42 "?"
 b)
 
-)| (a , b) -> (
-# 43 "?"
-
-  (
-# 42 "?"
-a * 
+)| (a , b)-> (
+  (a * 
 # 43 "?"
 b)
 
@@ -152,34 +114,24 @@ b)
 printf  ("x=%d\n") (x)
 ;;
 
-# 57 "?"
-let match_as = 
 # 56 "?"
+let match_as = 
 
-
-# 55 "?"
-let x = 
 # 49 "?"
-(match "add" , 1 , 2 with | (
+let x = (match "add" , 1 , 2 with | (
 # 50 "?"
-("add" as id , a , b)) -> (
+("add" as id , a , b))-> (
 # 51 "?"
 
   printf  ("%s") (id);
   
-# 53 "?"
-(
 # 52 "?"
-a + 
+(a + 
 # 53 "?"
 b)
 
-)| (id , a , b) -> (
-# 54 "?"
-
-  (
-# 53 "?"
-a + 
+)| (id , a , b)-> (
+  (a + 
 # 54 "?"
 b)
 
@@ -187,4 +139,22 @@ b)
 
 # 55 "?"
 printf  ("add 1 + 2 = %d\n") (x)
+;;
 
+# 59 "?"
+let x = (match 1 with | (
+# 60 "?"
+1)| (
+# 61 "?"
+2)-> (
+  1
+
+)| (
+# 62 "?"
+_)-> (
+  3
+
+));;
+
+# 64 "?"
+(Printf . printf  ("x=%d\n") (x))
