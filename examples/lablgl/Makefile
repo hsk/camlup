@@ -16,5 +16,17 @@ points: points.nml m.ml
 	nmlc points.nml
 	ocamlopt -I `ocamlfind query lablgl` lablgl.cmxa lablglut.cmxa m.ml points.ml -o points
 
+lines: lines.nml m.ml
+	nmlc lines.nml
+	ocamlopt -I `ocamlfind query lablgl` lablgl.cmxa lablglut.cmxa m.ml lines.ml -o lines
+
+lstipple: lstipple.nml m.ml
+	nmlc lstipple.nml
+	ocamlopt -I `ocamlfind query lablgl` lablgl.cmxa lablglut.cmxa m.ml lstipple.ml -o lstipple
+
+triangle: triangle.nml m.ml
+	nmlc triangle.nml
+	ocamlopt -I `ocamlfind query lablgl` lablgl.cmxa lablglut.cmxa m.ml triangle.ml -o triangle
+
 clean:
-	rm *.cm* simple glrect *.o
+	rm -rf *.cm* simple glrect points lines lstipple triangle *.o

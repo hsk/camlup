@@ -33,4 +33,7 @@ render_scene() = {
   Glut.swapBuffers()
 }
 
-_ = M.main(render_scene)
+_ = {
+  M.main(title="Lines"; render_scene)
+}
+

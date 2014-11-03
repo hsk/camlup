@@ -29,7 +29,10 @@ alt_color = {
 
 menu(#value) = {
   value match {
-    | 0 | 1 | 2 -> toggle(value)
+    | 0
+    | 1
+    | 2 => toggle(value)
+    | _ => ()
   }
   Printf.printf("value = %d (%b)\n%t" value flags[value] flush)
   Glut.postRedisplay()
@@ -57,7 +60,7 @@ render_scene() = {
     _ = {
       GlDraw.begins(`triangle_fan)
       GlDraw.vertex3(0.0, 0.0, 75.0)
-      while (*angle <= 2.0 *. pi) {
+      while (*angle <= 2.0 *. pi +. 0.01) {
         x = 50.0 *. sin(*angle)
         y = 50.0 *. cos(*angle)
         GlDraw.color(alt_color())
@@ -71,7 +74,7 @@ render_scene() = {
     _ = {
       GlDraw.begins(`triangle_fan)
       GlDraw.vertex2(0.0, 0.0)
-      while (*angle <= 2.0 *. pi) {
+      while (*angle <= 2.0 *. pi +. 0.01) {
         x = 50.0 *. sin(*angle)
         y = 50.0 *. cos(*angle)
         GlDraw.color(alt_color())
@@ -95,11 +98,11 @@ setup() = {
 }
 
 _ = {
-  Glut.init(Sys.argv)
-  Glut.initDisplayMode(double_buffer=true depth=true)
-  Glut.createWindow("Triangle Culling Example")
+  _ = Glut.init(Sys.argv)
+  _ = Glut.initDisplayMode(double_buffer=true depth=true)
+  _ = Glut.createWindow("Triangle Culling Example")
 
-  Glut.createMenu(menu)
+  _ = Glut.createMenu(menu)
   Glut.addMenuEntry("Toggle outline back" 0)
   Glut.addMenuEntry("Toggle cull backface" 1)
   Glut.addMenuEntry("Toggle depth test" 2)

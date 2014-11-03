@@ -26,8 +26,8 @@ render_scene() = {
         z = -50.0 +. 100.0 *. float(i) /. float(max)
         GlDraw.vertex3(x, y, z)
       }
+      GlDraw.ends()
     }
-    GlDraw.ends()
     GlMat.pop()
   }
   Glut.swapBuffers()
