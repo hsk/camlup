@@ -3,7 +3,7 @@
  */
 
 width = 400.0
-height = 400.0
+height = 800.0
 
 Key module {
 
@@ -55,31 +55,84 @@ Key module {
   }
 }
 
+BG module {
+  ship_x = & 0.
+  ship_y = & 0.
+  stars:ref[list[(float,float,float)]] = & []
+
+  init() = {
+    //Printf.printf("init\n"); flush(stdout)
+    def loop = {
+      | (0,ls) => ls
+      | (n,ls) => loop(n-1,(
+        ( Random.float(width),
+          Random.float(height),
+          Random.float(3.)+.2.)::ls))
+    }
+    stars := loop(30, [])
+  }
+
+  move(bs) = {
+    stars := (*stars) |> List.map{|(x,y,speed)=>
+      //Printf.printf("%f %f" x y); flush(stdout)
+      x = x -. ((*ship_x) -. width /. 2.) *. 0.005 *. speed 
+      x = if (x < 0.) x +. width else x
+      x = if (x > width) x -. width else x
+      speed2 = speed +. ((height -. *ship_y) *. 0.03)
+      y = y +. speed2
+      if (y > height)
+        (Random.float(width), 0., Random.float(3.)+.2.)
+      else (x, y, speed)
+    }
+  }
+
+  draw() = {
+    (*stars)|>List.iter{|(x,y,s)=>
+      GlDraw.color(
+        Random.float(0.5)+.0.5, 
+        Random.float(0.5)+.0.5, 
+        Random.float(0.5)+.0.5)
+
+      s = s +. ((height -. *ship_y) *. 0.06)
+
+      GlDraw.rect(
+        x, y
+        x +. 1.5, y +. 1.0 +. s 
+      )
+    }
+  }
+}
+
+Bullets module {
+
+  bullets:ref[list[(float,float,ref[bool])]] = & []
+
+  add(x y) = {
+    bullets := (x,y, &true):: (*bullets)
+  }
+
+  move(bs) = {
+    bullets := (*bullets) |>
+      List.map{|(x,y,b)=> (x,y-.10.,b) }
+    bullets := (*bullets) |>
+      List.filter{|(_,y,{:contents=b})=> b && y > 0. }
+  }
+
+  draw() = {
+    (*bullets)|>List.iter{|(x,y,_)=>
+      GlDraw.rect(
+        x -. 1.5, y -. 6.5
+        x +. 3., y +. 4.
+      )
+    }
+  }
+}
+
 Ship module {
   rsize = 25.
   x = & width /. 2.
   y = & (height -. rsize *. 2.0)
   speed = 5.
-
-  bullets:ref[list[(float,float)]] = & []
-
-  addBullet(x y) = {
-    bullets := (x,y):: (*bullets)
-  }
-  moveBullets(bs) = {
-    bullets := (*bullets) |>
-      List.map{|(x,y)=> (x,y-.10.) }
-    bullets := (*bullets) |>
-      List.filter{|(_,y)=>y > 20. }
-  }
-  drawBullets() = {
-    (*bullets)|>List.iter{|(x,y)=>
-      GlDraw.rect(
-        x -. 1.5, y -. 1.5
-        x +. 3., y +. 3.
-      )
-    }
-  }
 
   move() = {
 
@@ -111,20 +164,32 @@ Ship module {
     x := min(max(nx rsize /. 2.) width -. rsize /. 2.)
     y := min(max(ny rsize /. 2.) height -. rsize /. 2.)
 
-    moveBullets()
-    if(*Key.z) addBullet(*x ; *y -. rsize /. 2.)
+    Bullets.move()
+    if(*Key.z) Bullets.add(*x ; *y -. rsize /. 2.)
+    BG.ship_x := *x
+    BG.ship_y := *y
 
   }
 
-
   draw() = {
     GlDraw.color(1.0, 0.0, 0.0)
+    r = rsize /. 6.
+    r2 = rsize /. 4.
     GlDraw.rect(
-      *x -. rsize /. 2., *y -. rsize /. 2.
-      *x +. rsize /. 2., *y +. rsize /. 2.
+      *x -. r, *y -. r -. r2
+      *x +. r, *y +. r -. r
     )
-    GlDraw.color(0.5, 1.0, 1.0)
-    drawBullets()
+    GlDraw.rect(
+      *x -. r -.r2, *y -. r +. r2
+      *x +. r -.r2, *y +. r +. r2
+    )
+    GlDraw.rect(
+      *x -. r +.r2, *y -. r +. r2
+      *x +. r +.r2, *y +. r +. r2
+    )
+
+    GlDraw.color(0.5, 0.8+.Random.float(0.2), 0.8+.Random.float(0.2))
+    Bullets.draw()
   }
 }
 
@@ -132,14 +197,16 @@ Game module {
 
   draw() = {
     GlClear.clear([`color])
+    BG.draw()
     Ship.draw()
     Glut.swapBuffers()
   }
 
-  def timer(#value) = {
+  def mainLoop(#value) = {
     Glut.postRedisplay()
+    BG.move()
     Ship.move()
-    Glut.timerFunc(ms = 15 cb = timer value = 1)
+    Glut.timerFunc(ms = 15 cb = mainLoop value = 1)
   }
 
   resize(#w; #h) = {
@@ -159,14 +226,16 @@ Game module {
   }
 
   main = {
+    Random.init(int_of_float(Sys.time()*.10000.0))
     _ = Glut.init(Sys.argv)
     Glut.initDisplayMode(double_buffer = true; alpha= true)()
     Glut.initWindowSize(w= int_of_float(width); h= int_of_float(height))
-    _ = Glut.createWindow("Game01")
+    _ = Glut.createWindow("Game02")
     Glut.displayFunc(draw)
     Glut.reshapeFunc(resize)
     Key.init()
-    Glut.timerFunc(ms=33 cb=timer value=1)
+    BG.init()
+    Glut.timerFunc(ms=15 cb=mainLoop value=1)
     GlClear.color(alpha=1.0; (0.1, 0.1, 0.1))
     Glut.mainLoop()
   }
