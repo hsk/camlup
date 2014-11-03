@@ -1,5 +1,9 @@
 # newml(仮)
 
+![camlup](http://www.afghanistan-today.org/media/slideshows/camel_slide2.jpg)
+
+
+
 新しいML言語
 
 newmlはOCamlへのトランスレータ言語です。
