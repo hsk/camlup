@@ -311,6 +311,7 @@ and print_e_block sp b ppf = print_e (sp ^ "  ") ppf
 
 let rec print_s sp ppf (s:s):unit = 
   let rec print sp ppf = function
+  (*
     | SLet (id, TEmpty, e) ->
       fprintf ppf "(%s)let %s = %a"
         sp
@@ -333,6 +334,7 @@ let rec print_s sp ppf (s:s):unit =
         id
         (print_t sp "") t
         (print_e sp) e
+      *)
     | SAnd(e1, SExp(ELetRec(_,id, TEmpty, e)))
     | SAnd(e1, SExp(ELet(_,id, TEmpty, e))) ->
       fprintf ppf "%a\n"

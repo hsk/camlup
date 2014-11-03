@@ -17,9 +17,7 @@ let rotate = (fun i delta ->
 
   
 # 15 "?"
-(rot .(i) <- (rot .(i) +. 
-# 16 "?"
-delta))
+(rot .(i) <- (rot .(i) +. delta))
 );;
 
 # 18 "?"
@@ -36,85 +34,90 @@ let setup = (fun () ->
 
 # 23 "?"
 let special_keys = (fun ~(key) ~(x) ~(y) -> 
-# 31 "?"
+# 32 "?"
 
   
 # 24 "?"
 (match key with | (
 # 25 "?"
-(Glut . KEY_UP)) -> (
+(Glut . KEY_UP))-> (
     rotate  (0) (-5.000000)
   
 )| (
 # 26 "?"
-(Glut . KEY_DOWN)) -> (
+(Glut . KEY_DOWN))-> (
     rotate  (0) (5.000000)
   
 )| (
 # 27 "?"
-(Glut . KEY_LEFT)) -> (
+(Glut . KEY_LEFT))-> (
     rotate  (1) (-5.000000)
   
 )| (
 # 28 "?"
-(Glut . KEY_RIGHT)) -> (
+(Glut . KEY_RIGHT))-> (
     rotate  (1) (5.000000)
+  
+)| (
+# 29 "?"
+_)-> (
+    ()
   
 ));
   
-# 30 "?"
+# 31 "?"
 (Glut . postRedisplay (()))
 );;
 
-# 33 "?"
+# 34 "?"
 let change_size = (fun ~(w) ~(h) -> 
-# 52 "?"
+# 53 "?"
 
   
-# 34 "?"
+# 35 "?"
 let h = max  (h) (1) in
   
-# 35 "?"
+# 36 "?"
 (GlDraw . viewport  ~x:(0)  ~y:(0)  ~w:(w) ~h:(h));
   
-# 36 "?"
+# 37 "?"
 (GlMat . mode (`projection));
   
-# 37 "?"
+# 38 "?"
 (GlMat . load_identity (()));
   
-# 39 "?"
+# 40 "?"
 let h = float (h) in
   
-# 40 "?"
+# 41 "?"
 let w = float (w) in
   
-# 41 "?"
+# 42 "?"
 let r = 100.000000 in
   
-# 42 "?"
+# 43 "?"
 let z = (-. r) , r in
   
-# 43 "?"
-x , 
 # 44 "?"
-let y = (if (w < h) then (
+let x , y = 
 # 45 "?"
+(if (w < h) then (
+# 46 "?"
 (-. r) , r , (-. ((r *. h) /. w)) , (-. ((r *. h) /. w)))else(
-# 47 "?"
-(-. ((r *. w) /. h)) , ((r *. w) /. h) , (-. r) , r));
-  
-# 49 "?"
-(GlMat . ortho  ~x:(x)  ~y:(y) ~z:(z));
+# 48 "?"
+(-. ((r *. w) /. h)) , ((r *. w) /. h) , (-. r) , r)) in
   
 # 50 "?"
-(GlMat . mode (`modelview));
+(GlMat . ortho  ~x:(x)  ~y:(y) ~z:(z));
   
 # 51 "?"
+(GlMat . mode (`modelview));
+  
+# 52 "?"
 (GlMat . load_identity (()))
 );;
 
-# 54 "?"
+# 55 "?"
 let main = (fun 
 # 56 "?"
 ?(setup=(setup)) 
@@ -126,33 +129,33 @@ let main = (fun
 ~(title) 
 # 60 "?"
 render_scene -> 
-# 74 "?"
+# 75 "?"
 
   
-# 62 "?"
+# 63 "?"
 (Glut . init ((Sys . argv)));
   
-# 63 "?"
+# 64 "?"
 (Glut . initDisplayMode  ~double_buffer:(true)  ~alpha:(false) ~depth:(true));
   
-# 64 "?"
+# 65 "?"
 (Glut . initWindowSize  ~w:(800) ~h:(600));
   
-# 65 "?"
+# 66 "?"
 (Glut . createWindow (title));
   
-# 67 "?"
+# 68 "?"
 (Glut . reshapeFunc (change_size));
   
-# 68 "?"
+# 69 "?"
 (Glut . specialFunc (special_keys));
   
-# 69 "?"
+# 70 "?"
 (Glut . displayFunc (render_scene));
   
-# 71 "?"
+# 72 "?"
 setup (());
   
-# 73 "?"
+# 74 "?"
 (Glut . mainLoop (()))
 )

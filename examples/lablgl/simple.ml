@@ -1,6 +1,8 @@
 
-# 16 "?"
+# 6 "?"
 let _ = 
+# 16 "?"
+
 
 # 7 "?"
 let _ = (Glut . init ((Sys . argv))) in

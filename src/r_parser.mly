@@ -313,7 +313,7 @@ fns:
 
 stmt:
   | exp { SExp($1) }
-  | ID COLONASSIGN exp { SLet($1, TEmpty, $3) }
+  /*| ID COLONASSIGN exp { SLet($1, TEmpty, $3) }*/
   /*| DEF ID COLONASSIGN exp { SLetRec($2, TEmpty, $4) }*/
   | OPEN { SOpen($1) }
   /*

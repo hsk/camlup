@@ -158,6 +158,13 @@ tuple() = {
   }
   printf("%d\n" addt(1, 2))
 
+  x,y = 1,2
+  printf("%d %d\n" x y)
+
+  x,y = ((1,2),(3,4))
+
+  printf("%d %d\n" addt(x) addt(y))
+
   /*
   addt(int:a,int:b):int= a + b
   */
@@ -251,7 +258,7 @@ pattern_match() = {
   }
   */
 } pattern_match()
-
+/*
 parcial_function() = {
 
   def fib:(int)=>int={

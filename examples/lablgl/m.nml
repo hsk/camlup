@@ -26,6 +26,7 @@ special_keys(#key #x #y) = {
     | Glut.KEY_DOWN  => rotate(0;  5.0)
     | Glut.KEY_LEFT  => rotate(1; -5.0)
     | Glut.KEY_RIGHT => rotate(1;  5.0)
+    | _ => ()
   }
   Glut.postRedisplay()
 }
@@ -40,7 +41,7 @@ change_size(#w #h) = {
   w = float(w)
   r = 100.0
   z = (-.r, r)
-  x, y =
+  (x, y) =
     if (w < h)
       (-.r, r), (-.r *. h /. w, -.r *. h /. w)
     else

@@ -42,7 +42,53 @@ let rec loop1 f = function
       e2e l
     ) ls in
     loop1 f (e, EFun(p,le, TEmpty, b))
+  | EBin(p,_,",",_) as e,b -> f(p,e, TEmpty, b)
   | _ -> assert false
+
+let check_comma e =
+  let rec f e =
+    match e with
+    | EBin(p,e1,",",e2) -> true
+    | EBin(p,e1,op,e2) -> f e1 || f e2
+    | e -> false
+  in
+  match f e with
+  | true -> EPre(e_pos(e),"",e)
+  | false -> e
+
+(*
+let check_comma e =
+  let camma = ref false
+  let rec f e = 
+    match e with
+    | EEmpty(_) -> e
+    | EInt(_,_) -> e
+    | EFloat(_,_) -> e
+    | EStr(_,_) -> e
+    | EVar(_,_) -> e
+    | EBin(p,e1,op,e2) -> EBin(p,f e1,op,f e2)
+    | EPre(p,op,e) -> EPre(p,op,f e)
+    | ECall(p,e1,es) -> ECall(p, f e1, List.map f es)
+    | EIf(p,e1,e2,e3) -> EIf(p, f e1, f e2, f e3)
+    | EFun(p,es,t,e) -> EFun(p, List.map f es, t, f e)
+    | EPFun(p,es) -> EPFun(p, List.map f es)
+    | EMatch(p,e,es) -> EMatch(p, f e, List.map f es)
+    | EPtn(p,ess,t,w,e) -> EPtn(p, List.map (List.map f) ess, t, f w, f e)
+    | EList(p,es) -> EList(p, List.map f es)
+    | ELet(p,e1,t,e2) -> ELet(p,f e1, t, f e2)
+    | ELetRec(p,e1,t,e2) -> ELetRec(p,f e1, t, f e2)
+    | EUnit(_) -> e
+    | EBlock(p,es) -> EBlock(p,List.map f es)
+    | ERecord(p,ses) -> ERecord(p,List.map (fun (s,e) -> (s, f e)) ses)
+    | ETuple(p,es) -> ETuple(p,List.map f es)
+    | EIndex(p,e,es) -> EIndex(p,f e, List.map f es)
+    | EArray(p,es) -> EArray(p,List.map f es)
+    | EFor(p,s,e1,e2,i,e3) -> EFor(p,s,f e1, f e2, i, f e3)
+    | EWhile(p,e1,e2) -> EWhile(p,f e1, f e2)
+    | ETy(p,b,s,t,e) -> ETy(p,b,s,t,f e)
+  in
+  f e
+*)
 
 let parse_error1 lineno = 
   Printf.sprintf
@@ -62,8 +108,9 @@ let parse_error2 str =
 %token <int> SEMI
 %token LPAREN RPAREN LBRACE RBRACE LBRACK RBRACK
 %token EOF
-%token COLON COMMA COLONASSIGN REFASSIGN ARROWASSIGN
+%token COLON COLONASSIGN REFASSIGN ARROWASSIGN
 %token ASSIGN
+%token COMMA
 %token RETURN
 %token <string> OPEN
 %token <string> STR
@@ -196,7 +243,7 @@ exp:
   | STR { EStr(p(),$1) }
 
   | LPAREN RPAREN { EUnit(p()) }
-  | LPAREN exp RPAREN { $2 }
+  | LPAREN exp RPAREN { check_comma $2 }
 
   | LBRACE fns RBRACE { EPFun(p(),$2) }
   | LBRACE exps RBRACE { EBlock(p(),$2) }
@@ -303,7 +350,6 @@ exp:
   | exp LPAREN exps RPAREN %prec CALL { ECall(e_pos($1),$1, $3) }
   | exp LPAREN RPAREN %prec CALL { ECall(e_pos($1),$1, [EUnit(e_pos($1))]) }
 
-  |     VAR ASSIGN exp { ELet(e_pos($3),EVar(e_pos($3),$1), TEmpty, $3) }
   | DEF VAR ASSIGN exp { ELetRec(e_pos($4),EVar(e_pos($4), $2), TEmpty, $4) }
 
   |     exp ASSIGN exp { loop1 (fun(p,a,b,c)->ELet(e_pos($1),a,b,c)) ($1, $3) }
@@ -361,8 +407,6 @@ stmt:
   | VAR CLASS LPAREN RPAREN LBRACE stmts RBRACE { SClass($1, [], $6) }
   | VAR CLASS LPAREN defrecs RPAREN LBRACE stmts RBRACE { SClass($1, $4, $7) }
   | exp { SExp($1) }
-  | VAR ASSIGN exp { SLet($1, TEmpty, $3) }
-  | DEF VAR ASSIGN exp { SLetRec($2, TEmpty, $4) }
   | OPEN { SOpen($1) }
   | VAR TYPE LBRACE defrecs RBRACE { STypeRec($1, $4) }
   | VAR TYPE OR variants { STypeVariant($1, $4) }

@@ -66,8 +66,8 @@ let e_pos = function
 
 type s = 
   | SOpen of string
-  | SLet of string * t * e
-  | SLetRec of string * t * e
+(*  | SLet of string * t * e
+  | SLetRec of string * t * e*)
   | SAnd of s * s
   | SExp of e
   | SModule of string * s list
@@ -202,7 +202,7 @@ let rec print_s fp = function
   | SOpen(s) ->
     fprintf fp "SOpen(\"%s\")@?"
       s
-  | SLet(s,t,e) ->
+(*  | SLet(s,t,e) ->
     fprintf fp "SLet(\"%s\",%a,%a)@?"
       s
       print_t t
@@ -211,7 +211,7 @@ let rec print_s fp = function
     fprintf fp "SLetRec(\"%s\", %a, %a)@?"
       s
       print_t t
-      print_e e
+      print_e e*)
   | SAnd(s1,s2) ->
     fprintf fp "SAnd(%a,%a)@?"
       print_s s1

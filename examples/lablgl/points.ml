@@ -11,8 +11,10 @@ let render_scene = (fun () ->
 # 14 "?"
 (GlClear . clear ([`color]));
   
-# 32 "?"
+# 15 "?"
 let _ = 
+# 32 "?"
+
 
 # 16 "?"
 (GlMat . push (()));
@@ -23,8 +25,10 @@ let _ =
 # 18 "?"
 (GlMat . rotate3  ~angle:(rot .(1)) (around_yaxis));
 
-# 29 "?"
+# 19 "?"
 let _ = 
+# 29 "?"
+
 
 # 20 "?"
 (GlDraw . begins (`points));
@@ -38,9 +42,9 @@ for i = 0 to max do
 
 
 # 23 "?"
-let t = ((float (i) /. 20.000000) *. 
+let t = ((float (i) /. 20.000000) *. pi) in
+
 # 24 "?"
-pi) in
 let x = (r *. sin (t)) in
 
 # 25 "?"
@@ -65,8 +69,10 @@ let z = (-50.000000 +. ((100.000000 *. float (i)) /. float (max))) in
 (Glut . swapBuffers (()))
 );;
 
-# 38 "?"
+# 36 "?"
 let _ = 
+# 38 "?"
+
 
 # 37 "?"
 (M . main  ~title:("Points Example") (render_scene))

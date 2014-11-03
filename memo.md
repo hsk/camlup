@@ -7,6 +7,11 @@
 - 名前をnewcamlからcamlupに変更。
 - `-p` オプションで構文木出力。
 - x,y = 1,2の対応時のバグ解消
+- matchの複数|対応
+
+    value match {
+      | 0 | 1 | 2 -> toggle(value)
+    }
 
 ## 作業手順
 
