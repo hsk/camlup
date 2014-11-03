@@ -1,7 +1,5 @@
 /**
- * bounce.nml
- *
- * original code: https://github.com/wakita/OpenGL.ML/blob/master/chapt02/bounce.ml
+ * game.nml
  */
 
 width = 400.0
