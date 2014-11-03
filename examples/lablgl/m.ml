@@ -3,10 +3,10 @@
 let pi = acos (-1.000000);;
 
 # 9 "?"
-let around_xaxis = 1.000000 , 0.000000 , 0.000000;;
+let around_xaxis = ( 1.000000 , 0.000000 , 0.000000);;
 
 # 10 "?"
-let around_yaxis = 0.000000 , 1.000000 , 0.000000;;
+let around_yaxis = ( 0.000000 , 1.000000 , 0.000000);;
 
 # 12 "?"
 let rot = [|0.000000; 0.000000|];;
@@ -26,7 +26,7 @@ let setup = (fun () ->
 
   
 # 19 "?"
-(GlClear . color  ~alpha:(1.000000) (0.000000 , 0.000000 , 0.000000));
+(GlClear . color  ~alpha:(1.000000) (( 0.000000 , 0.000000 , 0.000000)));
   
 # 20 "?"
 (GlDraw . color (0.000000 , 1.000000 , 0.000000))
@@ -96,16 +96,16 @@ let w = float (w) in
 let r = 100.000000 in
   
 # 43 "?"
-let z = (-. r) , r in
+let z = ( (-. r) , r) in
   
 # 44 "?"
 let x , y = 
 # 45 "?"
 (if (w < h) then (
 # 46 "?"
-(-. r) , r , (-. ((r *. h) /. w)) , (-. ((r *. h) /. w)))else(
+( (-. r) , r) , ( (-. ((r *. h) /. w)) , (-. ((r *. h) /. w))))else(
 # 48 "?"
-(-. ((r *. w) /. h)) , ((r *. w) /. h) , (-. r) , r)) in
+( (-. ((r *. w) /. h)) , ((r *. w) /. h)) , ( (-. r) , r))) in
   
 # 50 "?"
 (GlMat . ortho  ~x:(x)  ~y:(y) ~z:(z));
@@ -133,16 +133,16 @@ render_scene ->
 
   
 # 63 "?"
-(Glut . init ((Sys . argv)));
+let _ = (Glut . init ((Sys . argv))) in
   
 # 64 "?"
-(Glut . initDisplayMode  ~double_buffer:(true)  ~alpha:(false) ~depth:(true));
+let _ = (Glut . initDisplayMode  ~double_buffer:(true)  ~alpha:(false) ~depth:(true)) in
   
 # 65 "?"
 (Glut . initWindowSize  ~w:(800) ~h:(600));
   
 # 66 "?"
-(Glut . createWindow (title));
+let _ = (Glut . createWindow (title)) in
   
 # 68 "?"
 (Glut . reshapeFunc (change_size));

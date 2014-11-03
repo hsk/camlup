@@ -161,9 +161,12 @@ tuple() = {
   x,y = 1,2
   printf("%d %d\n" x y)
 
-  x,y = ((1,2),(3,4))
+  x,y = if(true)
+    (1,2),(3,4)
+    else
+      (5,6),(7,8)
 
-  printf("%d %d\n" addt(x) addt(y))
+  printf("*** %d %d\n" addt(x) addt(y))
 
   /*
   addt(int:a,int:b):int= a + b

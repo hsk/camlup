@@ -41,7 +41,7 @@ change_size(#w #h) = {
   w = float(w)
   r = 100.0
   z = (-.r, r)
-  (x, y) =
+  x, y =
     if (w < h)
       (-.r, r), (-.r *. h /. w, -.r *. h /. w)
     else
@@ -60,10 +60,10 @@ main(
   render_scene
 ) = {
 
-  Glut.init(Sys.argv)
-  Glut.initDisplayMode(double_buffer=true; alpha=false; depth=true)
+  _ = Glut.init(Sys.argv)
+  _ = Glut.initDisplayMode(double_buffer=true; alpha=false; depth=true)
   Glut.initWindowSize(w=800; h=600)
-  Glut.createWindow(title)
+  _ = Glut.createWindow(title)
 
   Glut.reshapeFunc(change_size)
   Glut.specialFunc(special_keys)
