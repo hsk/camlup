@@ -1,12 +1,12 @@
-# camlup
+# Camlup
 
-![camlup](http://www.afghanistan-today.org/media/slideshows/camel_slide2.jpg)
+![Camlup](http://www.afghanistan-today.org/media/slideshows/camel_slide2.jpg)
 
 http://www.afghanistan-today.org/article/?id=814
 
-camlupはOCamlへのトランスレータ言語です。
+CamlupはOCamlへのトランスレータ言語です。
 
-camlupを使う事でC言語ライクな文法でOCamlのプログラムを記述出来ます。
+Camlupを使う事でC言語ライクな文法でOCamlのプログラムを記述出来ます。
 
 ## ビルド&インストール
 
@@ -165,7 +165,7 @@ printf("%d\n" f2(1,2 3,4))
 
 - [チュートリアル](docs/tutorial)
 - [言語仕様](docs/spec)
-- [camlup\(仮\)ドキュメント ドキュメント)](docs)
+- [Camlup ドキュメント)](docs)
 
 # License
 
