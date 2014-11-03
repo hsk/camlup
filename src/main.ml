@@ -1,4 +1,4 @@
-let version = "0.0.4"
+let version = "0.0.5"
 
 let print_flag = ref false
 let transc = ref false

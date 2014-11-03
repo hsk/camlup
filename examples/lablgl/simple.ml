@@ -31,7 +31,7 @@ begin fun t1'  -> match t1' with
  end ));
 
 # 14 "?"
-(GlClear . color  ~alpha:(1.000000) (0.000000 , 0.000000 , 1.000000));
+(GlClear . color  ~alpha:(1.000000) (( 0.000000 , 0.000000 , 1.000000)));
 
 # 15 "?"
 (Glut . mainLoop (()))
