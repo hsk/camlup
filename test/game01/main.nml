@@ -35,6 +35,11 @@ Key module {
     }
     Glut.postRedisplay()
   }
+
+  init() = {
+    Glut.specialFunc(onKeyDown)
+    Glut.specialUpFunc(onKeyUp)   
+  }
 }
 
 Ship module {
@@ -101,8 +106,7 @@ Game module {
     _ = Glut.createWindow("Game01")
     Glut.displayFunc(draw)
     Glut.reshapeFunc(change_size)
-    Glut.specialFunc(Key.onKeyDown)
-    Glut.specialUpFunc(Key.onKeyUp)
+    Key.init()
     Glut.timerFunc(ms=33 cb=timer value=1)
     GlClear.color(alpha=1.0; (0.1, 0.1, 0.1))
     Glut.mainLoop()
