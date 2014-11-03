@@ -120,145 +120,220 @@ let speed = 5.000000;;
 
 # 51 "?"
 let move = (fun () -> 
-# 61 "?"
+# 81 "?"
 
   
 # 53 "?"
-(x := (if (! Key . left) then (((! x) -. speed)  )else((! x))));
+let m = 5 in
   
 # 54 "?"
-(x := (if (! Key . right) then (((! x) +. speed)  )else((! x))));
+let m = (if (! Key . left) then ((m - 1))else(m)) in
   
 # 55 "?"
-(y := (if (! Key . up) then (((! y) -. speed)  )else((! y))));
+let m = (if (! Key . right) then ((m + 1))else(m)) in
   
 # 56 "?"
-(y := (if (! Key . down) then (((! y) +. speed)  )else((! y))));
+let m = (if (! Key . up) then ((m - 3))else(m)) in
+  
+# 57 "?"
+let m = (if (! Key . down) then ((m + 3))else(m)) in
   
 # 58 "?"
-(x := min  (max  ((! x)) (0.000000)) ((width -. rsize)));
-  
+let speed = (match m with | (
 # 59 "?"
-(y := min  (max  ((! y)) (0.000000)) ((height -. rsize)))
+1)| (
+# 60 "?"
+3)| (
+# 61 "?"
+7)| (
+# 62 "?"
+9)-> (
+  (speed /. 1.400000)
+
+)| (
+# 63 "?"
+_)-> (
+  speed
+
+)) in
+  
+# 65 "?"
+let nx , ny = (match m with | (
+# 66 "?"
+1)-> (
+  ((! x) -. speed) , ((! y) -. speed)
+
+)| (
+# 67 "?"
+2)-> (
+  (! x) , ((! y) -. speed)
+
+)| (
+# 68 "?"
+3)-> (
+  ((! x) +. speed) , ((! y) -. speed)
+
+)| (
+# 69 "?"
+4)-> (
+  ((! x) -. speed) , (! y)
+
+)| (
+# 70 "?"
+5)-> (
+  (! x) , (! y)
+
+)| (
+# 71 "?"
+6)-> (
+  ((! x) +. speed) , (! y)
+
+)| (
+# 72 "?"
+7)-> (
+  ((! x) -. speed) , ((! y) +. speed)
+
+)| (
+# 73 "?"
+8)-> (
+  (! x) , ((! y) +. speed)
+
+)| (
+# 74 "?"
+9)-> (
+  ((! x) +. speed) , ((! y) +. speed)
+
+)| (
+# 75 "?"
+_)-> (
+  (! x) , (! y)
+
+)) in
+  
+# 78 "?"
+(x := min  (max  (nx) (0.000000)) ((width -. rsize)));
+  
+# 79 "?"
+(y := min  (max  (ny) (0.000000)) ((height -. rsize)))
 );;
 
-# 63 "?"
+# 83 "?"
 let draw = (fun () -> 
-# 68 "?"
+# 88 "?"
 
   
-# 64 "?"
+# 84 "?"
 GlDraw . rect  (
-# 65 "?"
+# 85 "?"
 (! x) , (! y)) (
-# 66 "?"
+# 86 "?"
 ((! x) +. rsize) , ((! y) +. rsize))
 )
 end;;
 module Game = struct
 
-# 73 "?"
+# 93 "?"
 let draw = (fun () -> 
-# 78 "?"
+# 98 "?"
 
   
-# 74 "?"
+# 94 "?"
 GlClear . clear ([`color]);
   
-# 75 "?"
+# 95 "?"
 GlDraw . color (1.000000 , 0.000000 , 0.000000);
   
-# 76 "?"
+# 96 "?"
 Ship . draw (());
   
-# 77 "?"
+# 97 "?"
 Glut . swapBuffers (())
 );;
 
-# 80 "?"
+# 100 "?"
 let rec timer = (fun ~(value) -> 
-# 84 "?"
+# 104 "?"
 
   
-# 81 "?"
+# 101 "?"
 Glut . postRedisplay (());
   
-# 82 "?"
+# 102 "?"
 Ship . move (());
   
-# 83 "?"
+# 103 "?"
 Glut . timerFunc  ~ms:(15)  ~cb:(timer) ~value:(1)
 );;
 
-# 86 "?"
-let change_size = (fun ~(w) ~(h) -> 
-# 100 "?"
+# 106 "?"
+let resize = (fun ~(w) ~(h) -> 
+# 120 "?"
 
   
-# 87 "?"
+# 107 "?"
 let h = max  (h) (1) in
   
-# 88 "?"
+# 108 "?"
 GlDraw . viewport  ~x:(0)  ~y:(0)  ~w:(w) ~h:(h);
   
-# 90 "?"
+# 110 "?"
 GlMat . mode (`projection);
   
-# 91 "?"
+# 111 "?"
 GlMat . load_identity (());
   
-# 93 "?"
+# 113 "?"
 let ortho = GlMat . ortho ~z:(( 1.000000 , -1.000000)) in
   
-# 94 "?"
+# 114 "?"
 let x = ( 0.000000 , width) in
   
-# 95 "?"
+# 115 "?"
 let y = ( height , -0.000000) in
   
-# 96 "?"
+# 116 "?"
 ortho  ~x:(x) ~y:(y);
   
-# 98 "?"
+# 118 "?"
 GlMat . mode (`modelview);
   
-# 99 "?"
+# 119 "?"
 GlMat . load_identity (())
 );;
 
-# 102 "?"
+# 122 "?"
 let main = 
-# 113 "?"
+# 133 "?"
 
 
-# 103 "?"
+# 123 "?"
 let _ = Glut . init (Sys . argv) in
 
-# 104 "?"
+# 124 "?"
 Glut . initDisplayMode  ~double_buffer:(true) ~alpha:(true) (());
 
-# 105 "?"
+# 125 "?"
 Glut . initWindowSize  ~w:(int_of_float (width)) ~h:(int_of_float (height));
 
-# 106 "?"
+# 126 "?"
 let _ = Glut . createWindow ("Game01") in
 
-# 107 "?"
+# 127 "?"
 Glut . displayFunc (draw);
 
-# 108 "?"
-Glut . reshapeFunc (change_size);
+# 128 "?"
+Glut . reshapeFunc (resize);
 
-# 109 "?"
+# 129 "?"
 Key . init (());
 
-# 110 "?"
+# 130 "?"
 Glut . timerFunc  ~ms:(33)  ~cb:(timer) ~value:(1);
 
-# 111 "?"
+# 131 "?"
 GlClear . color  ~alpha:(1.000000) (( 0.100000 , 0.100000 , 0.100000));
 
-# 112 "?"
+# 132 "?"
 Glut . mainLoop (())
 
 end
