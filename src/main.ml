@@ -1,4 +1,9 @@
 let version = "0.0.3"
+
+let print_flag = ref false
+let transc = ref false
+let transo = ref false
+
 let parse input =
   let inp = open_in input in
   let lexbuf = Lexing.from_channel inp in
@@ -11,6 +16,8 @@ let to_string ast =
   
 let trans input output =
   let ast = parse input in
+  if !print_flag then Ast.print Format.std_formatter ast;
+  Printf.printf "\n";
   let out = open_out output in
   Gen_ml.print_prog (Format.formatter_of_out_channel out) ast;
   close_out out
@@ -34,9 +41,6 @@ let dexp_parse input =
   let ast = Dexp_parser.prog Dexp_lexer.token lexbuf in
   close_in inp;
   ast  
-
-let transc = ref false
-let transo = ref false
 
 let dexp_trans input output =
   let ast = dexp_parse input in
@@ -76,6 +80,7 @@ let _ =
   Arg.parse
     [
       "-run", Arg.Unit(fun()->run:=true), "run";
+      "-p", Arg.Unit(fun()->print_flag:=true), "print ast";
       "-tc", Arg.Unit(fun()->transc:=true), "transc";
       "-to", Arg.Unit(fun()->transo:=true), "trans ocaml";
       "-v", Arg.Unit(fun()->ver:=true), "show version";

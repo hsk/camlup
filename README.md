@@ -1,14 +1,12 @@
-# newml(仮) camlup
+# camlup
 
 ![camlup](http://www.afghanistan-today.org/media/slideshows/camel_slide2.jpg)
 
+http://www.afghanistan-today.org/article/?id=814
 
+camlupはOCamlへのトランスレータ言語です。
 
-新しいML言語
-
-newmlはOCamlへのトランスレータ言語です。
-
-newmlを使う事でC言語ライクな文法でOCamlのプログラムを記述出来ます。
+camlupを使う事でC言語ライクな文法でOCamlのプログラムを記述出来ます。
 
 ## ビルド&インストール
 
@@ -35,7 +33,7 @@ ocamlとUnix環境のmakeがある環境で以下のコマンドを実行しま�
 1. OCamlをインストールします。
 2. nmlc.exeを以下のURLからダウンロードして、パスを通します。
 
-https://github.com/hsk/newml/blob/master/nmlc.exe?raw=true
+https://github.com/hsk/camlup/blob/master/nmlc.exe?raw=true
 
 ※新しいWindowsの場合は認証が必要です。
 問題は無いはずですが、ウィルスチェックを行ってから実行してください。
@@ -167,7 +165,7 @@ printf("%d\n" f2(1,2 3,4))
 
 - [チュートリアル](docs/tutorial)
 - [言語仕様](docs/spec)
-- [newml\(仮\)ドキュメント ドキュメント)](docs)
+- [camlup\(仮\)ドキュメント ドキュメント)](docs)
 
 # License
 
