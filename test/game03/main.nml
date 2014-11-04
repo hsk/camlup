@@ -61,6 +61,17 @@ Key module {
   }
 }
 
+Utils module {
+
+  checkColligion(x y r ls) = {
+    !List.exists{|(bx,by,bb)=>
+      (x -. r < bx && bx < x +. r) &&
+      (y -. r < by && by < y +. r)
+    }(ls)
+  }
+
+}
+
 Bullets module {
 
   bullets:ref[list[(float,float,ref[bool])]] = & []
@@ -70,7 +81,7 @@ Bullets module {
     bullets := (x,y, &true):: *bullets
   }
 
-  move(bs) = {
+  move() = {
     bullets := *bullets |> List.map {
         | x,y,b =>
           (x, y -. 10.0, b)
@@ -93,6 +104,10 @@ Bullets module {
           x +. 3.0, y +. 4.0
         )
     }
+  }
+
+  checkColligion(x y r) = {
+    Utils.checkColligion(x y r)(*bullets)
   }
 }
 
@@ -176,8 +191,8 @@ BG module {
     }
   }
 
-  move(bs) = {
-    stars := (*stars) |> List.map{
+  move() = {
+    stars := *stars |> List.map{
       | (x,y,speed) =>
         x = x -. (*Ship.x -. width /. 2.) *. 0.005 *. speed 
         x = if (x < 0.   ) x +. width else x
@@ -210,12 +225,65 @@ BG module {
   }
 }
 
+
+Enemies module {
+  enemies:ref[list[(float,float,ref[bool])]] = & []
+
+  count = &0
+  add(x; y) = {
+    if(*count < 20) {
+      enemies := (x,y, &true):: *enemies
+    }
+  }
+  /**
+   * とりあえず、上から下に移動
+   */
+  init() = {
+    Printf.printf("%d\n" 1)
+
+  }
+
+  move() = {
+    if(Random.float(1.0) < 0.05)
+      add(Random.float(width*.2.0)-.width/. 2.; -10.0)
+
+    count := 0
+    enemies := *enemies |> List.map {
+      | x,y,b =>
+        ++count
+        s = 5.0 +. (height -. *Ship.y) *. 0.06
+        x = x -. (*Ship.x -. width /. 2.) *. 0.005 *. s
+        (x, y +. s, b)
+    } |> List.filter {
+      | x,y,{:contents = b} =>
+        b && y < height && Bullets.checkColligion(x y 16.0)
+    }
+  }
+
+  draw() = {
+    *enemies |> List.iter{
+      | (x,y,s) =>
+        GlDraw.color(
+          Random.float(0.1)+.0.8, 
+          Random.float(0.1)+.0.8, 
+          Random.float(0.1)+.0.2
+        )
+        r = 12.0
+        GlDraw.rect(
+          x -. r, y -. r
+          x +. r, y +. r
+        )
+    }
+  }
+}
+
 Game module {
 
   draw() = {
     GlClear.clear([`color])
     BG.draw()
     Ship.draw()
+    Enemies.draw()
     Glut.swapBuffers()
   }
 
@@ -223,6 +291,7 @@ Game module {
     Glut.postRedisplay()
     BG.move()
     Ship.move()
+    Enemies.move()
     Glut.timerFunc(ms = 15 cb = mainLoop value = 1)
   }
 

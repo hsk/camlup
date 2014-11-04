@@ -268,7 +268,7 @@ exp:
   | INC exp { ECall(e_pos($2), EVar(e_pos($2),"incr"), [$2]) }
 
   | AMP exp { EPre(e_pos($2), "ref", $2) }
-  | MUL exp { EPre(e_pos($2), "!", $2) }
+  | MUL exp %prec NEW { EPre(e_pos($2), "!", $2) }
   | NOT exp { EPre(e_pos($2), "not", $2) }
   | NEW exp { EPre(e_pos($2), "new", $2) }
   | exp XOR exp { EBin(e_pos($1), $1, "^", $3) }
