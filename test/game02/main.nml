@@ -2,48 +2,54 @@
  * main.nml
  */
 
-width = 400.0
+width  = 400.0
 height = 800.0
 
 Key module {
 
-  up = & false
-  down = & false
-  left = & false
-  right = & false
-  z = & false
+  _up    = &false
+  _down  = &false
+  _left  = &false
+  _right = &false
+  _z     = &false
+
+  up()    = *_up
+  down()  = *_down
+  left()  = *_left
+  right() = *_right
+  z()     = *_z
 
   onSpKeyDown(#key #x #y) = {
     key match {
-      | Glut.KEY_UP    => up := true
-      | Glut.KEY_DOWN  => down := true
-      | Glut.KEY_LEFT  => left := true
-      | Glut.KEY_RIGHT => right := true
+      | Glut.KEY_UP    => _up    := true
+      | Glut.KEY_DOWN  => _down  := true
+      | Glut.KEY_LEFT  => _left  := true
+      | Glut.KEY_RIGHT => _right := true
       | _ => ()
     }
   }
 
   onSpKeyUp(#key #x #y) = {
     key match {
-      | Glut.KEY_UP    => up := false
-      | Glut.KEY_DOWN  => down := false
-      | Glut.KEY_LEFT  => left := false
-      | Glut.KEY_RIGHT => right := false
+      | Glut.KEY_UP    => _up    := false
+      | Glut.KEY_DOWN  => _down  := false
+      | Glut.KEY_LEFT  => _left  := false
+      | Glut.KEY_RIGHT => _right := false
       | _ => ()
     }
   }
 
   onKeyDown(#key #x #y) = {
     char_of_int(key) match {
-      | 'z' => z := true
-      | _ => ()
+      | 'z' => _z := true
+      | _   => ()
     }
   }
 
   onKeyUp(#key #x #y) = {
     char_of_int(key) match {
-      | 'z' => z := false
-      | _ => ()
+      | 'z' => _z := false
+      | _   => ()
     }
   }
 
@@ -56,33 +62,42 @@ Key module {
 }
 
 BG module {
-  ship_x = & 0.
-  ship_y = & 0.
+
+  ship_x = &0.0
+  ship_y = &0.0
+
   stars:ref[list[(float,float,float)]] = & []
 
   init() = {
-    //Printf.printf("init\n"); flush(stdout)
-    def loop = {
-      | (0,ls) => ls
-      | (n,ls) => loop(n-1,(
-        ( Random.float(width),
-          Random.float(height),
-          Random.float(3.)+.2.)::ls))
+
+    def createList(i ls f) = {
+      i match {
+        | -1 => ls
+        | i  => createList(i-1 f(i)::ls f) 
+      }
     }
-    stars := loop(30, [])
+
+    stars := createList(30; []) {
+      | i =>
+        x = Random.float(width)
+        y = Random.float(height)
+        speed = Random.float(3.)+.2.0
+        (x,y,speed)
+    }
   }
 
   move(bs) = {
-    stars := (*stars) |> List.map{|(x,y,speed)=>
-      //Printf.printf("%f %f" x y); flush(stdout)
-      x = x -. ((*ship_x) -. width /. 2.) *. 0.005 *. speed 
-      x = if (x < 0.) x +. width else x
-      x = if (x > width) x -. width else x
-      speed2 = speed +. ((height -. *ship_y) *. 0.03)
-      y = y +. speed2
-      if (y > height)
-        (Random.float(width), 0., Random.float(3.)+.2.)
-      else (x, y, speed)
+    stars := (*stars) |> List.map{
+      | (x,y,speed) =>
+        x = x -. (*ship_x -. width /. 2.) *. 0.005 *. speed 
+        x = if (x < 0.   ) x +. width else x
+        x = if (x > width) x -. width else x
+        speed2 = speed +. (height -. *ship_y) *. 0.03
+        y = y +. speed2
+        if (y > height)
+          (Random.float(width), 0., Random.float(3.)+.2.)
+        else
+          (x, y, speed)
     }
   }
 
@@ -91,9 +106,10 @@ BG module {
       GlDraw.color(
         Random.float(0.5)+.0.5, 
         Random.float(0.5)+.0.5, 
-        Random.float(0.5)+.0.5)
+        Random.float(0.5)+.0.5
+      )
 
-      s = s +. ((height -. *ship_y) *. 0.06)
+      s = s +. (height -. *ship_y) *. 0.06
 
       GlDraw.rect(
         x, y
@@ -107,46 +123,55 @@ Bullets module {
 
   bullets:ref[list[(float,float,ref[bool])]] = & []
 
-  add(x y) = {
-    bullets := (x,y, &true):: (*bullets)
+  add(x; y) = {
+    bullets := (x,y, &true):: *bullets
   }
 
   move(bs) = {
     bullets := (*bullets) |>
-      List.map{|(x,y,b)=> (x,y-.10.,b) }
+      List.map{
+        | x,y,b =>
+          (x, y-.10.0, b)
+      }
     bullets := (*bullets) |>
-      List.filter{|(_,y,{:contents=b})=> b && y > 0. }
+      List.filter{
+        | _,y,{:contents=b} =>
+          b && y > 0.
+      }
   }
 
   draw() = {
-    (*bullets)|>List.iter{|(x,y,_)=>
-      GlDraw.rect(
-        x -. 1.5, y -. 6.5
-        x +. 3., y +. 4.
-      )
+    GlDraw.color(
+      0.5,
+      0.8+.Random.float(0.2),
+      0.8+.Random.float(0.2)
+    )
+    (*bullets)|>List.iter{
+      | x,y,_ =>
+        GlDraw.rect(
+          x -. 1.5, y -. 6.5
+          x +. 3.0, y +. 4.0
+        )
     }
   }
 }
 
 Ship module {
-  rsize = 25.
-  x = & width /. 2.
-  y = & (height -. rsize *. 2.0)
-  speed = 5.
+  rsize = 25.0
+  x = & width  /. 2.0
+  y = & height -. rsize *. 2.0
+  speed = 5.0
 
   move() = {
 
     m = 5
-    m = if(*Key.left)  m - 1 else m
-    m = if(*Key.right) m + 1 else m
-    m = if(*Key.up)    m - 3 else m
-    m = if(*Key.down)  m + 3 else m
+    m = if(Key.left())  m - 1 else m
+    m = if(Key.right()) m + 1 else m
+    m = if(Key.up())    m - 3 else m
+    m = if(Key.down())  m + 3 else m
     speed = m match {
-      | 1
-      | 3
-      | 7
-      | 9 => speed /. 1.4
-      | _ => speed
+      | 1;| 3;| 7;| 9 => speed /. 1.4
+      | _             => speed
     }
     nx,ny = m match {
       | 1 => *x -. speed, *y -. speed
@@ -161,11 +186,11 @@ Ship module {
       | _ => *x         , *y
     }
 
-    x := min(max(nx rsize /. 2.) width -. rsize /. 2.)
-    y := min(max(ny rsize /. 2.) height -. rsize /. 2.)
+    x := min(max(nx; rsize /. 2.); width  -. rsize /. 2.)
+    y := min(max(ny; rsize /. 2.); height -. rsize /. 2.)
 
     Bullets.move()
-    if(*Key.z) Bullets.add(*x ; *y -. rsize /. 2.)
+    if (Key.z()) Bullets.add(*x; *y -. rsize /. 2.)
     BG.ship_x := *x
     BG.ship_y := *y
 
@@ -187,8 +212,6 @@ Ship module {
       *x -. r +.r2, *y -. r +. r2
       *x +. r +.r2, *y +. r +. r2
     )
-
-    GlDraw.color(0.5, 0.8+.Random.float(0.2), 0.8+.Random.float(0.2))
     Bullets.draw()
   }
 }
@@ -210,16 +233,13 @@ Game module {
   }
 
   resize(#w; #h) = {
-    h = max(h; 1)
-    GlDraw.viewport(x=0; y=0; w=w; h=h)
+    GlDraw.viewport(x=0; y=0; w=w; h=max(h; 1))
 
     GlMat.mode(`projection)
     GlMat.load_identity()
 
     ortho = GlMat.ortho(z=(1.0, -1.0))
-    x = (0.0, width)
-    y = (height, -0.0)
-    ortho(x=x; y=y)
+    ortho(x=(0.0, width); y=(height, -0.0))
 
     GlMat.mode(`modelview)
     GlMat.load_identity()
@@ -227,19 +247,16 @@ Game module {
 
   main = {
     Random.init(int_of_float(Sys.time()*.10000.0))
-    _ = Glut.init(Sys.argv)
-    Glut.initDisplayMode(double_buffer = true; alpha= true)()
-    Glut.initWindowSize(w= int_of_float(width); h= int_of_float(height))
-    _ = Glut.createWindow("Game02")
+    Glut.init(Sys.argv) |> ignore
+    Glut.initDisplayMode(double_buffer = true; alpha = true)()
+    Glut.initWindowSize(w = int_of_float(width); h = int_of_float(height))
+    Glut.createWindow("Game02") |> ignore
     Glut.displayFunc(draw)
     Glut.reshapeFunc(resize)
     Key.init()
     BG.init()
-    Glut.timerFunc(ms=15 cb=mainLoop value=1)
-    GlClear.color(alpha=1.0; (0.1, 0.1, 0.1))
+    Glut.timerFunc(ms = 15 cb = mainLoop value = 1)
+    GlClear.color(alpha = 1.0; 0.1, 0.1, 0.1)
     Glut.mainLoop()
   }
 }
-
-
-

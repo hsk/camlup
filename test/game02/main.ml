@@ -7,615 +7,650 @@ let height = 800.000000;;
 module Key = struct
 
 # 10 "?"
-let up = (ref false);;
+let _up = (ref false);;
 
 # 11 "?"
-let down = (ref false);;
+let _down = (ref false);;
 
 # 12 "?"
-let left = (ref false);;
+let _left = (ref false);;
 
 # 13 "?"
-let right = (ref false);;
+let _right = (ref false);;
 
 # 14 "?"
-let z = (ref false);;
+let _z = (ref false);;
 
 # 16 "?"
-let onSpKeyDown = (fun ~(key) ~(x) ~(y) -> 
-# 24 "?"
+let up = (fun () -> (! _up));;
 
-  
 # 17 "?"
-(match key with | (
+let down = (fun () -> (! _down));;
+
 # 18 "?"
-(Glut . KEY_UP))-> (
-    (up := true)
-  
-)| (
+let left = (fun () -> (! _left));;
+
 # 19 "?"
-(Glut . KEY_DOWN))-> (
-    (down := true)
-  
-)| (
+let right = (fun () -> (! _right));;
+
 # 20 "?"
-(Glut . KEY_LEFT))-> (
-    (left := true)
-  
-)| (
-# 21 "?"
-(Glut . KEY_RIGHT))-> (
-    (right := true)
-  
-)| (
+let z = (fun () -> (! _z));;
+
 # 22 "?"
-_)-> (
-    ()
-  
-))
-);;
-
-# 26 "?"
-let onSpKeyUp = (fun ~(key) ~(x) ~(y) -> 
-# 34 "?"
-
-  
-# 27 "?"
-(match key with | (
-# 28 "?"
-(Glut . KEY_UP))-> (
-    (up := false)
-  
-)| (
-# 29 "?"
-(Glut . KEY_DOWN))-> (
-    (down := false)
-  
-)| (
+let onSpKeyDown = (fun ~(key) ~(x) ~(y) -> 
 # 30 "?"
+
+  
+# 23 "?"
+(match key with | (
+# 24 "?"
+(Glut . KEY_UP))-> (
+    (_up := true)
+  
+)| (
+# 25 "?"
+(Glut . KEY_DOWN))-> (
+    (_down := true)
+  
+)| (
+# 26 "?"
 (Glut . KEY_LEFT))-> (
-    (left := false)
+    (_left := true)
   
 )| (
-# 31 "?"
+# 27 "?"
 (Glut . KEY_RIGHT))-> (
-    (right := false)
+    (_right := true)
   
 )| (
+# 28 "?"
+_)-> (
+    ()
+  
+))
+);;
+
 # 32 "?"
-_)-> (
-    ()
-  
-))
-);;
+let onSpKeyUp = (fun ~(key) ~(x) ~(y) -> 
+# 40 "?"
 
+  
+# 33 "?"
+(match key with | (
+# 34 "?"
+(Glut . KEY_UP))-> (
+    (_up := false)
+  
+)| (
+# 35 "?"
+(Glut . KEY_DOWN))-> (
+    (_down := false)
+  
+)| (
 # 36 "?"
-let onKeyDown = (fun ~(key) ~(x) ~(y) -> 
-# 41 "?"
-
+(Glut . KEY_LEFT))-> (
+    (_left := false)
   
+)| (
 # 37 "?"
-(match char_of_int (key) with | (
+(Glut . KEY_RIGHT))-> (
+    (_right := false)
+  
+)| (
 # 38 "?"
-'z')-> (
-    (z := true)
-  
-)| (
-# 39 "?"
 _)-> (
     ()
   
 ))
 );;
 
+# 42 "?"
+let onKeyDown = (fun ~(key) ~(x) ~(y) -> 
+# 47 "?"
+
+  
 # 43 "?"
-let onKeyUp = (fun ~(key) ~(x) ~(y) -> 
-# 48 "?"
-
-  
-# 44 "?"
 (match char_of_int (key) with | (
-# 45 "?"
+# 44 "?"
 'z')-> (
-    (z := false)
+    (_z := true)
   
 )| (
-# 46 "?"
+# 45 "?"
 _)-> (
     ()
   
 ))
 );;
 
-# 50 "?"
-let init = (fun () -> 
-# 55 "?"
+# 49 "?"
+let onKeyUp = (fun ~(key) ~(x) ~(y) -> 
+# 54 "?"
 
   
+# 50 "?"
+(match char_of_int (key) with | (
 # 51 "?"
+'z')-> (
+    (_z := false)
+  
+)| (
+# 52 "?"
+_)-> (
+    ()
+  
+))
+);;
+
+# 56 "?"
+let init = (fun () -> 
+# 61 "?"
+
+  
+# 57 "?"
 (Glut . specialFunc (onSpKeyDown));
   
-# 52 "?"
+# 58 "?"
 (Glut . specialUpFunc (onSpKeyUp));
   
-# 53 "?"
+# 59 "?"
 (Glut . keyboardFunc (onKeyDown));
   
-# 54 "?"
+# 60 "?"
 (Glut . keyboardUpFunc (onKeyUp))
 )
 end;;
 module BG = struct
 
-# 59 "?"
+# 66 "?"
 let ship_x = (ref 0.000000);;
 
-# 60 "?"
+# 67 "?"
 let ship_y = (ref 0.000000);;
 
-# 61 "?"
+# 69 "?"
 let (stars:(((float * float * float)) list) ref) = (ref []);;
 
-# 63 "?"
-let init = (fun () -> 
-# 73 "?"
-
-  
 # 71 "?"
-let rec loop = begin fun t1'  -> match t1' with
-    | (
-# 66 "?"
-( 0 , ls)) -> (
-
-      ls
-    )
-    | (
-# 67 "?"
-( n , ls)) -> (
-
-      loop ((n - 1) , 
-# 68 "?"
-(( (Random . float (width)) , 
-# 69 "?"
-(Random . float (height)) , 
-# 70 "?"
-((Random . float (3.000000)) +. 2.000000)) :: ls))
-    )
-   end  in
-  
-# 72 "?"
-(stars := loop (30 , []))
-);;
-
-# 75 "?"
-let move = (fun bs -> 
+let init = (fun () -> 
 # 87 "?"
 
   
+# 73 "?"
+let rec createList = (fun i ls f -> 
+# 78 "?"
+
+    
+# 74 "?"
+(match i with | (
+# 75 "?"
+(- 1))-> (
+      ls
+    
+)| (
 # 76 "?"
-(stars := (List . map (
+i)-> (
+      createList  ((i - 1))  ((f (i) :: ls)) (f)
+    
+))
+  ) in
+  
+# 80 "?"
+(stars := createList  (30) ([]) (
 # 86 "?"
 begin fun t1'  -> match t1' with
     | (
-# 76 "?"
-( x , y , speed)) -> (
-
-# 78 "?"
-
-      let x = (x -. ((((! ship_x) -. (width /. 2.000000)) *. 0.005000) *. speed)) in
-      
-# 79 "?"
-let x = (if (x < 0.000000) then ((x +. width))else(x)) in
-      
-# 80 "?"
-let x = (if (x > width) then ((x -. width))else(x)) in
-      
 # 81 "?"
-let speed2 = (speed +. ((height -. (! ship_y)) *. 0.030000)) in
-      
+i) -> (
+
 # 82 "?"
-let y = (y +. speed2) in
+
+      let x = (Random . float (width)) in
       
 # 83 "?"
-(if (y > height) then (
+let y = (Random . float (height)) in
+      
 # 84 "?"
-( (Random . float (width)) , 0.000000 , ((Random . float (3.000000)) +. 2.000000))      )else(
+let speed = ((Random . float (3.000000)) +. 2.000000) in
+      
 # 85 "?"
-( x , y , speed)))
+( x , y , speed)
     )
-   end )) (
-# 76 "?"
-(! stars)))
+   end ))
 );;
 
 # 89 "?"
-let draw = (fun () -> 
-# 103 "?"
+let move = (fun bs -> 
+# 102 "?"
 
   
 # 90 "?"
-(List . iter (
-# 102 "?"
+(stars := (List . map (
+# 101 "?"
 begin fun t1'  -> match t1' with
     | (
-# 90 "?"
-( x , y , s)) -> (
-
 # 91 "?"
+( x , y , speed)) -> (
 
-      (GlDraw . color (
 # 92 "?"
-((Random . float (0.500000)) +. 0.500000) , 
+
+      let x = (x -. ((((! ship_x) -. (width /. 2.000000)) *. 0.005000) *. speed)) in
+      
 # 93 "?"
-((Random . float (0.500000)) +. 0.500000) , 
+let x = (if (x < 0.000000) then ((x +. width))else(x)) in
+      
 # 94 "?"
-((Random . float (0.500000)) +. 0.500000)));
+let x = (if (x > width) then ((x -. width))else(x)) in
+      
+# 95 "?"
+let speed2 = (speed +. ((height -. (! ship_y)) *. 0.030000)) in
       
 # 96 "?"
-let s = (s +. ((height -. (! ship_y)) *. 0.060000)) in
+let y = (y +. speed2) in
       
+# 97 "?"
+(if (y > height) then (
 # 98 "?"
-(GlDraw . rect  (
-# 99 "?"
-x , y) (
+( (Random . float (width)) , 0.000000 , ((Random . float (3.000000)) +. 2.000000))      )else(
 # 100 "?"
-(x +. 1.500000) , ((y +. 1.000000) +. s)))
+( x , y , speed)))
     )
    end )) (
 # 90 "?"
+(! stars)))
+);;
+
+# 104 "?"
+let draw = (fun () -> 
+# 119 "?"
+
+  
+# 105 "?"
+(List . iter (
+# 118 "?"
+begin fun t1'  -> match t1' with
+    | (
+# 105 "?"
+( x , y , s)) -> (
+
+# 106 "?"
+
+      (GlDraw . color (
+# 107 "?"
+((Random . float (0.500000)) +. 0.500000) , 
+# 108 "?"
+((Random . float (0.500000)) +. 0.500000) , 
+# 109 "?"
+((Random . float (0.500000)) +. 0.500000)));
+      
+# 112 "?"
+let s = (s +. ((height -. (! ship_y)) *. 0.060000)) in
+      
+# 114 "?"
+(GlDraw . rect  (
+# 115 "?"
+x , y) (
+# 116 "?"
+(x +. 1.500000) , ((y +. 1.000000) +. s)))
+    )
+   end )) (
+# 105 "?"
 (! stars))
 )
 end;;
 module Bullets = struct
 
-# 108 "?"
+# 124 "?"
 let (bullets:(((float * float * (bool) ref)) list) ref) = (ref []);;
 
-# 110 "?"
+# 126 "?"
 let add = (fun x y -> 
-# 112 "?"
+# 128 "?"
 
   
-# 111 "?"
+# 127 "?"
 (bullets := (( x , y , (ref true)) :: (! bullets)))
 );;
 
-# 114 "?"
+# 130 "?"
 let move = (fun bs -> 
-# 119 "?"
+# 141 "?"
 
   
-# 115 "?"
+# 131 "?"
 (bullets := 
-# 116 "?"
-(List . map (begin fun t1'  -> match t1' with
-    | (( x , y , b)) -> (
+# 132 "?"
+(List . map (
+# 135 "?"
+begin fun t1'  -> match t1' with
+    | (
+# 133 "?"
+x , y , b) -> (
+
+# 134 "?"
 
       ( x , (y -. 10.000000) , b)
     )
    end )) (
-# 115 "?"
+# 131 "?"
 (! bullets)));
   
-# 117 "?"
+# 136 "?"
 (bullets := 
-# 118 "?"
-(List . filter (begin fun t1'  -> match t1' with
-    | (( _ , y , {contents=b})) -> (
+# 137 "?"
+(List . filter (
+# 140 "?"
+begin fun t1'  -> match t1' with
+    | (
+# 138 "?"
+_ , y , {contents=b}) -> (
+
+# 139 "?"
 
       (b && (y > 0.000000))
     )
    end )) (
-# 117 "?"
+# 136 "?"
 (! bullets)))
 );;
 
-# 121 "?"
+# 143 "?"
 let draw = (fun () -> 
-# 128 "?"
+# 156 "?"
 
   
-# 122 "?"
+# 144 "?"
+(GlDraw . color (
+# 145 "?"
+0.500000 , 
+# 146 "?"
+(0.800000 +. (Random . float (0.200000))) , 
+# 147 "?"
+(0.800000 +. (Random . float (0.200000)))));
+  
+# 149 "?"
 (List . iter (
-# 127 "?"
+# 155 "?"
 begin fun t1'  -> match t1' with
     | (
-# 122 "?"
-( x , y , _)) -> (
+# 150 "?"
+x , y , _) -> (
 
-# 123 "?"
+# 151 "?"
 
       (GlDraw . rect  (
-# 124 "?"
+# 152 "?"
 (x -. 1.500000) , (y -. 6.500000)) (
-# 125 "?"
+# 153 "?"
 (x +. 3.000000) , (y +. 4.000000)))
     )
    end )) (
-# 122 "?"
+# 149 "?"
 (! bullets))
 )
 end;;
 module Ship = struct
 
-# 132 "?"
+# 160 "?"
 let rsize = 25.000000;;
 
-# 133 "?"
+# 161 "?"
 let x = (ref (width /. 2.000000));;
 
-# 134 "?"
+# 162 "?"
 let y = (ref (height -. (rsize *. 2.000000)));;
 
-# 135 "?"
+# 163 "?"
 let speed = 5.000000;;
 
-# 137 "?"
+# 165 "?"
 let move = (fun () -> 
-# 172 "?"
+# 197 "?"
 
   
-# 139 "?"
+# 167 "?"
 let m = 5 in
   
-# 140 "?"
-let m = (if (! (Key . left)) then ((m - 1))else(m)) in
+# 168 "?"
+let m = (if (Key . left (())) then ((m - 1))else(m)) in
   
-# 141 "?"
-let m = (if (! (Key . right)) then ((m + 1))else(m)) in
+# 169 "?"
+let m = (if (Key . right (())) then ((m + 1))else(m)) in
   
-# 142 "?"
-let m = (if (! (Key . up)) then ((m - 3))else(m)) in
+# 170 "?"
+let m = (if (Key . up (())) then ((m - 3))else(m)) in
   
-# 143 "?"
-let m = (if (! (Key . down)) then ((m + 3))else(m)) in
+# 171 "?"
+let m = (if (Key . down (())) then ((m + 3))else(m)) in
   
-# 144 "?"
+# 172 "?"
 let speed = (match m with | (
-# 145 "?"
-1)| (
-# 146 "?"
-3)| (
-# 147 "?"
-7)| (
-# 148 "?"
-9)-> (
+# 173 "?"
+1)| (3)| (7)| (9)-> (
   (speed /. 1.400000)
 
 )| (
-# 149 "?"
+# 174 "?"
 _)-> (
   speed
 
 )) in
   
-# 151 "?"
+# 176 "?"
 let nx , ny = (match m with | (
-# 152 "?"
+# 177 "?"
 1)-> (
   ((! x) -. speed) , ((! y) -. speed)
 
 )| (
-# 153 "?"
+# 178 "?"
 2)-> (
   (! x) , ((! y) -. speed)
 
 )| (
-# 154 "?"
+# 179 "?"
 3)-> (
   ((! x) +. speed) , ((! y) -. speed)
 
 )| (
-# 155 "?"
+# 180 "?"
 4)-> (
   ((! x) -. speed) , (! y)
 
 )| (
-# 156 "?"
+# 181 "?"
 5)-> (
   (! x) , (! y)
 
 )| (
-# 157 "?"
+# 182 "?"
 6)-> (
   ((! x) +. speed) , (! y)
 
 )| (
-# 158 "?"
+# 183 "?"
 7)-> (
   ((! x) -. speed) , ((! y) +. speed)
 
 )| (
-# 159 "?"
+# 184 "?"
 8)-> (
   (! x) , ((! y) +. speed)
 
 )| (
-# 160 "?"
+# 185 "?"
 9)-> (
   ((! x) +. speed) , ((! y) +. speed)
 
 )| (
-# 161 "?"
+# 186 "?"
 _)-> (
   (! x) , (! y)
 
 )) in
   
-# 164 "?"
+# 189 "?"
 (x := min  (max  (nx) ((rsize /. 2.000000))) ((width -. (rsize /. 2.000000))));
   
-# 165 "?"
+# 190 "?"
 (y := min  (max  (ny) ((rsize /. 2.000000))) ((height -. (rsize /. 2.000000))));
   
-# 167 "?"
+# 192 "?"
 (Bullets . move (()));
   
-# 168 "?"
-(if (! (Key . z)) then ((Bullets . add  ((! x)) (((! y) -. (rsize /. 2.000000)))))  );
+# 193 "?"
+(if (Key . z (())) then ((Bullets . add  ((! x)) (((! y) -. (rsize /. 2.000000)))))  );
   
-# 169 "?"
+# 194 "?"
 ((BG . ship_x) := (! x));
   
-# 170 "?"
+# 195 "?"
 ((BG . ship_y) := (! y))
 );;
 
-# 174 "?"
+# 199 "?"
 let draw = (fun () -> 
-# 193 "?"
+# 216 "?"
 
   
-# 175 "?"
+# 200 "?"
 (GlDraw . color (1.000000 , 0.000000 , 0.000000));
   
-# 176 "?"
+# 201 "?"
 let r = (rsize /. 6.000000) in
   
-# 177 "?"
+# 202 "?"
 let r2 = (rsize /. 4.000000) in
   
-# 178 "?"
+# 203 "?"
 (GlDraw . rect  (
-# 179 "?"
+# 204 "?"
 ((! x) -. r) , (((! y) -. r) -. r2)) (
-# 180 "?"
+# 205 "?"
 ((! x) +. r) , (((! y) +. r) -. r)));
   
-# 182 "?"
+# 207 "?"
 (GlDraw . rect  (
-# 183 "?"
+# 208 "?"
 (((! x) -. r) -. r2) , (((! y) -. r) +. r2)) (
-# 184 "?"
+# 209 "?"
 (((! x) +. r) -. r2) , (((! y) +. r) +. r2)));
   
-# 186 "?"
+# 211 "?"
 (GlDraw . rect  (
-# 187 "?"
+# 212 "?"
 (((! x) -. r) +. r2) , (((! y) -. r) +. r2)) (
-# 188 "?"
+# 213 "?"
 (((! x) +. r) +. r2) , (((! y) +. r) +. r2)));
   
-# 191 "?"
-(GlDraw . color (0.500000 , (0.800000 +. (Random . float (0.200000))) , (0.800000 +. (Random . float (0.200000)))));
-  
-# 192 "?"
+# 215 "?"
 (Bullets . draw (()))
 )
 end;;
 module Game = struct
 
-# 198 "?"
+# 221 "?"
 let draw = (fun () -> 
-# 203 "?"
-
-  
-# 199 "?"
-(GlClear . clear ([`color]));
-  
-# 200 "?"
-(BG . draw (()));
-  
-# 201 "?"
-(Ship . draw (()));
-  
-# 202 "?"
-(Glut . swapBuffers (()))
-);;
-
-# 205 "?"
-let rec mainLoop = (fun ~(value) -> 
-# 210 "?"
-
-  
-# 206 "?"
-(Glut . postRedisplay (()));
-  
-# 207 "?"
-(BG . move (()));
-  
-# 208 "?"
-(Ship . move (()));
-  
-# 209 "?"
-(Glut . timerFunc  ~ms:(15)  ~cb:(mainLoop) ~value:(1))
-);;
-
-# 212 "?"
-let resize = (fun ~(w) ~(h) -> 
 # 226 "?"
 
   
-# 213 "?"
-let h = max  (h) (1) in
-  
-# 214 "?"
-(GlDraw . viewport  ~x:(0)  ~y:(0)  ~w:(w) ~h:(h));
-  
-# 216 "?"
-(GlMat . mode (`projection));
-  
-# 217 "?"
-(GlMat . load_identity (()));
-  
-# 219 "?"
-let ortho = (GlMat . ortho ~z:(( 1.000000 , -1.000000))) in
-  
-# 220 "?"
-let x = ( 0.000000 , width) in
-  
-# 221 "?"
-let y = ( height , -0.000000) in
-  
 # 222 "?"
-ortho  ~x:(x) ~y:(y);
+(GlClear . clear ([`color]));
+  
+# 223 "?"
+(BG . draw (()));
   
 # 224 "?"
-(GlMat . mode (`modelview));
+(Ship . draw (()));
   
 # 225 "?"
-(GlMat . load_identity (()))
+(Glut . swapBuffers (()))
 );;
 
 # 228 "?"
-let main = 
-# 241 "?"
-
-
-# 229 "?"
-(Random . init (int_of_float (((Sys . time (())) *. 10000.000000))));
-
-# 230 "?"
-let _ = (Glut . init ((Sys . argv))) in
-
-# 231 "?"
-(Glut . initDisplayMode  ~double_buffer:(true) ~alpha:(true) (()));
-
-# 232 "?"
-(Glut . initWindowSize  ~w:(int_of_float (width)) ~h:(int_of_float (height)));
-
+let rec mainLoop = (fun ~(value) -> 
 # 233 "?"
-let _ = (Glut . createWindow ("Game02")) in
 
-# 234 "?"
-(Glut . displayFunc (draw));
+  
+# 229 "?"
+(Glut . postRedisplay (()));
+  
+# 230 "?"
+(BG . move (()));
+  
+# 231 "?"
+(Ship . move (()));
+  
+# 232 "?"
+(Glut . timerFunc  ~ms:(15)  ~cb:(mainLoop) ~value:(1))
+);;
 
 # 235 "?"
+let resize = (fun ~(w) ~(h) -> 
+# 246 "?"
+
+  
+# 236 "?"
+(GlDraw . viewport  ~x:(0)  ~y:(0)  ~w:(w) ~h:(max  (h) (1)));
+  
+# 238 "?"
+(GlMat . mode (`projection));
+  
+# 239 "?"
+(GlMat . load_identity (()));
+  
+# 241 "?"
+let ortho = (GlMat . ortho ~z:(( 1.000000 , -1.000000))) in
+  
+# 242 "?"
+ortho  ~x:(( 0.000000 , width)) ~y:(( height , -0.000000));
+  
+# 244 "?"
+(GlMat . mode (`modelview));
+  
+# 245 "?"
+(GlMat . load_identity (()))
+);;
+
+# 248 "?"
+let main = 
+# 261 "?"
+
+
+# 249 "?"
+(Random . init (int_of_float (((Sys . time (())) *. 10000.000000))));
+
+# 250 "?"
+ignore ((Glut . init ((Sys . argv))));
+
+# 251 "?"
+(Glut . initDisplayMode  ~double_buffer:(true) ~alpha:(true) (()));
+
+# 252 "?"
+(Glut . initWindowSize  ~w:(int_of_float (width)) ~h:(int_of_float (height)));
+
+# 253 "?"
+ignore ((Glut . createWindow ("Game02")));
+
+# 254 "?"
+(Glut . displayFunc (draw));
+
+# 255 "?"
 (Glut . reshapeFunc (resize));
 
-# 236 "?"
+# 256 "?"
 (Key . init (()));
 
-# 237 "?"
+# 257 "?"
 (BG . init (()));
 
-# 238 "?"
+# 258 "?"
 (Glut . timerFunc  ~ms:(15)  ~cb:(mainLoop) ~value:(1));
 
-# 239 "?"
-(GlClear . color  ~alpha:(1.000000) (( 0.100000 , 0.100000 , 0.100000)));
+# 259 "?"
+(GlClear . color  ~alpha:(1.000000) (0.100000 , 0.100000 , 0.100000));
 
-# 240 "?"
+# 260 "?"
 (Glut . mainLoop (()))
 
 end
