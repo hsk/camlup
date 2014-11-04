@@ -1,0 +1,366 @@
+/**
+ * main.nml
+ */
+
+width  = 400.0
+height = 800.0
+
+Key module {
+
+  _up    = &false
+  _down  = &false
+  _left  = &false
+  _right = &false
+  _z     = &false
+
+  up()    = *_up
+  down()  = *_down
+  left()  = *_left
+  right() = *_right
+  z()     = *_z
+
+  onSpKeyDown(#key #x #y) = {
+    key match {
+      | Glut.KEY_UP    => _up    := true
+      | Glut.KEY_DOWN  => _down  := true
+      | Glut.KEY_LEFT  => _left  := true
+      | Glut.KEY_RIGHT => _right := true
+      | _ => ()
+    }
+  }
+
+  onSpKeyUp(#key #x #y) = {
+    key match {
+      | Glut.KEY_UP    => _up    := false
+      | Glut.KEY_DOWN  => _down  := false
+      | Glut.KEY_LEFT  => _left  := false
+      | Glut.KEY_RIGHT => _right := false
+      | _ => ()
+    }
+  }
+
+  onKeyDown(#key #x #y) = {
+    char_of_int(key) match {
+      | 'z' => _z := true
+      | _   => ()
+    }
+  }
+
+  onKeyUp(#key #x #y) = {
+    char_of_int(key) match {
+      | 'z' => _z := false
+      | _   => ()
+    }
+  }
+
+  init() = {
+    Glut.specialFunc(onSpKeyDown)
+    Glut.specialUpFunc(onSpKeyUp)
+    Glut.keyboardFunc(onKeyDown)
+    Glut.keyboardUpFunc(onKeyUp)
+  }
+}
+
+bullet type {x:float; y:float; enable:ref[bool]}
+
+Utils module {
+
+  checkColligion(bx by r ls) = {
+    !List.exists{|{:x y}=>
+      (x -. r < bx && bx < x +. r) &&
+      (y -. r < by && by < y +. r)
+    }(ls)
+  }
+
+}
+
+Bullets module {
+
+
+  bullets:ref[list[bullet]] = & []
+
+
+  cnt = & 0
+
+  add(x; y) = {
+    if(*cnt < 16) {
+      bullets := {:x=x; y=y; enable= &true}:: *bullets
+    }
+  }
+
+  move() = {
+    cnt := 0
+    bullets := *bullets |> List.map {
+        | {:x y enable} =>
+          ++cnt
+          {:x=x; y=y -. 30.0; enable=enable}
+      } |> List.filter {
+        | {:y enable={:contents = b}} =>
+          b && y > 0.
+      }
+  }
+
+  draw() = {
+    GlDraw.color(
+      0.5,
+      0.8+.Random.float(0.2),
+      0.8+.Random.float(0.2)
+    )
+    *bullets|>List.iter{
+      | {:x y} =>
+        GlDraw.rect(
+          x -. 1.5, y -. 6.5
+          x +. 3.0, y +. 4.0
+        )
+    }
+  }
+
+  checkColligion(x y r) = {
+    Utils.checkColligion(x y r)(*bullets)
+  }
+}
+
+Ship module {
+  rsize = 25.0
+  x = & width  /. 2.0
+  y = & height -. rsize *. 2.0
+  speed = 5.0
+
+  move() = {
+
+    m = 5
+    m = if(Key.left())  m - 1 else m
+    m = if(Key.right()) m + 1 else m
+    m = if(Key.up())    m - 3 else m
+    m = if(Key.down())  m + 3 else m
+    speed = m match {
+      | 1;| 3;| 7;| 9 => speed /. 1.4
+      | _             => speed
+    }
+    nx,ny = m match {
+      | 1 => *x -. speed, *y -. speed
+      | 2 => *x         , *y -. speed
+      | 3 => *x +. speed, *y -. speed
+      | 4 => *x -. speed, *y
+      | 5 => *x         , *y
+      | 6 => *x +. speed, *y
+      | 7 => *x -. speed, *y +. speed
+      | 8 => *x         , *y +. speed
+      | 9 => *x +. speed, *y +. speed
+      | _ => *x         , *y
+    }
+
+    x := min(max(nx; rsize /. 2.); width  -. rsize /. 2.)
+    y := min(max(ny; rsize /. 2.); height -. rsize /. 2.)
+
+    Bullets.move()
+    if (Key.z()) Bullets.add(*x; *y -. rsize /. 2.)
+  }
+
+  draw() = {
+    GlDraw.color(1.0, 0.0, 0.0)
+    r = rsize /. 6.
+    r2 = rsize /. 4.
+    GlDraw.rect(
+      *x -. r, *y -. r -. r2
+      *x +. r, *y +. r -. r
+    )
+    GlDraw.rect(
+      *x -. r -.r2, *y -. r +. r2
+      *x +. r -.r2, *y +. r +. r2
+    )
+    GlDraw.rect(
+      *x -. r +.r2, *y -. r +. r2
+      *x +. r +.r2, *y +. r +. r2
+    )
+    Bullets.draw()
+  }
+}
+
+BG module {
+
+  stars:ref[list[(float,float,float)]] = & []
+
+  init() = {
+
+    def createList(i ls f) = {
+      i match {
+        | -1 => ls
+        | i  => createList(i-1 f(i)::ls f) 
+      }
+    }
+
+    stars := createList(30; []) {
+      | i =>
+        x = Random.float(width)
+        y = Random.float(height)
+        speed = Random.float(3.)+.2.0
+        (x,y,speed)
+    }
+  }
+
+  move() = {
+    stars := *stars |> List.map{
+      | (x,y,speed) =>
+        x = x -. (*Ship.x -. width /. 2.) *. 0.005 *. speed 
+        x = if (x < 0.   ) x +. width else x
+        x = if (x > width) x -. width else x
+        speed2 = speed +. (height -. *Ship.y) *. 0.03
+        y = y +. speed2
+        if (y > height)
+          (Random.float(width), 0., Random.float(3.)+.2.)
+        else
+          (x, y, speed)
+    }
+  }
+
+  draw() = {
+    *stars |> List.iter{
+      | (x,y,s) =>
+        GlDraw.color(
+          Random.float(0.5)+.0.5, 
+          Random.float(0.5)+.0.5, 
+          Random.float(0.5)+.0.5
+        )
+
+        s = s +. (height -. *Ship.y) *. 0.06
+
+        GlDraw.rect(
+          x, y
+          x +. 1.5, y +. 1.0 +. s 
+        )
+    }
+  }
+}
+
+Enemies module {
+  enemy class(x:float y:float enable:ref[bool]) {
+    + x = x
+    + y = y
+    + enable = enable
+    + move = {
+      s = 2.0 +. (height -. *Ship.y) *. 0.06
+      x = x -. (*Ship.x -. width /. 2.) *. 0.005 *. s
+      new enemy(x; y +.s; enable)
+    }
+    + draw = {
+      GlDraw.color(
+        Random.float(0.1)+.0.8, 
+        Random.float(0.1)+.0.8, 
+        Random.float(0.1)+.0.2
+      )
+      r = 12.0
+      GlDraw.rect(
+        x -. r, y -. r
+        x +. r, y +. r
+      )
+    }
+  }
+
+  enemy2 class(x:float y:float enable:ref[bool]) {
+    + x = x
+    + y = y
+    + enable = enable
+    + move = {
+
+      s = 5.0 +. (height -. *Ship.y) *. 0.06
+      x = x -. (*Ship.x -. width /. 2.) *. 0.005 *. s
+      new enemy2(x; y +.s; enable)
+    }
+    + draw = {
+      GlDraw.color(
+        Random.float(0.1)+.0.5, 
+        Random.float(0.1)+.0.5, 
+        Random.float(0.1)+.0.9
+      )
+      r = 8.0
+      GlDraw.rect(
+        x -. r, y -. r
+        x +. r, y +. r
+      )
+    }
+  }
+
+  enemies:ref[list[enemy2]] = & []
+
+  count = &0
+  add(enm; x; y) = {
+    if(*count < 20) {
+      enemies := enm(x y; &true) :: *enemies
+    }
+  }
+
+  move() = {
+    if(Random.float(1.0) < 0.05) {
+
+      es = [new enemy2;new enemy]
+
+      enm = List.nth(es Random.int(List.length(es)))
+      add(enm; Random.float(width*.2.0)-.width/. 2.; -10.0)
+
+    }
+
+    count := 0
+    enemies := *enemies |> List.map {
+      | e =>
+        ++count
+        e->move
+    } |> List.filter {
+      | e =>
+        *(e->enable) &&
+        e->y < height &&
+        Bullets.checkColligion(e->x e->y 16.0)
+    }
+  }
+
+  draw() = {
+    *enemies |> List.iter{| e => e->draw }
+  }
+}
+
+Game module {
+
+  draw() = {
+    GlClear.clear([`color])
+    BG.draw()
+    Ship.draw()
+    Enemies.draw()
+    Glut.swapBuffers()
+  }
+
+  def mainLoop(#value) = {
+    Glut.postRedisplay()
+    BG.move()
+    Ship.move()
+    Enemies.move()
+    Glut.timerFunc(ms = 15 cb = mainLoop value = 1)
+  }
+
+  resize(#w; #h) = {
+    GlDraw.viewport(x=0; y=0; w=w; h=max(h; 1))
+
+    GlMat.mode(`projection)
+    GlMat.load_identity()
+
+    ortho = GlMat.ortho(z=(1.0, -1.0))
+    ortho(x=(0.0, width); y=(height, -0.0))
+
+    GlMat.mode(`modelview)
+    GlMat.load_identity()
+  }
+
+  main = {
+    Random.init(int_of_float(Sys.time()*.10000.0))
+    Glut.init(Sys.argv) |> ignore
+    Glut.initDisplayMode(double_buffer = true; alpha = true)()
+    Glut.initWindowSize(w = int_of_float(width); h = int_of_float(height))
+    Glut.createWindow("Game03") |> ignore
+    Glut.displayFunc(draw)
+    Glut.reshapeFunc(resize)
+    Key.init()
+    BG.init()
+    Glut.timerFunc(ms = 15 cb = mainLoop value = 1)
+    GlClear.color(alpha = 1.0; 0.1, 0.1, 0.1)
+    Glut.mainLoop()
+  }
+}
