@@ -358,7 +358,7 @@ Game module {
     Glut.init(Sys.argv) |> ignore
     Glut.initDisplayMode(double_buffer = true; alpha = true)()
     Glut.initWindowSize(w = int_of_float(width); h = int_of_float(height))
-    Glut.createWindow("Game03") |> ignore
+    Glut.createWindow("Game04") |> ignore
     Glut.displayFunc(draw)
     Glut.reshapeFunc(resize)
     Key.init()
