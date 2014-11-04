@@ -281,7 +281,7 @@ Enemies module {
     }
   }
 
-  enemies:ref[list[enemy2]] = & []
+  enemies:ref[list[enemy]] = & []
 
   count = &0
   add(enm; x; y) = {
