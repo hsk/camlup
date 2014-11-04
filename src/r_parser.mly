@@ -269,13 +269,13 @@ exp:
   | INT { EInt(p(),$1) }
   | ID { EVar(p(),$1) }
   | STRING { EStr(p(),$1) }
-  | DEF ID COLONASSIGN exp { ELetRec(p(),EVar(p(),$2), TEmpty, $4) }
+  | DEF ID COLONASSIGN exp { ELetRec(p(),APub,EVar(p(),$2), TEmpty, $4) }
 
-  | DEF ID fns END { ELetRec(p(),EVar(p(),$2), TEmpty, EPFun(p(),$3)) }
+  | DEF ID fns END { ELetRec(p(),APub,EVar(p(),$2), TEmpty, EPFun(p(),$3)) }
 
   | DEF prm exps END {
       let rec loop = function 
-        | EVar(p,_) as id,b -> ELetRec(p,id, TEmpty, b)
+        | EVar(p,_) as id,b -> ELetRec(p,APub,id, TEmpty, b)
         | ECall(p,(e:e), ls), b ->
           let le = List.map (fun (l:e) ->
             e2e l
@@ -288,7 +288,7 @@ exp:
 
   | DEF prm COLON typ exps END {
       let rec loop = function 
-        | EVar(p,_) as id,t,b -> ELetRec(p,id, t, b)
+        | EVar(p,_) as id,t,b -> ELetRec(p,APub,id, t, b)
         | ECall(p,(e:e), ls), (t:t), b ->
           let (lt:t) = List.fold_left begin fun (t:t) (l:e)  ->
             TFun(e2t l, t)

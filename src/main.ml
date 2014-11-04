@@ -16,8 +16,10 @@ let to_string ast =
   
 let trans input output =
   let ast = parse input in
-  if !print_flag then Ast.print Format.std_formatter ast;
-  Printf.printf "\n";
+  if !print_flag then (
+    Ast.print Format.std_formatter ast;
+    Printf.printf "\n"
+  );
   let out = open_out output in
   Gen_ml.print_prog (Format.formatter_of_out_channel out) ast;
   close_out out

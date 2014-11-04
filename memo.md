@@ -4,9 +4,43 @@
 
 ## 0.0.5
 
-- aaa
+- オブジェクト指向の機能追加
 
+mutableなメンバ変数を#で、privateなメソッドを~で、publicなメソッドを+で指定出来るようになりました。また、自分自身はthisでアクセスします。:>を使ってキャストします。
 
+	enemy class (x:float y:float) {
+	  // mutable variable
+	  # x = x
+	  # y = y
+	  // private method
+	  ~ incx = x <- x +. 1.0
+	  ~ incy = y <- y +. 1.0
+	  // public method
+	  + move = {
+	    this->incx
+	    this->incy
+	  }
+	  + draw = {
+	    printf("enemy %f %f\n" x y)
+	  }
+	}
+
+	enemy2 class (x:float y:float) {
+	  # x = x
+	  # y = y
+	  + move = y <- y +. 100.0
+	  + draw = {
+	  	printf("enemy %f %f\n" x y)
+	  }
+	}
+
+	_ = {
+	  es = [
+	    new enemy(10.0 20.0)
+	    new enemy2(10.0 20.0) :> enemy
+	  ]
+	  List.iter{|e=> e->move; e->draw }(es)
+	}
 
 ## 作業手順
 
@@ -25,6 +59,12 @@
 8. 作業メモに変更したログを記述します。
 9. windowsのバイナリを生成します。
 10. リリースします。
+
+## 2014.11.04
+
+ゲームを作成してみて、使い勝手を見てます。
+moduleだけでかなりの事が出来る事が確認出来て、オブジェクト指向が欲しくなってきました。
+ということで、オブジェクト指向の機能を追加しました。
 
 ## 2014.11.03
 

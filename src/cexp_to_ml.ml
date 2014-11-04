@@ -12,13 +12,13 @@ let rec exp = function
     EVar(p(),id)
 
   | CBin(CMsg(CId(f),"(",prm,")"),COp("="), e) ->
-    ELetRec(p(),EVar(p(),f), TEmpty, EFun(p(),addEmpty (exps prm),TEmpty,exp e))
+    ELetRec(p(),APub,EVar(p(),f), TEmpty, EFun(p(),addEmpty (exps prm),TEmpty,exp e))
   | CBin(CId(i),COp("="),b) ->
     ELet(p(),EVar(p(),i), TEmpty, exp b)
   | CBin(CId(i),COp("#="),b) ->
     ELet(p(),EVar(p(),i), TEmpty, EPre(p(),"ref", exp b))
   | CBin(CPre(COp("def"),CId(i)),COp("="),b) ->
-    ELetRec(p(),EVar(p(),i), TEmpty, exp b)
+    ELetRec(p(),APub,EVar(p(),i), TEmpty, exp b)
   | CBin(e,COp("match"),b) ->
     begin match exp b with
     | EPFun(p,ls) ->

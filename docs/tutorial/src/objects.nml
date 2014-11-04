@@ -23,6 +23,7 @@ abc class(b:int c:int) {
   def c = b
 }
 
+
 _ = {
 
   printf("ab.a = %d\n" new abc(10 20)->c)
@@ -42,4 +43,23 @@ _ = {
 
   printf("A.a = %d\n" new fib(10)->apply)
 
+}
+
+mut1 class (b) {
+  // mutable 
+  # b = b
+  def c = b
+  def set_c(c) = this->b <- c
+}
+
+a class(x:int) {
+  def x = x
+}
+// inherit
+a :> b class(x:int) {}
+
+_ = {
+  // cast
+  b1 = new b(10) :> a
+  printf("%d\n" b1->x)
 }

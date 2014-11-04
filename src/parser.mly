@@ -8,19 +8,19 @@ let p() = !lineno
 let e2t = function
   | EVar(_,e) -> TEmpty
   | ELet(_,_,t,_) -> t
-  | ELetRec(_,_,t,_) -> t
+  | ELetRec(_,_,_,t,_) -> t
   | EUnit(_) -> TUnit
   | _ -> assert false
 
 let e2id = function
   | EVar(_,i) as e -> e
   | ELet(_,i,_,_) -> i
-  | ELetRec(_,i,_,_) -> i
+  | ELetRec(_,_,i,_,_) -> i
   | _ -> assert false
 
 let e2e = function
   | ELet(p,EVar(_,e),t,e2) -> ETy(p,false,e,t,e2)
-  | ELetRec(p,EVar(_,e),t,e2) -> ETy(p,true,e,t,e2)
+  | ELetRec(p,a,EVar(_,e),t,e2) -> ETy(p,true,e,t,e2)
   | e -> e
 
 let rec loop f = function 
@@ -115,7 +115,7 @@ let parse_error2 str =
 %token <string> OPEN
 %token <string> STR
 %token <string> CHR
-%token CLASS THIS DOT
+%token CLASS DOT
 %token IF ELSE
 %token IMPLEMENT RIMPLEMENT TRAIT
 %token ARROW MEMBER FARROW
@@ -145,6 +145,7 @@ let parse_error2 str =
 %left AS
 %left COMMA
 %right CAST
+%left RIMPLEMENT
 %right ADDLIST
 
 %left XOR
@@ -316,7 +317,7 @@ exp:
   | exp MEMBER exp { EBin(e_pos($1), $1, "#", $3) }
   | exp ARROWASSIGN exp { EBin(e_pos($1), $1, "<-", $3) }
   | exp FARROW exp { ECall(e_pos($1), $3, [$1]) }
-
+  | exp RIMPLEMENT exp { EBin(e_pos($1),$1, ":>", $3) }
   | exp COLONASSIGN exp
     {
       match $1 with
@@ -351,33 +352,40 @@ exp:
   | exp LPAREN exps RPAREN %prec CALL { ECall(e_pos($1),$1, $3) }
   | exp LPAREN RPAREN %prec CALL { ECall(e_pos($1),$1, [EUnit(e_pos($1))]) }
 
-  | DEF VAR ASSIGN exp { ELetRec(e_pos($4),EVar(e_pos($4), $2), TEmpty, $4) }
+  | DEF VAR ASSIGN exp { ELetRec(e_pos($4),APub,EVar(e_pos($4), $2), TEmpty, $4) }
 
   |     exp ASSIGN exp { loop1 (fun(p,a,b,c)->ELet(e_pos($1),a,b,c)) ($1, $3) }
-  | DEF exp ASSIGN exp { loop1 (fun(p,a,b,c)->ELetRec(e_pos($2),a,b,c)) ($2, $4) }
+  | DEF exp ASSIGN exp { loop1 (fun(p,a,b,c)->ELetRec(e_pos($2),APub,a,b,c)) ($2, $4) }
   |     exp REFASSIGN exp { loop1 (fun(p,a,b,c)->ELet(e_pos($1),a,b,c)) ($1,EPre(e_pos($3),"ref", $3)) }
 
   |     exp COLON typ ASSIGN exp { loop(fun(p,a,b,c)->ELet(e_pos($1),a,b,c)) ($1,$3,$5) }
-  | DEF exp COLON typ ASSIGN exp { loop(fun(p,a,b,c)->ELetRec(e_pos($2),a,b,c)) ($2,$4,$6) }
+  | DEF exp COLON typ ASSIGN exp { loop(fun(p,a,b,c)->ELetRec(e_pos($2),APub,a,b,c)) ($2,$4,$6) }
   |     exp COLON typ
     {
       match $1 with
-      | ELetRec(p,id,_,e) -> ELetRec(p, id, $3, e)
+      | ELetRec(p,_,id,_,e) -> ELetRec(p, APub, id, $3, e)
       | _ -> ELet(e_pos($1), e2id $1, $3, EEmpty(e_pos($1)))
     }
-  | XOR exp
+  | ADD exp %prec REF
     {
       match $2 with
-      | ELetRec(p,id,t,e) -> ELetRec(p,id, t, e)
-      | ELet(p,id,t,e) -> ELetRec(p,id, t, e)
-      | _ -> ELetRec(e_pos($2),e2id $2, TEmpty, EEmpty(e_pos($2)))
+      | ELetRec(p,_,id,t,e) -> ELetRec(p,APub, id, t, e)
+      | ELet(p,id,t,e) -> ELetRec(p,APub,id, t, e)
+      | _ -> ELetRec(e_pos($2), APub, e2id $2, TEmpty, EEmpty(e_pos($2)))
+    }
+  | XOR exp %prec REF
+    {
+      match $2 with
+      | ELetRec(p,_,id,t,e) -> ELetRec(p,APri, id, t, e)
+      | ELet(p,id,t,e) -> ELetRec(p,APri,id, t, e)
+      | _ -> ELetRec(e_pos($2), APri, e2id $2, TEmpty, EEmpty(e_pos($2)))
     }
   | REF exp
     {
       match $2 with
-      | ELetRec(p,id,t,e) -> ELetRec(p,id, t, e)
-      | ELet(p,id,t,e) -> ELetRec(p,id, t, e)
-      | _ -> ELetRec(e_pos($2), e2id $2, TEmpty, EEmpty(e_pos($2)))
+      | ELetRec(p,_,id,t,e) -> ELetRec(p,AMut, id, t, e)
+      | ELet(p,id,t,e) -> ELetRec(p,AMut,id, t, e)
+      | _ -> ELetRec(e_pos($2), AMut, e2id $2, TEmpty, EEmpty(e_pos($2)))
     }
 
 ptn:

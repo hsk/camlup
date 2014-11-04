@@ -9,6 +9,11 @@ type t =
   | TGen of t * t list
   | TUnit
 
+type a =
+  | AMut
+  | APri
+  | APub
+
 type e =
   | EEmpty of p
   | EInt of p * int
@@ -26,7 +31,7 @@ type e =
   | EPtn of p * e list list * t * e * e
   | EList of p * e list
   | ELet of p * e * t * e
-  | ELetRec of p * e * t * e
+  | ELetRec of p * a * e * t * e
   | EUnit of p
   | EBlock of p * e list
   | ERecord of p * (string * e) list
@@ -54,7 +59,7 @@ let e_pos = function
   | EPtn(p,_,_,_,_) -> p
   | EList(p,_) -> p
   | ELet(p,_,_,_) -> p
-  | ELetRec(p,_,_,_) -> p
+  | ELetRec(p,_,_,_,_) -> p
   | EUnit(p) -> p
   | EBlock(p,_) -> p
   | ERecord(p,_) -> p
@@ -87,6 +92,11 @@ type p = int
 *)
 
 open Format
+
+let rec print_a fp = function
+  | APri -> fprintf fp "APri@?"
+  | APub -> fprintf fp "APub@?"
+  | AMut -> fprintf fp "AMut@?"
 
 let rec print_t fp = function
   | Ty(s) -> fprintf fp "Ty(\"%s\")@?" s
@@ -160,8 +170,9 @@ let rec print_e fp = function
       print_e e1
       print_t t
       print_e e2
-  | ELetRec(_, e1, t, e2) ->
-    fprintf fp "ELetRec(%a,%a,%a)@?"
+  | ELetRec(_, a,e1, t, e2) ->
+    fprintf fp "ELetRec(%a,%a,%a,%a)@?"
+      print_a a
       print_e e1
       print_t t
       print_e e2

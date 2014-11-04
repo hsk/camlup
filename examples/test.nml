@@ -261,7 +261,7 @@ pattern_match() = {
   }
   */
 } pattern_match()
-/*
+
 parcial_function() = {
 
   def fib:(int)=>int={

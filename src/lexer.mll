@@ -31,7 +31,6 @@ rule token = parse
   | "downto" { DOWNTO }
   | "return" { RETURN }
   | "new" { NEW }
-  | "this" { THIS }
   | "class" { CLASS }
   | "trait" { TRAIT }
   | "<-" { ARROWASSIGN }

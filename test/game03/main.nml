@@ -61,10 +61,12 @@ Key module {
   }
 }
 
+bullet type {x:float; y:float; enable:ref[bool]}
+
 Utils module {
 
-  checkColligion(x y r ls) = {
-    !List.exists{|(bx,by,bb)=>
+  checkColligion(bx by r ls) = {
+    !List.exists{|{:x y}=>
       (x -. r < bx && bx < x +. r) &&
       (y -. r < by && by < y +. r)
     }(ls)
@@ -74,19 +76,20 @@ Utils module {
 
 Bullets module {
 
-  bullets:ref[list[(float,float,ref[bool])]] = & []
+
+  bullets:ref[list[bullet]] = & []
 
   add(x; y) = {
 
-    bullets := (x,y, &true):: *bullets
+    bullets := {:x=x; y=y; enable= &true}:: *bullets
   }
 
   move() = {
     bullets := *bullets |> List.map {
-        | x,y,b =>
-          (x, y -. 10.0, b)
+        | {:x y enable} =>
+          {:x=x; y=y -. 10.0; enable=enable}
       } |> List.filter {
-        | _,y,{:contents = b} =>
+        | {:y enable={:contents = b}} =>
           b && y > 0.
       }
   }
@@ -98,7 +101,7 @@ Bullets module {
       0.8+.Random.float(0.2)
     )
     *bullets|>List.iter{
-      | x,y,_ =>
+      | {:x y} =>
         GlDraw.rect(
           x -. 1.5, y -. 6.5
           x +. 3.0, y +. 4.0
@@ -227,12 +230,14 @@ BG module {
 
 
 Enemies module {
-  enemies:ref[list[(float,float,ref[bool])]] = & []
+  enemy type {x:float; y:float; enable:ref[bool]}
+
+  enemies:ref[list[enemy]] = & []
 
   count = &0
   add(x; y) = {
     if(*count < 20) {
-      enemies := (x,y, &true):: *enemies
+      enemies := {: x y enable=&true}:: *enemies
     }
   }
   /**
@@ -249,20 +254,20 @@ Enemies module {
 
     count := 0
     enemies := *enemies |> List.map {
-      | x,y,b =>
+      | {: x y enable} =>
         ++count
         s = 5.0 +. (height -. *Ship.y) *. 0.06
         x = x -. (*Ship.x -. width /. 2.) *. 0.005 *. s
-        (x, y +. s, b)
+        {:x=x; y=y +. s; enable=enable}
     } |> List.filter {
-      | x,y,{:contents = b} =>
+      | {: x y enable={:contents = b}} =>
         b && y < height && Bullets.checkColligion(x y 16.0)
     }
   }
 
   draw() = {
     *enemies |> List.iter{
-      | (x,y,s) =>
+      | {:x y} =>
         GlDraw.color(
           Random.float(0.1)+.0.8, 
           Random.float(0.1)+.0.8, 
@@ -313,7 +318,7 @@ Game module {
     Glut.init(Sys.argv) |> ignore
     Glut.initDisplayMode(double_buffer = true; alpha = true)()
     Glut.initWindowSize(w = int_of_float(width); h = int_of_float(height))
-    Glut.createWindow("Game02") |> ignore
+    Glut.createWindow("Game03") |> ignore
     Glut.displayFunc(draw)
     Glut.reshapeFunc(resize)
     Key.init()
