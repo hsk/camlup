@@ -61,64 +61,6 @@ Key module {
   }
 }
 
-BG module {
-
-  ship_x = &0.0
-  ship_y = &0.0
-
-  stars:ref[list[(float,float,float)]] = & []
-
-  init() = {
-
-    def createList(i ls f) = {
-      i match {
-        | -1 => ls
-        | i  => createList(i-1 f(i)::ls f) 
-      }
-    }
-
-    stars := createList(30; []) {
-      | i =>
-        x = Random.float(width)
-        y = Random.float(height)
-        speed = Random.float(3.)+.2.0
-        (x,y,speed)
-    }
-  }
-
-  move(bs) = {
-    stars := (*stars) |> List.map{
-      | (x,y,speed) =>
-        x = x -. (*ship_x -. width /. 2.) *. 0.005 *. speed 
-        x = if (x < 0.   ) x +. width else x
-        x = if (x > width) x -. width else x
-        speed2 = speed +. (height -. *ship_y) *. 0.03
-        y = y +. speed2
-        if (y > height)
-          (Random.float(width), 0., Random.float(3.)+.2.)
-        else
-          (x, y, speed)
-    }
-  }
-
-  draw() = {
-    (*stars)|>List.iter{|(x,y,s)=>
-      GlDraw.color(
-        Random.float(0.5)+.0.5, 
-        Random.float(0.5)+.0.5, 
-        Random.float(0.5)+.0.5
-      )
-
-      s = s +. (height -. *ship_y) *. 0.06
-
-      GlDraw.rect(
-        x, y
-        x +. 1.5, y +. 1.0 +. s 
-      )
-    }
-  }
-}
-
 Bullets module {
 
   bullets:ref[list[(float,float,ref[bool])]] = & []
@@ -191,8 +133,6 @@ Ship module {
 
     Bullets.move()
     if (Key.z()) Bullets.add(*x; *y -. rsize /. 2.)
-    BG.ship_x := *x
-    BG.ship_y := *y
 
   }
 
@@ -213,6 +153,62 @@ Ship module {
       *x +. r +.r2, *y +. r +. r2
     )
     Bullets.draw()
+  }
+}
+
+
+BG module {
+
+  stars:ref[list[(float,float,float)]] = & []
+
+  init() = {
+
+    def createList(i ls f) = {
+      i match {
+        | -1 => ls
+        | i  => createList(i-1 f(i)::ls f) 
+      }
+    }
+
+    stars := createList(30; []) {
+      | i =>
+        x = Random.float(width)
+        y = Random.float(height)
+        speed = Random.float(3.)+.2.0
+        (x,y,speed)
+    }
+  }
+
+  move(bs) = {
+    stars := (*stars) |> List.map{
+      | (x,y,speed) =>
+        x = x -. (*Ship.x -. width /. 2.) *. 0.005 *. speed 
+        x = if (x < 0.   ) x +. width else x
+        x = if (x > width) x -. width else x
+        speed2 = speed +. (height -. *Ship.y) *. 0.03
+        y = y +. speed2
+        if (y > height)
+          (Random.float(width), 0., Random.float(3.)+.2.)
+        else
+          (x, y, speed)
+    }
+  }
+
+  draw() = {
+    (*stars)|>List.iter{|(x,y,s)=>
+      GlDraw.color(
+        Random.float(0.5)+.0.5, 
+        Random.float(0.5)+.0.5, 
+        Random.float(0.5)+.0.5
+      )
+
+      s = s +. (height -. *Ship.y) *. 0.06
+
+      GlDraw.rect(
+        x, y
+        x +. 1.5, y +. 1.0 +. s 
+      )
+    }
   }
 }
 
