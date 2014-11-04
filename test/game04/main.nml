@@ -234,14 +234,16 @@ BG module {
 }
 
 Enemies module {
-  enemy class(x:float y:float enable:ref[bool]) {
+  enemy class(x:float y:float enable:bool) {
     + x = x
     + y = y
+    # enable = enable
     + enable = enable
+    + set_enable(e) = enable <- e
     + move = {
       s = 2.0 +. (height -. *Ship.y) *. 0.06
       x = x -. (*Ship.x -. width /. 2.) *. 0.005 *. s
-      new enemy(x; y +.s; enable)
+      new enemy(x; y +.s; enable && y < height)
     }
     + draw = {
       GlDraw.color(
@@ -257,15 +259,18 @@ Enemies module {
     }
   }
 
-  enemy2 class(x:float y:float enable:ref[bool]) {
+  enemy2 class(x:float y:float enable:bool) {
     + x = x
     + y = y
+    + z = 1
+    # enable = enable
     + enable = enable
+    + set_enable(e) = enable <- e
     + move = {
 
       s = 5.0 +. (height -. *Ship.y) *. 0.06
       x = x -. (*Ship.x -. width /. 2.) *. 0.005 *. s
-      new enemy2(x; y +.s; enable)
+      new enemy2(x; y +.s; enable && y < height)
     }
     + draw = {
       GlDraw.color(
@@ -286,14 +291,14 @@ Enemies module {
   count = &0
   add(enm; x; y) = {
     if(*count < 20) {
-      enemies := enm(x y; &true) :: *enemies
+      enemies := enm(x; y; true) :: *enemies
     }
   }
 
   move() = {
     if(Random.float(1.0) < 0.05) {
 
-      es = [new enemy2;new enemy]
+      es = [{|x y b=>new enemy2(x y b) :> enemy};new enemy]
 
       enm = List.nth(es Random.int(List.length(es)))
       add(enm; Random.float(width*.2.0)-.width/. 2.; -10.0)
@@ -307,8 +312,7 @@ Enemies module {
         e->move
     } |> List.filter {
       | e =>
-        *(e->enable) &&
-        e->y < height &&
+        e->enable &&
         Bullets.checkColligion(e->x e->y 16.0)
     }
   }
