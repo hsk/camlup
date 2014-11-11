@@ -163,7 +163,11 @@ let rec print_e sp ppf e =
   | EFun (_,its, t, e) ->
     let rec print_ls sep p ppf = function
       | [] -> ()
-      | [x] -> fprintf ppf "%a" (p sp) x
+      | ((EBin(_,_,",",_)) as x)::xs ->
+        fprintf ppf "(%a)%s%a"
+          (p sp) x
+          sep
+          (print_ls sep p) xs
       | x::xs ->
         fprintf ppf "%a%s%a"
           (p sp) x
