@@ -96,6 +96,7 @@ rule token = parse
   | ":=" { COLONASSIGN }
   | '#' { REF }
   | "#=" { REFASSIGN }
+  | "##" { REFREF }
   | "def" { DEF }
   | '=' { ASSIGN }
   | '"' ([^ '"'] | "\\" (['"'  '\'' 'n' 'r' 't' 'b' ] | ['0'-'9'] ['0'-'9'] ['0'-'9']) )* '"' { STR(Lexing.lexeme lexbuf) }

@@ -90,6 +90,12 @@ let rec print_e sp ppf e =
       (print_e sp) e1
       ","
       (print_e sp) e2
+  | EBin(_,e1,"##",e2) ->
+    fprintf ppf "%a %s %a"
+      (print_e sp) e1
+      "##"
+      (print_e sp) e2
+
   | ETuple(_,ls) ->
     fprintf ppf "(%a)"
       (print_ls "" ", " print_e) ls
@@ -120,9 +126,15 @@ let rec print_e sp ppf e =
       | e ->
         fprintf ppf "(%a)" (print_e sp) e
     in
-    fprintf ppf "%a %a"
-      (print_e sp) e1
-      (print_ls sp " " (print_e2)) es
+    begin match es with
+    | [EUnit _] ->
+      fprintf ppf "%a ()"
+        (print_e sp) e1
+    | _ ->
+      fprintf ppf "%a %a"
+        (print_e sp) e1
+        (print_ls sp " " (print_e2)) es
+    end
   | EIndex(_,e1,es) ->
     let rec print_ls sp sep p ppf = function
       | [] -> ()

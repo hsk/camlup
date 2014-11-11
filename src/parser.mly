@@ -121,7 +121,7 @@ let parse_error2 str =
 %token ARROW MEMBER FARROW
 %token CAST NEW AT DEF CASE MATCH TYPE MODULE
 %token ADDLIST
-%token REF
+%token REF REFREF
 
 %token HAT
 %token LOR
@@ -164,7 +164,7 @@ let parse_error2 str =
 
 %left prec_app
 %left SEMI
-%left MEMBER FARROW
+%left MEMBER FARROW REFREF
 %left NEW
 %left LBRACK RBRACK
 %left DOT
@@ -315,6 +315,7 @@ exp:
   | exp COMMA exp { EBin(e_pos($1), $1, ",", $3) }
   | exp ADDLIST exp { EBin(e_pos($1), $1, "::", $3) }
   | exp MEMBER exp { EBin(e_pos($1), $1, "#", $3) }
+  | exp REFREF exp { EBin(e_pos($1), $1, "##", $3) }
   | exp ARROWASSIGN exp { EBin(e_pos($1), $1, "<-", $3) }
   | exp FARROW exp { ECall(e_pos($1), $3, [$1]) }
   | exp RIMPLEMENT exp { EBin(e_pos($1),$1, ":>", $3) }

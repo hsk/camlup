@@ -1,0 +1,101 @@
+Html module = Dom_html
+
+w = 400.
+h = 400.
+
+Key module {
+
+  z = & false
+  up = & false
+  down = & false
+  left = & false
+  right = & false
+
+  setKey(keyCode v) = {
+    char_of_int(keyCode) match {
+      | 'z' => z := v
+      | _ => ()
+    }
+    keyCode match {
+    | 37 => left := v
+    | 38 => up := v
+    | 39 => right := v
+    | 40 => down := v
+    | _ => ()
+    }
+  }
+
+  keydown(ev) = {
+    keyCode = ev##keyCode
+    setKey(keyCode true)
+    Js._true
+  }
+
+  keyup(ev) = {
+    keyCode = ev##keyCode
+    setKey(keyCode false)
+    Js._true
+  }
+  init() = {
+
+    Html.window##onkeyup <- Html.handler(keyup);
+    Html.window##onkeydown <- Html.handler(keydown)
+  }
+}
+
+rect(c x y width height) = {
+  c##beginPath()
+  c##moveTo(x , y)
+  c##lineTo(x+.width, y)
+  c##lineTo(x+.width, y+.height)
+  c##lineTo(x,        y+.height)
+  c##closePath()
+  c##fill()
+}
+
+Game module {
+  x = & 200.
+  y = & 200.
+
+  move() = {
+    x := if (*Key.left ) *x -. 1. else *x
+    x := if (*Key.right) *x +. 1. else *x
+    y := if (*Key.up   ) *y -. 1. else *y
+    y := if (*Key.down ) *y +. 1. else *y
+  }
+
+  draw(c) = {
+    c##fillStyle <- Js.string("#ccffd9")
+    rect(c; 0.; 0.; w; h)
+    c##fillStyle <- Js.string("#ff0000")
+    rect(c; *x; *y; 50. 50.)
+  }
+
+  def loop (c)= {
+    move()
+    draw(c)
+    ignore(Html.window##setTimeout(Js.wrap_callback {|()=> loop(c)}, 0.15))
+  }
+
+  create_canvas(w h) = {
+    d = Html.window##document
+    c = Html.createCanvas(d)
+    c##width <- int_of_float(w)
+    c##height <- int_of_float(h)
+    c
+  }
+
+  start(_) = {
+    c = create_canvas( w h)
+    Dom.appendChild(Html.window##document##body c)
+    Key.init()
+    c = c##getContext(Html._2d_)
+    loop(c)
+    Js._false
+  }
+
+  _ = {
+    Html.window##onload <- Html.handler(start)
+  }
+
+}
