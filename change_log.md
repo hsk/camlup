@@ -1,5 +1,58 @@
 # 変更ログ
 
+
+
+## 0.0.6 2014.11.11
+
+- オブジェクト指向の機能追加
+
+mutableなメンバ変数を#で、privateなメソッドを~で、publicなメソッドを+で指定出来るようになりました。また、自分自身はthisでアクセスします。:>を使ってキャストします。
+
+	enemy class (x:float y:float) {
+	  // mutable variable
+	  # x = x
+	  # y = y
+	  // private method
+	  ~ incx = x <- x +. 1.0
+	  ~ incy = y <- y +. 1.0
+	  // public method
+	  + move = {
+	    this->incx
+	    this->incy
+	  }
+	  + draw = {
+	    printf("enemy %f %f\n" x y)
+	  }
+	}
+
+	enemy2 class (x:float y:float) {
+	  # x = x
+	  # y = y
+	  + move = y <- y +. 100.0
+	  + draw = {
+	  	printf("enemy %f %f\n" x y)
+	  }
+	}
+
+	_ = {
+	  es = [
+	    new enemy(10.0 20.0)
+	    new enemy2(10.0 20.0) :> enemy
+	  ]
+	  List.iter{|e=> e->move; e->draw }(es)
+	}
+
+- js_of_ocaml対応
+
+js_of_ocamlを使用する事で、javascriptを生成する事が出来ます。
+js_of_ocamlの演算子##が追加してあります。
+
+- js_of_ocaml対応に伴って、
+
+	add(a,b) = a + b
+
+形式の関数が動くようになりました。
+
 ## 0.0.5 2014.11.03
 
 - windows バイナリビルド漏れ対応

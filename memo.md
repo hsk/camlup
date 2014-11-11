@@ -2,46 +2,6 @@
 
 作業用のメモです。
 
-## 0.0.5
-
-- オブジェクト指向の機能追加
-
-mutableなメンバ変数を#で、privateなメソッドを~で、publicなメソッドを+で指定出来るようになりました。また、自分自身はthisでアクセスします。:>を使ってキャストします。
-
-	enemy class (x:float y:float) {
-	  // mutable variable
-	  # x = x
-	  # y = y
-	  // private method
-	  ~ incx = x <- x +. 1.0
-	  ~ incy = y <- y +. 1.0
-	  // public method
-	  + move = {
-	    this->incx
-	    this->incy
-	  }
-	  + draw = {
-	    printf("enemy %f %f\n" x y)
-	  }
-	}
-
-	enemy2 class (x:float y:float) {
-	  # x = x
-	  # y = y
-	  + move = y <- y +. 100.0
-	  + draw = {
-	  	printf("enemy %f %f\n" x y)
-	  }
-	}
-
-	_ = {
-	  es = [
-	    new enemy(10.0 20.0)
-	    new enemy2(10.0 20.0) :> enemy
-	  ]
-	  List.iter{|e=> e->move; e->draw }(es)
-	}
-
 ## 作業手順
 
 最も重要なのは、言語の新機能の開発ですが、長い間作業しているとダレてきます。
