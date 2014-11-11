@@ -4,8 +4,8 @@
 
 Html module = Dom_html
 
-width  = 400.0
-height = 600.0
+width  = 465.0
+height = 465.0
 pi = 4.0 *. atan(1.0)
 
 normalize(v) = {
@@ -75,13 +75,13 @@ Key module {
     keyCode = ev##keyCode
     // Html.window##alert(Js.string("code" ~ string_of_int(keyCode)))
     setKey(keyCode true)
-    Js._true
+    Js._false
   }
 
   keyup(ev) = {
     keyCode = ev##keyCode
     setKey(keyCode false)
-    Js._true
+    Js._false
   }
   init() = {
 

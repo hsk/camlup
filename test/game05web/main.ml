@@ -2,9 +2,9 @@ module Html =
 # 5 "?"
 Dom_html;; 
 # 7 "?"
-let width = 400.0;; 
+let width = 465.0;; 
 # 8 "?"
-let height = 600.0;; 
+let height = 465.0;; 
 # 9 "?"
 let pi = (4.0 *. atan (1.0));; 
 # 11 "?"
@@ -141,7 +141,7 @@ let keyCode = ev ## keyCode in
 setKey  (keyCode) (true);
   
 # 78 "?"
-(Js . _true)
+(Js . _false)
 );; 
 # 81 "?"
 let keyup = (fun ev  -> 
@@ -154,7 +154,7 @@ let keyCode = ev ## keyCode in
 setKey  (keyCode) (false);
   
 # 84 "?"
-(Js . _true)
+(Js . _false)
 );; 
 # 86 "?"
 let init = (fun ()  -> 
