@@ -55,7 +55,7 @@ rule token = parse
   | '0' ['o' 'O'] ['0'-'7']+ { INT(int_of_string (Lexing.lexeme lexbuf)) }
   | '0' ['b' 'B'] ['0'-'1']+ { INT(int_of_string (Lexing.lexeme lexbuf)) }
   | digit+ ('.' digit*)? (['e' 'E'] ['+' '-']? digit+)?
-    { FLOAT(float_of_string (Lexing.lexeme lexbuf)) }  
+    { FLOAT(Lexing.lexeme lexbuf) }  
 
   | '^' { HAT }
   | "||" { LOR }

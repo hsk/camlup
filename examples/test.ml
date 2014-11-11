@@ -1,122 +1,93 @@
-open Printf;;
-open List;;
-
+open Printf;; open List;; 
 # 4 "?"
-let (variable:int) = 2;;
-
+let (variable:int) = 2;; 
 # 5 "?"
-let a = 1;;
-
+let a = 1;; 
 # 6 "?"
-let b = 2882400009;;
-
+let b = 2882400009;; 
 # 7 "?"
-let c = 2882400009;;
-
+let c = 2882400009;; 
 # 8 "?"
-let d = 342391;;
-
+let d = 342391;; 
 # 9 "?"
-let e = 342391;;
-
+let e = 342391;; 
 # 10 "?"
-let f = 170;;
-
+let f = 170;; 
 # 11 "?"
-let g = 170;;
-
+let g = 170;; 
 # 12 "?"
-let _ = 3;;
-
+let _ = 3;; 
 # 15 "?"
 let (block:unit) = 
 # 18 "?"
-
-
+ 
 # 17 "?"
 printf ("test 1\n")
-;;
-
+;; 
 # 20 "?"
 let block = 
 # 23 "?"
-
-
+ 
 # 21 "?"
 printf ("test 2\n");
 
 # 22 "?"
 printf ("test 2\n")
-;;
-
+;; 
 # 25 "?"
-let functions = (fun () -> 
+let functions = (fun  -> 
 # 28 "?"
-
-  
+   
 # 27 "?"
 printf ("test\n")
-);;
-
+);; 
 # 28 "?"
-functions (());;
-
+functions ;; 
 # 30 "?"
 let curry_function = 
 # 121 "?"
-
-
+ 
 # 32 "?"
-let (f0:(unit)->(int)) = begin fun t1'  -> match t1' with
-  | (()) -> (
-
-    0
-  )
- end  in
+let (f0:(unit)->(int)) = begin fun t1'  -> match t1' with   | (()) -> (     0
+  ) end  in
 
 # 33 "?"
-printf ("%d\n") (f0 (()));
+printf ("%d\n") (f0 );
 
 # 34 "?"
-let (f0:(unit)->(int)) = (fun () -> 
-  0
+let (f0:int) = (fun  ->    0
 ) in
 
 # 35 "?"
-printf ("%d\n") (f0 (()));
+printf ("%d\n") (f0 );
 
 # 36 "?"
-let (f0:(unit)->(int)) = (fun () -> 0) in
+let (f0:int) = (fun  -> 0) in
 
 # 37 "?"
-printf ("%d\n") (f0 (()));
+printf ("%d\n") (f0 );
 
 # 38 "?"
-let f0 = (fun () -> 0) in
+let f0 = (fun  -> 0) in
 
 # 40 "?"
-printf ("%d\n") (f0 (()));
+printf ("%d\n") (f0 );
 
 # 41 "?"
-printf  ("%d\n") (f0 (()));
+printf  ("%d\n") (f0 );
 
 # 42 "?"
-printf  ("%d\n") (f0 (()));
+printf  ("%d\n") (f0 );
 
 # 44 "?"
-let (f1:((int))->(int)) = begin fun t1'  -> match t1' with
-  | (a) -> (
-
-    a
-  )
- end  in
+let (f1:((int))->(int)) = begin fun t1'  -> match t1' with   | (a) -> (     a
+  ) end  in
 
 # 45 "?"
 printf  ("%d\n") (f1 (1));
 
 # 46 "?"
-let (f1:(int)->(int)) = (fun (a:int) -> 
-  a
+let (f1:(int)->(int)) = (fun (a:int) ->    a
 ) in
 
 # 47 "?"
@@ -141,30 +112,21 @@ printf  ("%d\n") (f1 (1));
 printf  ("%d\n") (f1 (1));
 
 # 56 "?"
-let (f2:(int)->((int)->(int))) = begin fun t1' t2'  -> match t1',t2' with
-  | (a),(b) -> (
-
-    (a + b)
-  )
- end  in
+let (f2:(int)->((int)->(int))) = begin fun t1' t2'  -> match t1',t2' with   | (a),(b) -> (     (a + b)
+  ) end  in
 
 # 57 "?"
 printf  ("%d\n") (f2  (1) (2));
 
 # 58 "?"
-let (f2:(int)->(((int))->(int))) = (fun (a:int) -> begin fun t1'  -> match t1' with
-    | (b) -> (
-
-      (a + b)
-    )
-   end ) in
+let (f2:(int)->(((int))->(int))) = (fun (a:int) -> begin fun t1'  -> match t1' with     | (b) -> (       (a + b)
+    )   end ) in
 
 # 59 "?"
 printf  ("%d\n") (f2  (1) (2));
 
 # 60 "?"
-let (f2:(int)->((int)->(int))) = (fun (a:int) -> (fun (b:int) -> 
-    (a + b)
+let (f2:(int)->((int)->(int))) = (fun (a:int) -> (fun (b:int) ->      (a + b)
   )) in
 
 # 61 "?"
@@ -189,41 +151,28 @@ printf  ("%d\n") (f2  (1) (2));
 printf  ("%d\n") (f2  (1) (2));
 
 # 70 "?"
-let (f3:(int)->((int)->((int)->(int)))) = begin fun t1' t2' t3'  -> match t1',t2',t3' with
-  | (a),(b),(c) -> (
-
-    ((a + b) + c)
-  )
- end  in
+let (f3:(int)->((int)->((int)->(int)))) = begin fun t1' t2' t3'  -> match t1',t2',t3' with   | (a),(b),(c) -> (     ((a + b) + c)
+  ) end  in
 
 # 71 "?"
 printf  ("%d\n") (f3  (1)  (2) (3));
 
 # 72 "?"
-let (f3:(int)->((int)->((int)->(int)))) = (fun (a:int) -> begin fun t1' t2'  -> match t1',t2' with
-    | (b),(c) -> (
-
-      ((a + b) + c)
-    )
-   end ) in
+let (f3:(int)->((int)->((int)->(int)))) = (fun (a:int) -> begin fun t1' t2'  -> match t1',t2' with     | (b),(c) -> (       ((a + b) + c)
+    )   end ) in
 
 # 73 "?"
 printf  ("%d\n") (f3  (1)  (2) (3));
 
 # 74 "?"
-let (f3:(int)->((int)->((int)->(int)))) = (fun (a:int) -> (fun (b:int) -> begin fun t1'  -> match t1' with
-      | (c) -> (
-
-        ((a + b) + c)
-      )
-     end   )) in
+let (f3:(int)->((int)->((int)->(int)))) = (fun (a:int) -> (fun (b:int) -> begin fun t1'  -> match t1' with       | (c) -> (         ((a + b) + c)
+      )     end   )) in
 
 # 75 "?"
 printf  ("%d\n") (f3  (1)  (2) (3));
 
 # 76 "?"
-let (f3:(int)->((int)->((int)->(int)))) = (fun (a:int) -> (fun (b:int) -> (fun (c:int) -> 
-      ((a + b) + c)
+let (f3:(int)->((int)->((int)->(int)))) = (fun (a:int) -> (fun (b:int) -> (fun (c:int) ->        ((a + b) + c)
     )  )) in
 
 # 77 "?"
@@ -252,7 +201,7 @@ printf (
 # 87 "?"
 "%d %d %d %d\n") (
 # 89 "?"
-f0 (())) (
+f0 ) (
 # 91 "?"
 f1 (1)) (
 # 93 "?"
@@ -265,7 +214,7 @@ printf  (
 # 99 "?"
 "%d %d %d %d\n")  (
 # 100 "?"
-f0 (()))  (
+f0 )  (
 # 101 "?"
 f1 (1))  (
 # 102 "?"
@@ -278,7 +227,7 @@ printf  (
 # 107 "?"
 "%d %d %d %d\n")  (
 # 108 "?"
-f0 (()))  (
+f0 )  (
 # 109 "?"
 f1 (1))  (
 # 110 "?"
@@ -303,24 +252,20 @@ printf  ("%d+%d=%d\n")  (a)  (b) ((a + b));
 
 # 120 "?"
 printf  ("%d+%d=%d\n")  (a)  (b) ((a + b))
-;;
-
+;; 
 # 123 "?"
-let if_else = (fun () -> 
+let if_else = (fun  -> 
 # 131 "?"
-
-  
+   
 # 125 "?"
 (if (a < 10) then (printf ("b1\n"))  );
   
 # 126 "?"
-(if (a < 10) then (
-    printf ("b2\n")
+(if (a < 10) then (     printf ("b2\n")
 )  );
   
 # 127 "?"
-(if (a < 10) then (
-    printf ("b2\n");
+(if (a < 10) then (     printf ("b2\n");
     printf ("b3\n")
 )  );
   
@@ -329,59 +274,45 @@ let if_else = (fun () ->
   
 # 130 "?"
 printf ((if (a < 1) then ("a\n"  )else("b1\n")))
-);;
-
+);; 
 # 131 "?"
-if_else (());;
-
+if_else ;; 
 # 133 "?"
-let recursive_function = (fun () -> 
+let recursive_function = (fun  -> 
 # 152 "?"
-
-  
+   
 # 136 "?"
 let rec (fib:((int))->(int)) = 
 # 141 "?"
-begin fun t1'  -> match t1' with
-    | (
+begin fun t1'  -> match t1' with     | (
 # 136 "?"
 n) -> (
-
 # 137 "?"
-
-      (if (n = 0) then (0      )else(
+       (if (n = 0) then (0      )else(
 # 138 "?"
 (if (n = 1) then (1        )else(
 # 139 "?"
 (fib ((n - 2)) + fib ((n - 1)))))))
-    )
-   end  in
+    )   end  in
   
 # 151 "?"
 printf  ("fib 10 %d\n") (fib (10))
-);;
-
+);; 
 # 152 "?"
-recursive_function (());;
-
+recursive_function ;; 
 # 154 "?"
-let tuple = (fun () -> 
+let tuple = (fun  -> 
 # 240 "?"
-
-  
+   
 # 156 "?"
 let (addt:((int * int))->(int)) = 
 # 158 "?"
-begin fun t1'  -> match t1' with
-  | (
+begin fun t1'  -> match t1' with   | (
 # 156 "?"
 a , b) -> (
-
 # 157 "?"
-
-    (a + b)
-  )
- end  in
+     (a + b)
+  ) end  in
   
 # 159 "?"
 printf  ("%d\n") (addt (1 , 2));
@@ -405,94 +336,64 @@ printf  ("*** %d %d\n")  (addt (x)) (addt (y));
 # 230 "?"
 let (f2:((int * int))->(((int * int))->(int))) = 
 # 232 "?"
-begin fun t1' t2'  -> match t1',t2' with
-  | (
+begin fun t1' t2'  -> match t1',t2' with   | (
 # 231 "?"
-a , b),(c , d) -> (
-
-    ((a * b) + (c * d))
-  )
- end  in
+a , b),(c , d) -> (     ((a * b) + (c * d))
+  ) end  in
   
 # 238 "?"
 printf ("%d\n") (f2 (1 , 2) (3 , 4));
   
 # 239 "?"
 printf  ("%d\n") (f2  (1 , 2) (3 , 4))
-);;
-
+);; 
 # 240 "?"
-tuple (());;
-
+tuple ;; 
 # 242 "?"
-let pattern_match = (fun () -> 
+let pattern_match = (fun  -> 
 # 263 "?"
-
-  
+   
 # 244 "?"
 let rec (fib:((int))->(int)) = 
 # 250 "?"
-begin fun t1'  -> match t1' with
-    | (
+begin fun t1'  -> match t1' with     | (
 # 244 "?"
 n) -> (
-
 # 245 "?"
-
-      (match n with | (
+       (match n with | (
 # 246 "?"
-0)-> (
-        0
-      
-)| (
+0)-> (         0
+      )| (
 # 247 "?"
-1)-> (
-        1
-      
-)| (
+1)-> (         1
+      )| (
 # 248 "?"
-n)-> (
-        (fib ((n - 2)) + fib ((n - 1)))
-      
-))
-    )
-   end  in
+n)-> (         (fib ((n - 2)) + fib ((n - 1)))
+      ))
+    )   end  in
   
 # 252 "?"
 printf  ("fib 10 %d\n") (fib (10))
-);;
-
+);; 
 # 263 "?"
-pattern_match (());;
-
+pattern_match ;; 
 # 265 "?"
-let parcial_function = (fun () -> 
+let parcial_function = (fun  -> 
 # 283 "?"
-
-  
+   
 # 267 "?"
 let rec (fib:((int))->(int)) = 
 # 271 "?"
-begin fun t1'  -> match t1' with
-    | (
+begin fun t1'  -> match t1' with     | (
 # 268 "?"
-0) -> (
-
-      0
-    )
-    | (
+0) -> (       0
+    )    | (
 # 269 "?"
-1) -> (
-
-      1
-    )
-    | (
+1) -> (       1
+    )    | (
 # 270 "?"
-n) -> (
-
-      (fib ((n - 2)) + fib ((n - 1)))
-    )
-   end  in
+n) -> (       (fib ((n - 2)) + fib ((n - 1)))
+    )   end  in
   
 # 273 "?"
 printf  ("fib 10 = %d\n") (fib (10));
@@ -500,94 +401,56 @@ printf  ("fib 10 = %d\n") (fib (10));
 # 277 "?"
 let (llor:((int * int))->(int)) = 
 # 280 "?"
-begin fun t1'  -> match t1' with
-  | (
+begin fun t1'  -> match t1' with   | (
 # 278 "?"
-0 , 0) -> (
-
-    let a = 1 in
+0 , 0) -> (     let a = 1 in
     let b = 2 in
     (a lor b)
-  )
-  | (
+  )  | (
 # 279 "?"
-a , b) -> (
-
-    (a lor b)
-  )
- end  in
+a , b) -> (     (a lor b)
+  ) end  in
   
 # 282 "?"
 printf  ("llor %d\n") (llor (1 , 2))
-);;
-
+);; 
 # 283 "?"
-parcial_function (());;
-
+parcial_function ;; 
 # 285 "?"
-let list = (fun () -> 
+let list = (fun  -> 
 # 312 "?"
-
-  
+   
 # 287 "?"
-iter (begin fun t1'  -> match t1' with
-    | (x) -> (
-
-      printf ("%d\n") (x)
-    )
-   end ) ([1; 2; 3; 4]);
+iter (begin fun t1'  -> match t1' with     | (x) -> (       printf ("%d\n") (x)
+    )   end ) ([1; 2; 3; 4]);
   
 # 288 "?"
-iter (begin fun t1'  -> match t1' with
-    | (x) -> (
-
-      printf  ("%d\n") (x)
-    )
-   end ) ([1; 2; 3; 4]);
+iter (begin fun t1'  -> match t1' with     | (x) -> (       printf  ("%d\n") (x)
+    )   end ) ([1; 2; 3; 4]);
   
 # 289 "?"
-iter (begin fun t1'  -> match t1' with
-    | (x) -> (
-
-      printf  ("%d\n") (x)
-    )
-   end ) ([1; 2; 3; 4]);
+iter (begin fun t1'  -> match t1' with     | (x) -> (       printf  ("%d\n") (x)
+    )   end ) ([1; 2; 3; 4]);
   
 # 290 "?"
-iter  (begin fun t1'  -> match t1' with
-    | (x) -> (
-
-      printf  ("%d\n") (x)
-    )
-   end ) ([1; 2; 3; 4]);
+iter  (begin fun t1'  -> match t1' with     | (x) -> (       printf  ("%d\n") (x)
+    )   end ) ([1; 2; 3; 4]);
   
 # 292 "?"
-iter (begin fun t1'  -> match t1' with
-    | (x) -> (
-
-      printf  ("%d\n") (x)
-    )
-   end ) ([1; 2; 3; 4]);
+iter (begin fun t1'  -> match t1' with     | (x) -> (       printf  ("%d\n") (x)
+    )   end ) ([1; 2; 3; 4]);
   
 # 293 "?"
-iter (begin fun t1'  -> match t1' with
-    | (x) -> (
-
-      printf  ("%d\n") (x)
-    )
-   end ) ([1; 2; 3; 4]);
+iter (begin fun t1'  -> match t1' with     | (x) -> (       printf  ("%d\n") (x)
+    )   end ) ([1; 2; 3; 4]);
   
 # 295 "?"
 iter (
 # 297 "?"
-begin fun t1'  -> match t1' with
-    | (
+begin fun t1'  -> match t1' with     | (
 # 296 "?"
-x) -> (
-
-      printf  ("%d\n") (x)
-    )
-   end ) (
+x) -> (       printf  ("%d\n") (x)
+    )   end ) (
 # 295 "?"
 [1; 2; 3; 4]);
   
@@ -596,38 +459,26 @@ x) -> (
 # 301 "?"
 iter (
 # 303 "?"
-begin fun t1'  -> match t1' with
-    | (
+begin fun t1'  -> match t1' with     | (
 # 302 "?"
-x) -> (
-
-      printf  ("%d\n") (x)
-    )
-   end ) (
+x) -> (       printf  ("%d\n") (x)
+    )   end ) (
 # 299 "?"
 map (
 # 301 "?"
-begin fun t1'  -> match t1' with
-    | (
+begin fun t1'  -> match t1' with     | (
 # 300 "?"
-x) -> (
-
-      (x * 10)
-    )
-   end ) (
+x) -> (       (x * 10)
+    )   end ) (
 # 299 "?"
 [1; 2; 3; 4]))
-);;
-
+);; 
 # 312 "?"
-list (());;
-type a = {x:int;y:int};;
-
+list ;; type a = {x:int;y:int};; 
 # 316 "?"
-let record = (fun () -> 
+let record = (fun  -> 
 # 327 "?"
-
-  
+   
 # 318 "?"
 let (a:a) = {x=1;y=2} in
   
@@ -635,68 +486,46 @@ let (a:a) = {x=1;y=2} in
 printf  ("%d\n") ((a . x));
   
 # 322 "?"
-printf  ("%d\n") (({x=(1 + (2 * 3));y=
-let a = 1 in
+printf  ("%d\n") (({x=(1 + (2 * 3));y= let a = 1 in
 a
 } . x));
   
 # 324 "?"
-let aa = begin fun t1'  -> match t1' with
-  | ({x}) -> (
-
-    printf  ("%d\n") (x)
-  )
- end  in
+let aa = begin fun t1'  -> match t1' with   | ({x}) -> (     printf  ("%d\n") (x)
+  ) end  in
   
 # 326 "?"
 aa ({x=1;y=2})
-);;
-
+);; 
 # 327 "?"
-record (());;
-type e = EUnit|EInt of (int)|EAdd of (e * e);;
-
+record ;; type e = EUnit|EInt of (int)|EAdd of (e * e);; 
 # 331 "?"
-let variant = (fun () -> 
+let variant = (fun  -> 
 # 340 "?"
-
-  
+   
 # 333 "?"
 let rec (eval:(e)->(int)) = 
 # 337 "?"
-begin fun t1'  -> match t1' with
-    | (
+begin fun t1'  -> match t1' with     | (
 # 334 "?"
-EUnit) -> (
-
-      0
-    )
-    | (
+EUnit) -> (       0
+    )    | (
 # 335 "?"
-EInt (i)) -> (
-
-      i
-    )
-    | (
+EInt (i)) -> (       i
+    )    | (
 # 336 "?"
-EAdd (a , b)) -> (
-
-      (eval (a) + eval (b))
-    )
-   end  in
+EAdd (a , b)) -> (       (eval (a) + eval (b))
+    )   end  in
   
 # 339 "?"
 printf  ("1+2=%d\n") (eval (EAdd (EInt (1) , EInt (2))))
-);;
-
+);; 
 # 340 "?"
-variant (());;
-
+variant ;; 
 # 342 "?"
-let reference = (fun () -> 
+let reference = (fun  -> 
 # 356 "?"
-
-  
+   
 # 344 "?"
 let a = (ref 1) in
   
@@ -726,21 +555,17 @@ decr (b);
   
 # 355 "?"
 printf  ("-- %d\n") ((! b))
-);;
-
+);; 
 # 356 "?"
-reference (());;
-
+reference ;; 
 # 358 "?"
-let closure = (fun () -> 
+let closure = (fun  -> 
 # 390 "?"
-
-  
+   
 # 360 "?"
 let block = (fun sp -> (fun f -> 
 # 364 "?"
-
-    
+     
 # 361 "?"
 printf ("{\n");
     
@@ -758,40 +583,31 @@ let p = printf in
 p  ("def %s() ") ("a");
   block ("") (
 # 373 "?"
-begin fun t1'  -> match t1' with
-    | (
+begin fun t1'  -> match t1' with     | (
 # 367 "?"
 sp) -> (
-
 # 368 "?"
-
-      p  ("%sdef %s() ")  (sp) ("b");
+       p  ("%sdef %s() ")  (sp) ("b");
       block (sp) (
 # 371 "?"
-begin fun t1'  -> match t1' with
-        | (
+begin fun t1'  -> match t1' with         | (
 # 368 "?"
 sp) -> (
-
 # 369 "?"
-
-          p  ("%sprogram2()\n") (sp);
+           p  ("%sprogram2()\n") (sp);
           
 # 370 "?"
 p  ("%sprogram2()\n") (sp)
-        )
-       end );
+        )       end );
       
 # 372 "?"
 p  ("%sprogram()\n") (sp)
-    )
-   end );
+    )   end );
   
 # 376 "?"
 let block = (fun sp -> (fun f -> 
 # 380 "?"
-
-    
+     
 # 377 "?"
 printf ("{\n");
     
@@ -809,58 +625,43 @@ let p = printf in
 p  ("def %s() ") ("a");
   block ("") (
 # 389 "?"
-begin fun t1'  -> match t1' with
-    | (
+begin fun t1'  -> match t1' with     | (
 # 383 "?"
 sp) -> (
-
 # 384 "?"
-
-      p  ("%sdef %s() ")  (sp) ("b");
+       p  ("%sdef %s() ")  (sp) ("b");
       block (sp) (
 # 387 "?"
-begin fun t1'  -> match t1' with
-        | (
+begin fun t1'  -> match t1' with         | (
 # 384 "?"
 sp) -> (
-
 # 385 "?"
-
-          p  ("%sprogram2()\n") (sp);
+           p  ("%sprogram2()\n") (sp);
           
 # 386 "?"
 p  ("%sprogram2()\n") (sp)
-        )
-       end );
+        )       end );
       
 # 388 "?"
 p  ("%sprogram()\n") (sp)
-    )
-   end )
-);;
-
+    )   end )
+);; 
 # 390 "?"
-closure (());;
-
+closure ;; 
 # 392 "?"
 let list_type = 
 # 424 "?"
-
-
+ 
 # 394 "?"
 let ls = [1; 2; 3] in
 
 # 396 "?"
 iter (
 # 398 "?"
-begin fun t1'  -> match t1' with
-  | (
+begin fun t1'  -> match t1' with   | (
 # 397 "?"
-l) -> (
-
-    printf  ("%d,") (l)
-  )
- end ) (
+l) -> (     printf  ("%d,") (l)
+  ) end ) (
 # 396 "?"
 ls);
 
@@ -873,14 +674,10 @@ let (ls:(int) list) = [1; 2; 3] in
 # 402 "?"
 iter (
 # 404 "?"
-begin fun t1'  -> match t1' with
-  | (
+begin fun t1'  -> match t1' with   | (
 # 403 "?"
-l) -> (
-
-    printf  ("%d,") (l)
-  )
- end ) (
+l) -> (     printf  ("%d,") (l)
+  ) end ) (
 # 402 "?"
 ls);
 
@@ -893,16 +690,12 @@ let (ls:((int * int)) list) = [1 , 2; 3 , 4] in
 # 408 "?"
 iter (
 # 411 "?"
-begin fun t1'  -> match t1' with
-  | (
+begin fun t1'  -> match t1' with   | (
 # 409 "?"
 ( l , r)) -> (
-
 # 410 "?"
-
-    printf  ("(%d,%d);")  (l) (r)
-  )
- end ) (
+     printf  ("(%d,%d);")  (l) (r)
+  ) end ) (
 # 408 "?"
 ls);
 
@@ -910,25 +703,18 @@ ls);
 printf ("\n");
 
 # 418 "?"
-let rec f = begin fun t1'  -> match t1' with
-  | (
+let rec f = begin fun t1'  -> match t1' with   | (
 # 414 "?"
-[]) -> (
-
-    ()
-  )
-  | (
+[]) -> (     ()
+  )  | (
 # 415 "?"
 (x :: xs)) -> (
-
 # 416 "?"
-
-    printf  ("%d,\n") (x);
+     printf  ("%d,\n") (x);
     
 # 417 "?"
 f (xs)
-  )
- end  in
+  ) end  in
 
 # 420 "?"
 f ([1; 2; 3]);
@@ -937,131 +723,89 @@ f ([1; 2; 3]);
 printf  ("1+20=%d\n") ((1 + 
 # 423 "?"
 20))
-;;
-
+;; 
 # 426 "?"
 let whens = 
 # 434 "?"
-
-
+ 
 # 428 "?"
 let rec (fib:((int))->(int)) = 
 # 432 "?"
-begin fun t1'  -> match t1' with
-  | (
+begin fun t1'  -> match t1' with   | (
 # 429 "?"
-n) when (n = 0) -> (
-
-    0
-  )
-  | (
+n) when (n = 0) -> (     0
+  )  | (
 # 430 "?"
-n) when (n = 1) -> (
-
-    1
-  )
-  | (
+n) when (n = 1) -> (     1
+  )  | (
 # 431 "?"
-n) -> (
-
-    (fib ((n - 2)) + fib ((n - 1)))
-  )
- end  in
+n) -> (     (fib ((n - 2)) + fib ((n - 1)))
+  ) end  in
 
 # 433 "?"
 printf  ("fib 11 %d\n") (fib (11))
-;;
-module A = struct
-
+;; module A = struct 
 # 438 "?"
-let a = 1234;;
-
+let a = 1234;; 
 # 439 "?"
-let inc = (fun k -> (k + 1))
-end;;
-
+let inc = (fun k -> (k + 1)) end;; 
 # 442 "?"
 let _ = 
 # 445 "?"
-
-
+ 
 # 444 "?"
 printf  ("A.a = %d A.inc(10) = %d\n")  ((A . a)) ((A . inc (10)))
-;;
-class ab = object
-
+;; class ab = object(this) 
 # 449 "?"
-val a = 123
-
+val a = 123 
 # 451 "?"
-method c = a
-end;;
-
+method c = a end;; 
 # 458 "?"
 let _ = 
 # 461 "?"
-
-
+ 
 # 460 "?"
 printf  ("ab.a = %d\n") (((new ab) # c))
-;;
-class abc (b:int)(c:int) = object
-
+;; class abc (b:int)(c:int) = object(this) 
 # 465 "?"
-method c = b
-end;;
-
+method c = b end;; 
 # 468 "?"
 let _ = 
 # 472 "?"
-
-
+ 
 # 470 "?"
 printf  ("ab.a = %d\n") (((new abc  (10) (20)) # c));
 
 # 471 "?"
 printf  ("ab.a = %d\n") (((2 * 3) + 1))
-;;
-class fib (x:int) = object
-
+;; class fib (x:int) = object(this) 
 # 476 "?"
 method apply = (match x with | (
 # 477 "?"
-0)-> (
-  0
-
+0)-> (   0
 )| (
 # 478 "?"
-1)-> (
-  1
-
+1)-> (   1
 )| (
 # 479 "?"
-n)-> (
-  (((new fib ((x - 2))) # apply) + 
+n)-> (   (((new fib ((x - 2))) # apply) + 
 # 480 "?"
 ((new fib ((x - 1))) # apply))
-
-))
-end;;
-
+)) end;; 
 # 484 "?"
 let _ = 
 # 488 "?"
-
-
+ 
 # 486 "?"
 printf  ("A.a = %d\n") (((new fib (10)) # apply));
 
 # 487 "?"
 printf  ("%d %d\n")  (((1 + 2) - 3)) ((- 1))
-;;
-
+;; 
 # 490 "?"
 let array_and_loop = 
 # 508 "?"
-
-
+ 
 # 491 "?"
 let a = [|1; 2; 3|] in
 
@@ -1074,8 +818,7 @@ printf  ("%d%d%d\n")  (a .(0))  (a .(1)) (a .(2));
 # 495 "?"
 for i = 0 to 2 do 
 # 497 "?"
-
-
+ 
 # 496 "?"
 printf  ("for %d\n") (a .(i))
  done;
@@ -1083,8 +826,7 @@ printf  ("for %d\n") (a .(i))
 # 499 "?"
 for i = 10 downto 1 do 
 # 501 "?"
-
-
+ 
 # 500 "?"
 printf  ("for %d\n") (i)
  done;
@@ -1095,52 +837,37 @@ let i = (ref 0) in
 # 504 "?"
 while ((! i) < 3) do 
 # 507 "?"
-
-
+ 
 # 505 "?"
 incr (i);
 
 # 506 "?"
 printf  ("while %d\n") ((! i))
  done
-;;
-
+;; 
 # 510 "?"
 let variants = 
 # 518 "?"
-
-
+ 
 # 516 "?"
-let rec eval = begin fun t1'  -> match t1' with
-  | (
+let rec eval = begin fun t1'  -> match t1' with   | (
 # 513 "?"
-`int (n)) -> (
-
-    n
-  )
-  | (
+`int (n)) -> (     n
+  )  | (
 # 514 "?"
-`add (a , b)) -> (
-
-    (eval (a) + eval (b))
-  )
-  | (
+`add (a , b)) -> (     (eval (a) + eval (b))
+  )  | (
 # 515 "?"
-`mul (a , b)) -> (
-
-    (eval (a) * eval (b))
-  )
- end  in
+`mul (a , b)) -> (     (eval (a) * eval (b))
+  ) end  in
 
 # 517 "?"
 printf  ("%d\n") (eval (`add (`mul (`int (10) , `int (20)) , `int (20))))
-;;
-
+;; 
 # 520 "?"
 let keyword_params = 
 # 526 "?"
-
-
+ 
 # 521 "?"
 let f = (fun ?(a:int=(1)) ~(b:int) ~(c) d -> (((a + b) + c) + d)) in
 
@@ -1152,18 +879,16 @@ let f = (fun ?(a:int=(1)) ~(b:int) ~(c) d -> (((a + b) + c) + d)) in
 
 # 525 "?"
 printf  ("%d\n") (f  ~a:(1)  ~b:(2)  ~c:(5) (3))
-;;
-
+;; 
 # 528 "?"
 let floats = 
 # 532 "?"
-
-
+ 
 # 529 "?"
-let n = 1.234000 in
+let n = 1.234 in
 
 # 530 "?"
-let m = (n +. 10.500000) in
+let m = (n +. 10.5) in
 
 # 531 "?"
 printf  ("%f\n") (m)

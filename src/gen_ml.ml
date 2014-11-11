@@ -56,7 +56,7 @@ let rec print_e sp ppf e =
     fprintf ppf "%d"
       i
   | EFloat(_,i) ->
-    fprintf ppf "%f"
+    fprintf ppf "%s"
       i
   | EStr(_,i) ->
     fprintf ppf "%s"
@@ -140,12 +140,12 @@ let rec print_e sp ppf e =
   | EIf(_,e1, e2, EEmpty _) ->
     fprintf ppf "(if %a then (%a)%s)"
       (print_e "") e1
-      (print_e_block sp "\n") e2
+      (print_e_block sp " ") e2
       sp
   | EIf(_,e1, e2, e3) ->
     fprintf ppf "(if %a then (%a%s)else(%a))"
       (print_e "" ) e1
-      (print_e_block sp "\n") e2 
+      (print_e_block sp " ") e2 
       sp
       (print_e_block sp "") e3 
   | EFun (_,its, t, e) ->
@@ -161,7 +161,7 @@ let rec print_e sp ppf e =
     fprintf ppf "(fun %a%a -> %a%s)"
       (print_ls " " print_e) its
       (print_t (if t=TEmpty then "" else ":") "") t
-      (print_e_block sp "\n") e
+      (print_e_block sp " ") e
       sp
   | EPtn _ -> assert false
   | EPFun (_,ls) ->
@@ -182,7 +182,7 @@ let rec print_e sp ppf e =
         in f 1 ppf its
       | _ -> assert false
     end;
-    fprintf ppf " with\n";
+    fprintf ppf " with ";
     List.iter begin function
       | EPtn(_,[its], t, w, e) ->
         let rec print_ls sp sep p ppf = function
@@ -201,10 +201,10 @@ let rec print_e sp ppf e =
           (print_t (if t=TEmpty then "" else ":") "") t;
         (match w with
         | EEmpty _ -> ()
-        | _ -> fprintf ppf " when %a" (print_e_block sp "\n") w
+        | _ -> fprintf ppf " when %a" (print_e_block sp " ") w
         );
-        fprintf ppf " -> (\n%a%s)\n"
-          (print_e_block sp "\n") e
+        fprintf ppf " -> (%a%s)"
+          (print_e_block sp " ") e
           sp
 
       | _ -> assert false
@@ -232,13 +232,13 @@ let rec print_e sp ppf e =
         (*print_t ppf (if t=TEmpty then "" else ":") "" t;*)
         (match w with
         | EEmpty _ -> ()
-        | _ -> fprintf ppf " when %a" (print_e_block sp "\n") w
+        | _ -> fprintf ppf " when %a" (print_e_block sp " ") w
         );
-        fprintf ppf "-> (%a%s\n)"
-          (print_e_block sp "\n") e
+        fprintf ppf "-> (%a%s)"
+          (print_e_block sp " ") e
           sp
       | e ->
-        fprintf std_formatter "%a\n" (print_e " ") e;
+        fprintf std_formatter "%a " (print_e " ") e;
         assert false
     end ls;
     fprintf ppf ")"
@@ -265,7 +265,7 @@ let rec print_e sp ppf e =
         fprintf ppf "%s%a;@." sp (print_e sp) e;
         loop xs
     in
-    fprintf ppf "\n";
+    fprintf ppf " ";
     loop ls
   | EList (_, ls) ->
     fprintf ppf "[%a]"
@@ -340,15 +340,15 @@ let rec print_s sp ppf (s:s):unit =
       *)
     | SAnd(e1, SExp(ELetRec(_,_,id, TEmpty, e)))
     | SAnd(e1, SExp(ELet(_,id, TEmpty, e))) ->
-      fprintf ppf "%a\n"
+      fprintf ppf "%a "
         (print_s sp) e1;
-      fprintf ppf "\n%sand %a = %a"
+      fprintf ppf " %sand %a = %a"
         sp
         (print_e "") id
         (print_e (sp^"  ")) e
 
     | SAnd(e1, e2) ->
-      fprintf ppf "%a\nand %a"
+      fprintf ppf "%a and %a"
         (print_s sp) e1
         (print_s sp) e2
 
@@ -380,13 +380,13 @@ let rec print_s sp ppf (s:s):unit =
         )
         ls
     | SModule(name, ss) ->
-      fprintf ppf "%smodule %s = struct\n"
+      fprintf ppf "%smodule %s = struct "
         sp
         name
       ;
 
-      print_ls sp ";;\n" print ppf ss;
-      fprintf ppf "\n%send" sp
+      print_ls sp ";; " print ppf ss;
+      fprintf ppf " %send" sp
 
     | SModuleExp(name, e) ->
       fprintf ppf "%smodule %s = %a"
@@ -396,23 +396,23 @@ let rec print_s sp ppf (s:s):unit =
       ;
 
     | SClass(name, [], ss) ->
-      fprintf ppf "%sclass %s = object(this)\n"
+      fprintf ppf "%sclass %s = object(this) "
         sp
         name
       ;
-      print_ls sp "\n" print_member ppf ss;
-      fprintf ppf "\n%send" sp
+      print_ls sp " " print_member ppf ss;
+      fprintf ppf " %send" sp
 
     | SClass(name, sts, ss) ->
-      fprintf ppf "%sclass %s (%a) = object(this)\n"
+      fprintf ppf "%sclass %s (%a) = object(this) "
         sp
         name
         (print_ls "" ")("
           (fun sp ppf (s,t) -> fprintf ppf "%s:%a" s (print_t "" "") t)
         ) sts
       ;
-      print_ls sp "\n" print_member ppf ss;
-      fprintf ppf "\n%send" sp
+      print_ls sp " " print_member ppf ss;
+      fprintf ppf " %send" sp
 
   and print_member sp ppf s = 
     let print_e2 sp ppf e = 
@@ -468,6 +468,6 @@ let rec print_s sp ppf (s:s):unit =
     print sp ppf s
 
 let print_prog ppf (Prog(ss)) =
-  print_ls "" ";;\n" print_s ppf ss;
+  print_ls "" ";; " print_s ppf ss;
   fprintf ppf "@."
 

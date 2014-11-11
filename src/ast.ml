@@ -17,7 +17,7 @@ type a =
 type e =
   | EEmpty of p
   | EInt of p * int
-  | EFloat of p * float
+  | EFloat of p * string
   | EStr of p * string
   | EChr of p * string
   | EVar of p * string
@@ -118,7 +118,7 @@ let rec print_t fp = function
 let rec print_e fp = function
   | EEmpty(_) -> fprintf fp "EEmpty()@?"
   | EInt(_, i) -> fprintf fp "EInt(%d)@?" i
-  | EFloat(_, f) -> fprintf fp "EFloat(%f)@?" f
+  | EFloat(_, f) -> fprintf fp "EFloat(%s)@?" f
   | EStr(_, s) -> fprintf fp "EStr(\"%s\")@?" s
   | EChr(_, s) -> fprintf fp "EChr(\"%s\")@?" s
   | EVar(_, s) -> fprintf fp "EVar(\"%s\")@?" s

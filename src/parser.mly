@@ -101,7 +101,7 @@ let parse_error2 str =
 %}
 
 %token <int> INT
-%token <float> FLOAT
+%token <string> FLOAT
 %token <string> VAR
 
 
@@ -219,7 +219,7 @@ defrec1:
   | defrec { $1 }
 
 defrecs:
-  | defrec1 { [$1] }
+  | { [] }
   | defrec1 defrecs %prec LIST { $1::$2 }
 
 record:
@@ -259,7 +259,7 @@ exp:
   | SEMI exp { $2 }
   | SUB exp {
       match $2 with
-      | EFloat(p,f) -> EFloat(p,-. f)
+      | EFloat(p,f) -> EFloat(p,"-" ^ f)
       | e -> EPre(e_pos(e), "-", $2)
     }
 
@@ -413,7 +413,6 @@ stmt:
   | VAR MODULE LBRACE stmts RBRACE { SModule($1, $4) }
   | VAR MODULE ASSIGN exp { SModuleExp($1, $4) }
   | VAR CLASS LBRACE stmts RBRACE { SClass($1, [], $4) }
-  | VAR CLASS LPAREN RPAREN LBRACE stmts RBRACE { SClass($1, [], $6) }
   | VAR CLASS LPAREN defrecs RPAREN LBRACE stmts RBRACE { SClass($1, $4, $7) }
   | exp { SExp($1) }
   | OPEN { SOpen($1) }
@@ -426,7 +425,7 @@ stmt1:
   | stmt1 SEMI { $1 }
 
 stmts:
-  | stmt1 { [$1] }
+  | { [] }
   | stmt1 stmts { $1 :: $2 }
 
 prog:

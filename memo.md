@@ -98,11 +98,11 @@ gen_mlを修正する
 
 元の動きが
 
-    Prog([SExp(ELet(            f1  ,TEmpty,EFun([ETy(false,a,Ty("int"),EEmpty())],TEmpty,EVar("a"))))])
+    Prog([SExp(ELet(f1,TEmpty,EFun([ETy(false,a,Ty("int"),EEmpty())],TEmpty,EVar("a"))))])
 
 で
 
-    Prog([SExp(ELet(      EVar("f1"),TEmpty,EFun([ETy(false,a,Ty("int"),EEmpty())],TEmpty,EVar("a"))))])
+    Prog([SExp(ELet(EVar("f1"),TEmpty,EFun([ETy(false,a,Ty("int"),EEmpty())],TEmpty,EVar("a"))))])
 
 となるのがいいはずなのだけど、
 
@@ -205,11 +205,11 @@ C言語も++と--しか後置演算子は無いので、消してしまおう。
 
 	{a=1 b=2+2}
 
-はレコード{a=1 b=4}を返します。
+はレコード`{a=1 b=4}`を返します。
 
 	[1 2+2]
 
-は[1;4]というリストを返します。
+は`[1;4]`というリストを返します。
 
 こう考えると、楽しいのですけど、パーシャルファンクションをこの中に押し込めようとすると、結構無理があります。
 
