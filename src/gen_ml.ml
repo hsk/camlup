@@ -83,8 +83,12 @@ let rec print_e sp ppf e =
         (print_t "" "") t
         (print_e "") e
     )
-
-
+(*
+  | EBin(_,e1,".",e2) ->
+    fprintf ppf " %a.%a "
+      (print_e sp) e1
+      (print_e sp) e2
+*)
   | EBin(_,e1,",",e2) ->
     fprintf ppf "%a %s %a"
       (print_e sp) e1
@@ -104,6 +108,13 @@ let rec print_e sp ppf e =
       (print_e sp) e1
       op
       (print_e sp) e2
+  | EPre(_,"jsnew",EBin(_,e1,".",e2)) ->
+    fprintf ppf "jsnew %a.%a"
+      (print_e "") e1
+      (print_e "") e2
+  | EPre(_,"jsnew",e1) ->
+    fprintf ppf "jsnew %a" 
+      (print_e "") e1
   | EPre(_,op,e1) ->
     fprintf ppf "(%s %a)" 
       op

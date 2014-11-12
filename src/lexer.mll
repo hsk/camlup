@@ -1,9 +1,11 @@
 {
 open Parser
+let buf = ref ""
 }
 
 let space = [' ' '\t']
 let digit = ['0'-'9']
+
 
 rule token = parse
   | '\r' '\n' { incr lineno; SEMI(!lineno) }
@@ -31,6 +33,7 @@ rule token = parse
   | "downto" { DOWNTO }
   | "return" { RETURN }
   | "new" { NEW }
+  | "jsnew" { JSNEW }
   | "class" { CLASS }
   | "trait" { TRAIT }
   | "<-" { ARROWASSIGN }
@@ -99,7 +102,7 @@ rule token = parse
   | "##" { REFREF }
   | "def" { DEF }
   | '=' { ASSIGN }
-  | '"' ([^ '"'] | "\\" (['"'  '\'' 'n' 'r' 't' 'b' ] | ['0'-'9'] ['0'-'9'] ['0'-'9']) )* '"' { STR(Lexing.lexeme lexbuf) }
+  | '"' { buf:="\""; STR(str lexbuf) }
   | '\'' ([^ '\''] | "\\" (['"'  '\'' 'n' 'r' 't' 'b' ] | ['0'-'9'] ['0'-'9'] ['0'-'9']) )* '\'' { CHR(Lexing.lexeme lexbuf) }
 
   | ['`' 'a'-'z' 'A'-'Z' '_']['a'-'z' 'A'-'Z' '_' '0'-'9']*
@@ -138,3 +141,11 @@ and comment = parse
   | "/*" { comment lexbuf; comment lexbuf }
   | eof { Format.eprintf "warning: unterminated comment@." }
   | _ { comment lexbuf }
+
+and str = parse
+  | '\r' '\n' { incr lineno; buf:=!buf ^ (Lexing.lexeme lexbuf); (str lexbuf) }
+  | ['\n' '\r'] { incr lineno; buf:=!buf ^ (Lexing.lexeme lexbuf); (str lexbuf) }
+  | ("\\" (['"'  '\'' 'n' 'r' 't' 'b' ] | ['0'-'9'] ['0'-'9'] ['0'-'9']) ) { buf:=!buf ^ (Lexing.lexeme lexbuf);(str lexbuf) }
+  | '"' { !buf ^ (Lexing.lexeme lexbuf) }
+  | _ { buf:=!buf ^ (Lexing.lexeme lexbuf); (str lexbuf) }
+  | eof { Format.eprintf "warning: unterminated comment@." ; !buf}

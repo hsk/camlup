@@ -1,5 +1,6 @@
 /**
  * main.nml
+ * demo: http://jsdo.it/h_sakurai/ofqW
  */
 
 Html module = Dom_html
@@ -15,36 +16,97 @@ normalize(v) = {
   )
 }
 
-canvas = Html.createCanvas(Html.window##document)
+error(f) = Printf.ksprintf {|s => Firebug.console##error(Js.string(s)); failwith (s)} (f)
+debug(f) = Printf.ksprintf {|s => Firebug.console##log(Js.string(s))} (f)
+alert(f) = Printf.ksprintf {|s => Dom_html.window##alert(Js.string(s)); failwith (s)} (f)
 
-ctx = & (canvas##getContext(Html._2d_))
+canvas = {
+  canvas = Html.createCanvas(Html.window##document)
+  canvas##width <- int_of_float(width)
+  canvas##height <- int_of_float(height)
+  canvas
+}
 
-grect((x, y); (x2, y2)) = {
+gl = Js.Opt.get(WebGL.getContext(canvas)){|()=> alert("can't init webgl context")}
 
-  (*ctx)##beginPath()
-  (*ctx)##moveTo(x , y)
-  (*ctx)##lineTo(x2, y)
-  (*ctx)##lineTo(x2, y2)
-  (*ctx)##lineTo(x,  y2)
-  (*ctx)##closePath()
-  (*ctx)##fill()
+load_shader(shader text) = {
+
+  gl##shaderSource(shader,text)
+  gl##compileShader(shader)
+  _ = gl##getShaderParameter(shader, gl##_COMPILE_STATUS_)
+  ()
+}
+
+createProgram(vs fs) = {
+  vertexShader = gl##createShader(gl##_VERTEX_SHADER_)
+  fragmentShader = gl##createShader(gl##_FRAGMENT_SHADER_)
+  
+  load_shader (vertexShader Js.string(vs))
+  load_shader (fragmentShader Js.string(fs))
+  
+  prog = gl##createProgram()
+  gl##attachShader(prog,vertexShader)
+  gl##attachShader(prog,fragmentShader)
+  gl##linkProgram(prog)
+  _ = gl##getProgramParameter(prog, gl##_LINK_STATUS_)
+  gl##useProgram(prog)
+  prog
+}
+
+colorLocation = {
+
+  vs = "attribute vec2 a_position;
+    uniform vec2 u_resolution;
+    void main() {
+       // convert the rectangle from pixels to 0.0 to 1.0
+       vec2 zeroToOne = a_position / u_resolution;
+       // convert from 0->1 to 0->2
+       vec2 zeroToTwo = zeroToOne * 2.0;
+       // convert from 0->2 to -1->+1 (clipspace)
+       vec2 clipSpace = zeroToTwo - 1.0;
+       gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
+    }"
+
+  fs =
+    "precision mediump float;uniform vec4 u_color;void main() {gl_FragColor = u_color;}"
+
+  prog = createProgram(vs fs)
+
+  resolutionLocation = gl##getUniformLocation(prog, Js.string("u_resolution"))
+
+  gl##uniform2f(resolutionLocation, width, height)
+  gl##bindBuffer(gl##_ARRAY_BUFFER_, gl##createBuffer())
+
+  positionLocation = gl##getAttribLocation(prog, Js.string("a_position"))
+  gl##enableVertexAttribArray(positionLocation)
+  gl##vertexAttribPointer(positionLocation, 2, gl##_FLOAT, Js._false, 0, 0)
+
+  gl##getUniformLocation(prog, Js.string("u_color"))
+}
+
+float32array(a) = {
+  array = jsnew Typed_array.float32Array(Array.length(a))
+  Array.iteri{| i v => Typed_array.set(array i v)}(a)
+  array
+}
+
+grect((x1, y1); (x2, y2)) = {
+
+  recfa = float32array([|
+    x1; y1;
+    x2; y1;
+    x1; y2;
+    x1; y2;
+    x2; y1;
+    x2; y2;
+  ])
+  gl##bufferData(gl##_ARRAY_BUFFER_, recfa, gl##_STATIC_DRAW_)
+  gl##drawArrays(gl##_TRIANGLES, 0, 6)
 }
 
 gcolor(r,g,b) = {
-	r = int_of_float(max(0. min(1. r)) *. 255.)
-	g = int_of_float(max(0. min(1. g)) *. 255.)
-	b = int_of_float(max(0. min(1. b)) *. 255.)
-  (*ctx)##fillStyle <- Js.string(Printf.sprintf("#%02x%02x%02x" r g b))	
-}
-
-rect(x, y, width, height) = {
-  (*ctx)##beginPath()
-  (*ctx)##moveTo(x , y)
-  (*ctx)##lineTo(x+.width, y)
-  (*ctx)##lineTo(x+.width, y+.height)
-  (*ctx)##lineTo(x,        y+.height)
-  (*ctx)##closePath()
-  (*ctx)##fill()
+  gl##uniform4f(colorLocation, r, g, b, 1.)
+  ()
 }
 
 Key module {
@@ -588,6 +650,8 @@ Game module {
   }
 }
 
+
+
 GameLib module {
 
   def loop ()= {
@@ -596,21 +660,9 @@ GameLib module {
     ignore(Html.window##setTimeout(Js.wrap_callback {|()=> loop()}, 15.))
   }
 
-  create_canvas(w h) = {
-    c = canvas
-    c##width <- int_of_float(w)
-    c##height <- int_of_float(h)
-    c
-  }
 
   start(_) = {
-    c = create_canvas( width height)
-    //_ = Js.Unsafe.variable("WebGL2D")##enable(canvas)
-    //ctx := canvas##getContext(Html._2d_)
-    //ctx := Js.Unsafe.meth_call(canvas
-    //  "getContext"; [|Js.Unsafe.inject(Js.string("webgl-2d"))])
-
-    Dom.appendChild(Html.window##document##body c)
+    Dom.appendChild(Html.window##document##body canvas)
     Game.init()
     loop()
     Js._false

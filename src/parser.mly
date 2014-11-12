@@ -121,7 +121,7 @@ let parse_error2 str =
 %token ARROW MEMBER FARROW
 %token CAST NEW AT DEF CASE MATCH TYPE MODULE
 %token ADDLIST
-%token REF REFREF
+%token REF REFREF JSNEW
 
 %token HAT
 %token LOR
@@ -272,6 +272,7 @@ exp:
   | MUL exp %prec NEW { EPre(e_pos($2), "!", $2) }
   | NOT exp { EPre(e_pos($2), "not", $2) }
   | NEW exp { EPre(e_pos($2), "new", $2) }
+  | JSNEW exp %prec NEW { EPre(e_pos($2), "jsnew", $2) }
   | exp XOR exp { EBin(e_pos($1), $1, "^", $3) }
 
   | exp LOR exp { EBin(e_pos($1), $1, "||", $3) }

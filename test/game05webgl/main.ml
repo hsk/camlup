@@ -19,1178 +19,1271 @@ let normalize = (fun v  ->
 (if (v < (-. pi)) then (1.    )else(0.))))))
 );; 
 # 18 "?"
-let canvas = (Html . createCanvas ((Html . window) ## document));; 
+let error = (fun f  -> (Printf . ksprintf (begin fun t1'  -> match t1' with     | (s) -> (       (Firebug . console) ## error ((Js . string (s)));
+      failwith (s)
+    )   end ) (f)));; 
+# 19 "?"
+let debug = (fun f  -> (Printf . ksprintf (begin fun t1'  -> match t1' with     | (s) -> (       (Firebug . console) ## log ((Js . string (s)))
+    )   end ) (f)));; 
 # 20 "?"
-let ctx = (ref canvas ## getContext ((Html . _2d_)));; 
+let alert = (fun f  -> (Printf . ksprintf (begin fun t1'  -> match t1' with     | (s) -> (       (Dom_html . window) ## alert ((Js . string (s)));
+      failwith (s)
+    )   end ) (f)));; 
 # 22 "?"
-let grect = (fun ( x , y) ( x2 , y2)  -> 
-# 31 "?"
-   
-# 24 "?"
-(! ctx) ## beginPath ();
-  
-# 25 "?"
-(! ctx) ## moveTo (x , y);
-  
-# 26 "?"
-(! ctx) ## lineTo (x2 , y);
-  
+let canvas = 
 # 27 "?"
-(! ctx) ## lineTo (x2 , y2);
-  
-# 28 "?"
-(! ctx) ## lineTo (x , y2);
-  
+ 
+# 23 "?"
+let canvas = (Html . createCanvas ((Html . window) ## document)) in
+
+# 24 "?"
+(canvas ## width <- int_of_float (width));
+
+# 25 "?"
+(canvas ## height <- int_of_float (height));
+
+# 26 "?"
+canvas
+;; 
 # 29 "?"
-(! ctx) ## closePath ();
-  
-# 30 "?"
-(! ctx) ## fill ()
-);; 
-# 33 "?"
-let gcolor = (fun (r , g , b)  -> 
-# 38 "?"
+let gl = ((Js . Opt) . get ((WebGL . getContext (canvas))) (begin fun t1'  -> match t1' with   | (()) -> (     alert ("can't init webgl context")
+  ) end ));; 
+# 31 "?"
+let load_shader = (fun shader text  -> 
+# 37 "?"
    
+# 33 "?"
+gl ## shaderSource (shader , text);
+  
 # 34 "?"
-let r = int_of_float ((max  (0.) (min  (1.) (r)) *. 255.)) in
+gl ## compileShader (shader);
   
 # 35 "?"
-let g = int_of_float ((max  (0.) (min  (1.) (g)) *. 255.)) in
+let _ = gl ## getShaderParameter (shader , gl ## _COMPILE_STATUS_) in
   
 # 36 "?"
-let b = int_of_float ((max  (0.) (min  (1.) (b)) *. 255.)) in
-  
-# 37 "?"
-((! ctx) ## fillStyle <- (Js . string ((Printf . sprintf  ("#%02x%02x%02x")  (r)  (g) (b)))))
+()
 );; 
-# 40 "?"
-let rect = (fun (x , y , width , height)  -> 
-# 48 "?"
+# 39 "?"
+let createProgram = (fun vs fs  -> 
+# 53 "?"
    
-# 41 "?"
-(! ctx) ## beginPath ();
+# 40 "?"
+let vertexShader = gl ## createShader (gl ## _VERTEX_SHADER_) in
   
-# 42 "?"
-(! ctx) ## moveTo (x , y);
+# 41 "?"
+let fragmentShader = gl ## createShader (gl ## _FRAGMENT_SHADER_) in
   
 # 43 "?"
-(! ctx) ## lineTo ((x +. width) , y);
+load_shader  (vertexShader) ((Js . string (vs)));
   
 # 44 "?"
-(! ctx) ## lineTo ((x +. width) , (y +. height));
-  
-# 45 "?"
-(! ctx) ## lineTo (x , (y +. height));
+load_shader  (fragmentShader) ((Js . string (fs)));
   
 # 46 "?"
-(! ctx) ## closePath ();
+let prog = gl ## createProgram () in
   
 # 47 "?"
-(! ctx) ## fill ()
-);; module Key = struct 
+gl ## attachShader (prog , vertexShader);
+  
+# 48 "?"
+gl ## attachShader (prog , fragmentShader);
+  
+# 49 "?"
+gl ## linkProgram (prog);
+  
+# 50 "?"
+let _ = gl ## getProgramParameter (prog , gl ## _LINK_STATUS_) in
+  
+# 51 "?"
+gl ## useProgram (prog);
+  
 # 52 "?"
-let _up = (ref false);; 
-# 53 "?"
-let _down = (ref false);; 
+prog
+);; 
 # 54 "?"
-let _left = (ref false);; 
-# 55 "?"
-let _right = (ref false);; 
+let colorLocation = 
+# 83 "?"
+ 
 # 56 "?"
-let _z = (ref false);; 
-# 58 "?"
-let up = (fun ()  -> (! _up));; 
-# 59 "?"
-let down = (fun ()  -> (! _down));; 
-# 60 "?"
-let left = (fun ()  -> (! _left));; 
-# 61 "?"
-let right = (fun ()  -> (! _right));; 
-# 62 "?"
-let z = (fun ()  -> (! _z));; 
-# 64 "?"
-let setKey = (fun keyCode v  -> 
-# 74 "?"
-   
+let vs = 
 # 66 "?"
+"attribute vec2 a_position;
+    uniform vec2 u_resolution;
+    void main() {
+       // convert the rectangle from pixels to 0.0 to 1.0
+       vec2 zeroToOne = a_position / u_resolution;
+       // convert from 0->1 to 0->2
+       vec2 zeroToTwo = zeroToOne * 2.0;
+       // convert from 0->2 to -1->+1 (clipspace)
+       vec2 clipSpace = zeroToTwo - 1.0;
+       gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
+    }" in
+
+# 68 "?"
+let fs = 
+# 69 "?"
+"precision mediump float;uniform vec4 u_color;void main() {gl_FragColor = u_color;}" in
+
+# 71 "?"
+let prog = createProgram  (vs) (fs) in
+
+# 73 "?"
+let resolutionLocation = gl ## getUniformLocation (prog , (Js . string ("u_resolution"))) in
+
+# 75 "?"
+gl ## uniform2f (resolutionLocation , width , height);
+
+# 76 "?"
+gl ## bindBuffer (gl ## _ARRAY_BUFFER_ , gl ## createBuffer ());
+
+# 78 "?"
+let positionLocation = gl ## getAttribLocation (prog , (Js . string ("a_position"))) in
+
+# 79 "?"
+gl ## enableVertexAttribArray (positionLocation);
+
+# 80 "?"
+gl ## vertexAttribPointer (positionLocation , 2 , gl ## _FLOAT , (Js . _false) , 0 , 0);
+
+# 82 "?"
+gl ## getUniformLocation (prog , (Js . string ("u_color")))
+;; 
+# 85 "?"
+let float32array = (fun a  -> 
+# 89 "?"
+   
+# 86 "?"
+let array = jsnew Typed_array.float32Array ((Array . length (a))) in
+  
+# 87 "?"
+(Array . iteri (begin fun t1' t2'  -> match t1',t2' with     | (i),(v) -> (       (Typed_array . set  (array)  (i) (v))
+    )   end ) (a));
+  
+# 88 "?"
+array
+);; 
+# 91 "?"
+let grect = (fun ( x1 , y1) ( x2 , y2)  -> 
+# 103 "?"
+   
+# 93 "?"
+let recfa = float32array (
+# 100 "?"
+[|
+# 94 "?"
+x1; y1; 
+# 95 "?"
+x2; y1; 
+# 96 "?"
+x1; y2; 
+# 97 "?"
+x1; y2; 
+# 98 "?"
+x2; y1; 
+# 99 "?"
+x2; y2|]) in
+  
+# 101 "?"
+gl ## bufferData (gl ## _ARRAY_BUFFER_ , recfa , gl ## _STATIC_DRAW_);
+  
+# 102 "?"
+gl ## drawArrays (gl ## _TRIANGLES , 0 , 6)
+);; 
+# 105 "?"
+let gcolor = (fun (r , g , b)  -> 
+# 108 "?"
+   
+# 106 "?"
+gl ## uniform4f (colorLocation , r , g , b , 1.);
+  
+# 107 "?"
+()
+);; module Key = struct 
+# 112 "?"
+let _up = (ref false);; 
+# 113 "?"
+let _down = (ref false);; 
+# 114 "?"
+let _left = (ref false);; 
+# 115 "?"
+let _right = (ref false);; 
+# 116 "?"
+let _z = (ref false);; 
+# 118 "?"
+let up = (fun ()  -> (! _up));; 
+# 119 "?"
+let down = (fun ()  -> (! _down));; 
+# 120 "?"
+let left = (fun ()  -> (! _left));; 
+# 121 "?"
+let right = (fun ()  -> (! _right));; 
+# 122 "?"
+let z = (fun ()  -> (! _z));; 
+# 124 "?"
+let setKey = (fun keyCode v  -> 
+# 134 "?"
+   
+# 126 "?"
 (match keyCode with | (
-# 67 "?"
+# 127 "?"
 37)-> (     (_left := v)
   )| (
-# 68 "?"
+# 128 "?"
 38)-> (     (_up := v)
   )| (
-# 69 "?"
+# 129 "?"
 39)-> (     (_right := v)
   )| (
-# 70 "?"
+# 130 "?"
 40)-> (     (_down := v)
   )| (
-# 71 "?"
+# 131 "?"
 90)-> (     (_z := v)
   )| (
-# 72 "?"
+# 132 "?"
 _)-> (     ()
   ))
 );; 
-# 76 "?"
+# 136 "?"
 let keydown = (fun ev  -> 
-# 81 "?"
+# 141 "?"
    
-# 77 "?"
+# 137 "?"
 let keyCode = ev ## keyCode in
   
-# 79 "?"
+# 139 "?"
 setKey  (keyCode) (true);
   
-# 80 "?"
+# 140 "?"
 (Js . _false)
 );; 
-# 83 "?"
+# 143 "?"
 let keyup = (fun ev  -> 
-# 87 "?"
+# 147 "?"
    
-# 84 "?"
+# 144 "?"
 let keyCode = ev ## keyCode in
   
-# 85 "?"
+# 145 "?"
 setKey  (keyCode) (false);
   
-# 86 "?"
+# 146 "?"
 (Js . _false)
 );; 
-# 88 "?"
+# 148 "?"
 let init = (fun ()  -> 
-# 92 "?"
+# 152 "?"
    
-# 90 "?"
+# 150 "?"
 ((Html . window) ## onkeyup <- (Html . handler (keyup)));
   
-# 91 "?"
+# 151 "?"
 ((Html . window) ## onkeydown <- (Html . handler (keydown)))
 ) end;; module Shots = struct type shot = {x:float;y:float;enable:(bool) ref};; 
-# 98 "?"
+# 158 "?"
 let (shots:((shot) list) ref) = (ref []);; 
-# 100 "?"
+# 160 "?"
 let cnt = (ref 0);; 
-# 102 "?"
+# 162 "?"
 let add = (fun x y  -> 
-# 106 "?"
+# 166 "?"
    
-# 103 "?"
+# 163 "?"
 (if ((! cnt) < 16) then (
-# 105 "?"
+# 165 "?"
      
-# 104 "?"
+# 164 "?"
 (shots := ({x=x;y=y;enable=(ref true)} :: (! shots)))
 )  )
 );; 
-# 108 "?"
+# 168 "?"
 let move = (fun ()  -> 
-# 118 "?"
+# 178 "?"
    
-# 109 "?"
+# 169 "?"
 (cnt := 0);
   
-# 110 "?"
+# 170 "?"
 (shots := 
-# 114 "?"
+# 174 "?"
 (List . filter (
-# 117 "?"
+# 177 "?"
 begin fun t1'  -> match t1' with     | (
-# 115 "?"
+# 175 "?"
 {y;enable={contents=b}}) -> (
-# 116 "?"
+# 176 "?"
        (b && (y > 0.))
     )   end )) (
-# 110 "?"
+# 170 "?"
 (List . map (
-# 114 "?"
+# 174 "?"
 begin fun t1'  -> match t1' with     | (
-# 111 "?"
+# 171 "?"
 {x;y;enable}) -> (
-# 112 "?"
+# 172 "?"
        incr (cnt);
       
-# 113 "?"
+# 173 "?"
 {x=x;y=(y -. 30.0);enable=enable}
     )   end )) (
-# 110 "?"
+# 170 "?"
 (! shots))))
 );; 
-# 120 "?"
+# 180 "?"
 let draw = (fun ()  -> 
-# 133 "?"
+# 193 "?"
    
-# 121 "?"
+# 181 "?"
 gcolor (
-# 122 "?"
+# 182 "?"
 0.5 , 
-# 123 "?"
+# 183 "?"
 (0.8 +. (Random . float (0.2))) , 
-# 124 "?"
+# 184 "?"
 (0.8 +. (Random . float (0.2))));
   
-# 126 "?"
+# 186 "?"
 (List . iter (
-# 132 "?"
+# 192 "?"
 begin fun t1'  -> match t1' with     | (
-# 127 "?"
+# 187 "?"
 {x;y}) -> (
-# 128 "?"
+# 188 "?"
        grect  (
-# 129 "?"
+# 189 "?"
 (x -. 1.5) , (y -. 6.5)) (
-# 130 "?"
+# 190 "?"
 (x +. 3.0) , (y +. 4.0))
     )   end )) (
-# 126 "?"
+# 186 "?"
 (! shots))
 );; 
-# 135 "?"
+# 195 "?"
 let checkColligion1 = (fun bx by r ls  -> 
-# 140 "?"
+# 200 "?"
    
-# 136 "?"
+# 196 "?"
 (not (List . exists (
-# 139 "?"
+# 199 "?"
 begin fun t1'  -> match t1' with   | (
-# 136 "?"
+# 196 "?"
 {x;y}) -> (
-# 137 "?"
+# 197 "?"
      ((((x -. r) < bx) && (bx < (x +. r))) && 
-# 138 "?"
+# 198 "?"
 (((y -. r) < by) && (by < (y +. r))))
   ) end ) (
-# 139 "?"
+# 199 "?"
 ls)))
 );; 
-# 142 "?"
+# 202 "?"
 let checkColligion = (fun x y r  -> 
-# 144 "?"
+# 204 "?"
    
-# 143 "?"
+# 203 "?"
 checkColligion1  (x)  (y) (r) ((! shots))
 ) end;; module Ship = struct 
-# 148 "?"
+# 208 "?"
 let rsize = 25.0;; 
-# 149 "?"
+# 209 "?"
 let x = (ref (width /. 2.0));; 
-# 150 "?"
+# 210 "?"
 let y = (ref (height -. (rsize *. 2.0)));; 
-# 151 "?"
+# 211 "?"
 let speed = 5.0;; 
-# 153 "?"
+# 213 "?"
 let move = (fun ()  -> 
-# 182 "?"
+# 242 "?"
    
-# 155 "?"
+# 215 "?"
 let m = 5 in
   
-# 156 "?"
+# 216 "?"
 let m = (if (Key . left ()) then ((m - 1))else(m)) in
   
-# 157 "?"
+# 217 "?"
 let m = (if (Key . right ()) then ((m + 1))else(m)) in
   
-# 158 "?"
+# 218 "?"
 let m = (if (Key . up ()) then ((m - 3))else(m)) in
   
-# 159 "?"
+# 219 "?"
 let m = (if (Key . down ()) then ((m + 3))else(m)) in
   
-# 160 "?"
+# 220 "?"
 let speed = (match m with | (
-# 161 "?"
+# 221 "?"
 1)| (3)| (7)| (9)-> (   (speed /. 1.4)
 )| (
-# 162 "?"
+# 222 "?"
 _)-> (   speed
 )) in
   
-# 164 "?"
+# 224 "?"
 let nx , ny = (match m with | (
-# 165 "?"
+# 225 "?"
 1)-> (   ((! x) -. speed) , ((! y) -. speed)
 )| (
-# 166 "?"
+# 226 "?"
 2)-> (   (! x) , ((! y) -. speed)
 )| (
-# 167 "?"
+# 227 "?"
 3)-> (   ((! x) +. speed) , ((! y) -. speed)
 )| (
-# 168 "?"
+# 228 "?"
 4)-> (   ((! x) -. speed) , (! y)
 )| (
-# 169 "?"
+# 229 "?"
 5)-> (   (! x) , (! y)
 )| (
-# 170 "?"
+# 230 "?"
 6)-> (   ((! x) +. speed) , (! y)
 )| (
-# 171 "?"
+# 231 "?"
 7)-> (   ((! x) -. speed) , ((! y) +. speed)
 )| (
-# 172 "?"
+# 232 "?"
 8)-> (   (! x) , ((! y) +. speed)
 )| (
-# 173 "?"
+# 233 "?"
 9)-> (   ((! x) +. speed) , ((! y) +. speed)
 )| (
-# 174 "?"
+# 234 "?"
 _)-> (   (! x) , (! y)
 )) in
   
-# 177 "?"
+# 237 "?"
 (x := min  (max  (nx) ((rsize /. 2.))) ((width -. (rsize /. 2.))));
   
-# 178 "?"
+# 238 "?"
 (y := min  (max  (ny) ((rsize /. 2.))) ((height -. (rsize /. 2.))));
   
-# 180 "?"
+# 240 "?"
 (Shots . move ());
   
-# 181 "?"
+# 241 "?"
 (if (Key . z ()) then ((Shots . add  ((! x)) (((! y) -. (rsize /. 2.)))))  )
 );; 
-# 184 "?"
+# 244 "?"
 let draw = (fun ()  -> 
-# 201 "?"
+# 261 "?"
    
-# 185 "?"
+# 245 "?"
 gcolor (1.0 , 0.0 , 0.0);
   
-# 186 "?"
+# 246 "?"
 let r = (rsize /. 6.) in
   
-# 187 "?"
+# 247 "?"
 let r2 = (rsize /. 4.) in
   
-# 188 "?"
+# 248 "?"
 grect  (
-# 189 "?"
+# 249 "?"
 ((! x) -. r) , (((! y) -. r) -. r2)) (
-# 190 "?"
+# 250 "?"
 ((! x) +. r) , (((! y) +. r) -. r));
   
-# 192 "?"
+# 252 "?"
 grect  (
-# 193 "?"
+# 253 "?"
 (((! x) -. r) -. r2) , (((! y) -. r) +. r2)) (
-# 194 "?"
+# 254 "?"
 (((! x) +. r) -. r2) , (((! y) +. r) +. r2));
   
-# 196 "?"
+# 256 "?"
 grect  (
-# 197 "?"
+# 257 "?"
 (((! x) -. r) +. r2) , (((! y) -. r) +. r2)) (
-# 198 "?"
+# 258 "?"
 (((! x) +. r) +. r2) , (((! y) +. r) +. r2));
   
-# 200 "?"
+# 260 "?"
 (Shots . draw ())
 );; 
-# 203 "?"
+# 263 "?"
 let checkColligion = (fun r _x _y  -> 
-# 206 "?"
+# 266 "?"
    
-# 204 "?"
+# 264 "?"
 ((((_x -. r) < (! x)) && ((! x) < (_x +. r))) && 
-# 205 "?"
+# 265 "?"
 (((_y -. r) < (! y)) && ((! y) < (_y +. r))))
 ) end;; module BG = struct 
-# 211 "?"
+# 271 "?"
 let (stars:(((float * float * float)) list) ref) = (ref []);; 
-# 213 "?"
+# 273 "?"
 let init = (fun ()  -> 
-# 229 "?"
+# 289 "?"
    
-# 215 "?"
+# 275 "?"
 let rec createList = (fun i ls f  -> 
-# 220 "?"
+# 280 "?"
      
-# 216 "?"
+# 276 "?"
 (match i with | (
-# 217 "?"
+# 277 "?"
 (- 1))-> (       ls
     )| (
-# 218 "?"
+# 278 "?"
 i)-> (       createList  ((i - 1))  ((f (i) :: ls)) (f)
     ))
   ) in
   
-# 222 "?"
+# 282 "?"
 (stars := createList  (200) ([]) (
-# 228 "?"
+# 288 "?"
 begin fun t1'  -> match t1' with     | (
-# 223 "?"
+# 283 "?"
 i) -> (
-# 224 "?"
+# 284 "?"
        let x = (Random . float (width)) in
       
-# 225 "?"
+# 285 "?"
 let y = (Random . float (height)) in
       
-# 226 "?"
+# 286 "?"
 let speed = ((Random . float (3.)) +. 2.0) in
       
-# 227 "?"
+# 287 "?"
 ( x , y , speed)
     )   end ))
 );; 
-# 231 "?"
+# 291 "?"
 let move = (fun ()  -> 
-# 244 "?"
+# 304 "?"
    
-# 232 "?"
+# 292 "?"
 (stars := (List . map (
-# 243 "?"
+# 303 "?"
 begin fun t1'  -> match t1' with     | (
-# 233 "?"
+# 293 "?"
 ( x , y , speed)) -> (
-# 234 "?"
+# 294 "?"
        let x = (x -. ((((! (Ship . x)) -. (width /. 2.)) *. 0.005) *. speed)) in
       
-# 235 "?"
+# 295 "?"
 let x = (if (x < 0.) then ((x +. width))else(x)) in
       
-# 236 "?"
+# 296 "?"
 let x = (if (x > width) then ((x -. width))else(x)) in
       
-# 237 "?"
+# 297 "?"
 let speed2 = (speed +. ((height -. (! (Ship . y))) *. 0.03)) in
       
-# 238 "?"
+# 298 "?"
 let y = (y +. speed2) in
       
-# 239 "?"
+# 299 "?"
 (if (y > height) then (
-# 240 "?"
+# 300 "?"
 ( (Random . float (width)) , 0. , ((Random . float (3.)) +. 2.))      )else(
-# 242 "?"
+# 302 "?"
 ( x , y , speed)))
     )   end )) (
-# 232 "?"
+# 292 "?"
 (! stars)))
 );; 
-# 246 "?"
+# 306 "?"
 let draw = (fun ()  -> 
-# 262 "?"
+# 322 "?"
    
-# 247 "?"
+# 307 "?"
 (List . iter (
-# 261 "?"
+# 321 "?"
 begin fun t1'  -> match t1' with     | (
-# 248 "?"
+# 308 "?"
 ( x , y , s)) -> (
-# 249 "?"
+# 309 "?"
        gcolor (
-# 250 "?"
+# 310 "?"
 ((Random . float (0.5)) +. 0.5) , 
-# 251 "?"
+# 311 "?"
 ((Random . float (0.5)) +. 0.5) , 
-# 252 "?"
+# 312 "?"
 ((Random . float (0.5)) +. 0.5));
       
-# 255 "?"
+# 315 "?"
 let s = (s +. ((height -. (! (Ship . y))) *. 0.06)) in
       
-# 257 "?"
+# 317 "?"
 grect  (
-# 258 "?"
+# 318 "?"
 x , y) (
-# 259 "?"
+# 319 "?"
 (x +. 1.5) , ((y +. 1.0) +. s))
     )   end )) (
-# 247 "?"
+# 307 "?"
 (! stars))
 ) end;; module Particles = struct type particle = {x:float;y:float;dir:float;speed:float;size:float;color:(float * float * float)};; 
-# 269 "?"
-let (particles:((particle) list) ref) = (ref []);; 
-# 271 "?"
-let cnt = (ref 0);; 
-# 273 "?"
-let add = (fun ?(color=(( 100.0 , 0.6 , 0.2))) ?(speed=(0.0)) x y n  -> 
-# 285 "?"
-   
-# 274 "?"
-for i = 0 to n do 
-# 275 "?"
-(if ((! cnt) < 28000) then (
-# 284 "?"
-     
-# 276 "?"
-(particles := 
-# 283 "?"
-({x=
-# 276 "?"
-x;y=
-# 277 "?"
-y;dir=
-# 278 "?"
-(Random . float ((pi *. 2.)));speed=
-# 279 "?"
-(if (speed > 0.0) then (speed)else((Random . float (2.0))));size=
-# 280 "?"
-((Random . float (15.1)) +. 2.);color=
-# 281 "?"
-color} :: 
-# 283 "?"
-(! particles)))
-)  ) done
-);; 
-# 286 "?"
-let add2 = (fun x y  -> 
-# 288 "?"
-   
-# 287 "?"
-add  ~color:(( 0.2 , 0.6 , 100.0))  ~speed:(10.0)  (x)  (y) (300)
-);; 
-# 289 "?"
-let add1 = (fun x y  -> 
-# 291 "?"
-   
-# 290 "?"
-add  (x)  (y) (50)
-);; 
-# 292 "?"
-let move = (fun ()  -> 
-# 307 "?"
-   
-# 293 "?"
-(cnt := 0);
-  
-# 294 "?"
-(particles := 
-# 303 "?"
-(List . filter (
-# 306 "?"
-begin fun t1'  -> match t1' with     | (
-# 304 "?"
-{x;y;size}) -> (
-# 305 "?"
-       (((((size > 0.) && (y > 0.)) && (y < height)) && (x > 0.)) && (x < height))
-    )   end )) (
-# 294 "?"
-(List . map (
-# 303 "?"
-begin fun t1'  -> match t1' with     | (
-# 295 "?"
-{x;y;dir;speed;size;color}) -> (
-# 296 "?"
-       incr (cnt);
-      
-# 302 "?"
-{x=
-# 298 "?"
-((x +. (speed *. cos (dir))) -. (speed *. sin (dir)));y=
-# 299 "?"
-((y +. (speed *. sin (dir))) +. (speed *. cos (dir)));dir=
-# 300 "?"
-dir;speed=speed;size=(size -. 0.5);color=
-# 301 "?"
-color}
-    )   end )) (
-# 294 "?"
-(! particles))))
-);; 
-# 309 "?"
-let draw = (fun ()  -> 
-# 323 "?"
-   
-# 310 "?"
-(List . iter (
-# 322 "?"
-begin fun t1'  -> match t1' with     | (
-# 311 "?"
-{x;y;size;color=( r , g , b)}) -> (
-# 312 "?"
-       gcolor (
-# 313 "?"
-(((r +. (Random . float (0.2))) *. (size *. 0.75)) /. 5.) , 
-# 314 "?"
-(((g +. (Random . float (0.2))) *. (size *. 0.75)) /. 5.) , 
-# 315 "?"
-(((b +. (Random . float (0.2))) *. (size *. 0.75)) /. 5.));
-      
-# 318 "?"
-grect  (
-# 319 "?"
-(x -. size) , (y -. size)) (
-# 320 "?"
-(x +. size) , (y +. size))
-    )   end )) (
-# 310 "?"
-(! particles))
-) end;; module Bullets = struct type bullet = {x:float;y:float;rad:float;speed:float;enable:(bool) ref};; 
 # 329 "?"
-let (bullets:((bullet) list) ref) = (ref []);; 
+let (particles:((particle) list) ref) = (ref []);; 
 # 331 "?"
 let cnt = (ref 0);; 
 # 333 "?"
-let add = (fun x y rad speed  -> 
-# 337 "?"
+let add = (fun ?(color=(( 100.0 , 0.6 , 0.2))) ?(speed=(0.0)) x y n  -> 
+# 345 "?"
    
 # 334 "?"
-(if ((! cnt) < 20) then (
-# 336 "?"
-     
+for i = 0 to n do 
 # 335 "?"
+(if ((! cnt) < 28000) then (
+# 344 "?"
+     
+# 336 "?"
+(particles := 
+# 343 "?"
+({x=
+# 336 "?"
+x;y=
+# 337 "?"
+y;dir=
+# 338 "?"
+(Random . float ((pi *. 2.)));speed=
+# 339 "?"
+(if (speed > 0.0) then (speed)else((Random . float (2.0))));size=
+# 340 "?"
+((Random . float (15.1)) +. 2.);color=
+# 341 "?"
+color} :: 
+# 343 "?"
+(! particles)))
+)  ) done
+);; 
+# 346 "?"
+let add2 = (fun x y  -> 
+# 348 "?"
+   
+# 347 "?"
+add  ~color:(( 0.2 , 0.6 , 100.0))  ~speed:(10.0)  (x)  (y) (300)
+);; 
+# 349 "?"
+let add1 = (fun x y  -> 
+# 351 "?"
+   
+# 350 "?"
+add  (x)  (y) (50)
+);; 
+# 352 "?"
+let move = (fun ()  -> 
+# 367 "?"
+   
+# 353 "?"
+(cnt := 0);
+  
+# 354 "?"
+(particles := 
+# 363 "?"
+(List . filter (
+# 366 "?"
+begin fun t1'  -> match t1' with     | (
+# 364 "?"
+{x;y;size}) -> (
+# 365 "?"
+       (((((size > 0.) && (y > 0.)) && (y < height)) && (x > 0.)) && (x < height))
+    )   end )) (
+# 354 "?"
+(List . map (
+# 363 "?"
+begin fun t1'  -> match t1' with     | (
+# 355 "?"
+{x;y;dir;speed;size;color}) -> (
+# 356 "?"
+       incr (cnt);
+      
+# 362 "?"
+{x=
+# 358 "?"
+((x +. (speed *. cos (dir))) -. (speed *. sin (dir)));y=
+# 359 "?"
+((y +. (speed *. sin (dir))) +. (speed *. cos (dir)));dir=
+# 360 "?"
+dir;speed=speed;size=(size -. 0.5);color=
+# 361 "?"
+color}
+    )   end )) (
+# 354 "?"
+(! particles))))
+);; 
+# 369 "?"
+let draw = (fun ()  -> 
+# 383 "?"
+   
+# 370 "?"
+(List . iter (
+# 382 "?"
+begin fun t1'  -> match t1' with     | (
+# 371 "?"
+{x;y;size;color=( r , g , b)}) -> (
+# 372 "?"
+       gcolor (
+# 373 "?"
+(((r +. (Random . float (0.2))) *. (size *. 0.75)) /. 5.) , 
+# 374 "?"
+(((g +. (Random . float (0.2))) *. (size *. 0.75)) /. 5.) , 
+# 375 "?"
+(((b +. (Random . float (0.2))) *. (size *. 0.75)) /. 5.));
+      
+# 378 "?"
+grect  (
+# 379 "?"
+(x -. size) , (y -. size)) (
+# 380 "?"
+(x +. size) , (y +. size))
+    )   end )) (
+# 370 "?"
+(! particles))
+) end;; module Bullets = struct type bullet = {x:float;y:float;rad:float;speed:float;enable:(bool) ref};; 
+# 389 "?"
+let (bullets:((bullet) list) ref) = (ref []);; 
+# 391 "?"
+let cnt = (ref 0);; 
+# 393 "?"
+let add = (fun x y rad speed  -> 
+# 397 "?"
+   
+# 394 "?"
+(if ((! cnt) < 20) then (
+# 396 "?"
+     
+# 395 "?"
 (bullets := ({x=x;y=y;enable=(ref true);rad=rad;speed=speed} :: (! bullets)))
 )  )
 );; 
-# 339 "?"
+# 399 "?"
 let move = (fun ()  -> 
-# 359 "?"
+# 419 "?"
    
-# 340 "?"
+# 400 "?"
 (cnt := 0);
   
-# 341 "?"
+# 401 "?"
 (bullets := 
-# 355 "?"
+# 415 "?"
 (List . filter (
-# 358 "?"
+# 418 "?"
 begin fun t1'  -> match t1' with     | (
-# 356 "?"
+# 416 "?"
 {x;y;enable={contents=b}}) -> (
-# 357 "?"
+# 417 "?"
        ((((b && (y > 0.)) && (y < height)) && (x > 0.)) && (x < height))
     )   end )) (
-# 341 "?"
+# 401 "?"
 (List . map (
-# 355 "?"
+# 415 "?"
 begin fun t1'  -> match t1' with     | (
-# 342 "?"
+# 402 "?"
 {x;y;rad;speed;enable}) -> (
-# 343 "?"
+# 403 "?"
        incr (cnt);
       
-# 345 "?"
+# 405 "?"
 let c = (Ship . checkColligion  (1.2)  (x) (y)) in
       
-# 346 "?"
+# 406 "?"
 (if c then (         (Particles . add2  (x) (y))
 )      );
       
-# 348 "?"
+# 408 "?"
 let e = 
-# 353 "?"
+# 413 "?"
 {x=
-# 348 "?"
+# 408 "?"
 (x +. (cos (rad) *. speed));y=
-# 349 "?"
+# 409 "?"
 (y +. (sin (rad) *. speed));enable=
-# 350 "?"
+# 410 "?"
 (ref ((! enable) && (not c)));speed=
-# 351 "?"
+# 411 "?"
 speed;rad=
-# 352 "?"
+# 412 "?"
 rad} in
       
-# 354 "?"
+# 414 "?"
 e
     )   end )) (
-# 341 "?"
+# 401 "?"
 (! bullets))))
 );; 
-# 361 "?"
+# 421 "?"
 let draw = (fun ()  -> 
-# 375 "?"
+# 435 "?"
    
-# 362 "?"
+# 422 "?"
 gcolor (
-# 363 "?"
+# 423 "?"
 ((Random . float (0.1)) +. 0.8) , 
-# 364 "?"
+# 424 "?"
 ((Random . float (0.1)) +. 0.2) , 
-# 365 "?"
+# 425 "?"
 ((Random . float (0.1)) +. 0.8));
   
-# 367 "?"
+# 427 "?"
 (List . iter (
-# 374 "?"
+# 434 "?"
 begin fun t1'  -> match t1' with     | (
-# 368 "?"
+# 428 "?"
 {x;y}) -> (
-# 369 "?"
+# 429 "?"
        let r = 5.0 in
       
-# 370 "?"
+# 430 "?"
 grect  (
-# 371 "?"
+# 431 "?"
 (x -. r) , (y -. r)) (
-# 372 "?"
+# 432 "?"
 (x +. r) , (y +. r))
     )   end )) (
-# 367 "?"
+# 427 "?"
 (! bullets))
 ) end;; module Enemies = struct class enemy (x:float)(y:float)(enable:bool) = object(this) 
-# 380 "?"
+# 440 "?"
 method x = x 
-# 381 "?"
+# 441 "?"
 method y = y 
-# 382 "?"
+# 442 "?"
 val mutable enable = enable 
-# 383 "?"
+# 443 "?"
 method enable = enable 
-# 384 "?"
+# 444 "?"
 method set_enable = (fun e  -> (enable <- e)) 
-# 385 "?"
+# 445 "?"
 method move = 
-# 395 "?"
+# 455 "?"
  
-# 386 "?"
+# 446 "?"
 let s = (2.0 +. ((height -. (! (Ship . y))) *. 0.06)) in
 
-# 387 "?"
+# 447 "?"
 let x = (x -. ((((! (Ship . x)) -. (width /. 2.)) *. 0.005) *. s)) in
 
-# 389 "?"
+# 449 "?"
 (if ((Random . float (1.0)) < 0.01) then (
-# 392 "?"
+# 452 "?"
    
-# 390 "?"
+# 450 "?"
 let rad2 = atan2  (((! (Ship . y)) -. y)) (((! (Ship . x)) -. x)) in
   
-# 391 "?"
+# 451 "?"
 (Bullets . add  (x)  (y)  (rad2) (3.0))
 ));
 
-# 394 "?"
+# 454 "?"
 (new enemy  (x)  ((y +. s)) ((enable && (y < height))))
  
-# 396 "?"
+# 456 "?"
 method draw = 
-# 407 "?"
+# 467 "?"
  
-# 397 "?"
+# 457 "?"
 gcolor (
-# 398 "?"
+# 458 "?"
 ((Random . float (0.1)) +. 0.8) , 
-# 399 "?"
+# 459 "?"
 ((Random . float (0.1)) +. 0.8) , 
-# 400 "?"
+# 460 "?"
 ((Random . float (0.1)) +. 0.2));
 
-# 402 "?"
+# 462 "?"
 let r = 24.0 in
 
-# 403 "?"
+# 463 "?"
 grect  (
-# 404 "?"
+# 464 "?"
 (x -. r) , (y -. r)) (
-# 405 "?"
+# 465 "?"
 (x +. r) , (y +. r))
  end;; class enemy2 (x:float)(y:float)(enable:bool) = object(this) 
-# 411 "?"
+# 471 "?"
 method x = x 
-# 412 "?"
+# 472 "?"
 method y = y 
-# 413 "?"
+# 473 "?"
 method z = 1 
-# 414 "?"
+# 474 "?"
 val mutable enable = enable 
-# 415 "?"
+# 475 "?"
 method enable = enable 
-# 416 "?"
+# 476 "?"
 method set_enable = (fun e  -> (enable <- e)) 
-# 417 "?"
+# 477 "?"
 method move = 
-# 427 "?"
+# 487 "?"
  
-# 419 "?"
+# 479 "?"
 let s = (5.0 +. ((height -. (! (Ship . y))) *. 0.06)) in
 
-# 420 "?"
+# 480 "?"
 let x = (x -. ((((! (Ship . x)) -. (width /. 2.)) *. 0.005) *. s)) in
 
-# 421 "?"
-let y = (y +. s) in
-
-# 423 "?"
-let c = (Ship . checkColligion  (5.0)  (x) (y)) in
-
-# 424 "?"
-(if c then (   (Particles . add2  (x) (y))
-));
-
-# 426 "?"
-(new enemy2  (x)  (y) (((enable && (y < height)) && (not c))))
- 
-# 428 "?"
-method draw = 
-# 439 "?"
- 
-# 429 "?"
-gcolor (
-# 430 "?"
-((Random . float (0.1)) +. 0.5) , 
-# 431 "?"
-((Random . float (0.1)) +. 0.5) , 
-# 432 "?"
-((Random . float (0.1)) +. 0.9));
-
-# 434 "?"
-let r = 8.0 in
-
-# 435 "?"
-grect  (
-# 436 "?"
-(x -. r) , (y -. r)) (
-# 437 "?"
-(x +. r) , (y +. r))
- end;; class enemy3 (x:float)(y:float)(enable:bool) = object(this) 
-# 443 "?"
-method x = x 
-# 444 "?"
-method y = y 
-# 445 "?"
-val mutable enable = enable 
-# 446 "?"
-method enable = enable 
-# 447 "?"
-method set_enable = (fun e  -> (enable <- e)) 
-# 448 "?"
-val mutable cnt = (Random . float ((pi *. 2.0))) 
-# 449 "?"
-method set_cnt = (fun z1  -> (cnt <- z1)) 
-# 450 "?"
-method move = 
-# 460 "?"
- 
-# 452 "?"
-let s = (5.0 +. ((height -. (! (Ship . y))) *. 0.06)) in
-
-# 453 "?"
-let x = ((x -. ((((! (Ship . x)) -. (width /. 2.)) *. 0.005) *. s)) +. (sin (cnt) *. 10.0)) in
-
-# 454 "?"
-let y = (y +. s) in
-
-# 455 "?"
-let c = (Ship . checkColligion  (5.0)  (x) (y)) in
-
-# 456 "?"
-(if c then (   (Particles . add2  (x) (y))
-));
-
-# 457 "?"
-let e = (new enemy3  (x)  (y) (((enable && (y < height)) && (not c)))) in
-
-# 458 "?"
-(e # set_cnt ((cnt +. 0.1)));
-
-# 459 "?"
-e
- 
-# 461 "?"
-method draw = 
-# 472 "?"
- 
-# 462 "?"
-gcolor (
-# 463 "?"
-((Random . float (0.1)) +. 0.9) , 
-# 464 "?"
-((Random . float (0.1)) +. 0.5) , 
-# 465 "?"
-((Random . float (0.1)) +. 0.5));
-
-# 467 "?"
-let r = 8.0 in
-
-# 468 "?"
-grect  (
-# 469 "?"
-(x -. r) , (y -. r)) (
-# 470 "?"
-(x +. r) , (y +. r))
- end;; class enemy4 (x:float)(y:float)(enable:bool) = object(this) 
-# 476 "?"
-method x = x 
-# 477 "?"
-method y = y 
-# 478 "?"
-val mutable enable = enable 
-# 479 "?"
-method enable = enable 
-# 480 "?"
-method set_enable = (fun e  -> (enable <- e)) 
 # 481 "?"
-val mutable rad = 0.0 
-# 482 "?"
-method rad = rad 
+let y = (y +. s) in
+
 # 483 "?"
-method set_rad = (fun z1  -> (rad <- z1)) 
+let c = (Ship . checkColligion  (5.0)  (x) (y)) in
+
 # 484 "?"
-method move = 
-# 501 "?"
- 
-# 485 "?"
-let speed = 6.0 in
+(if c then (   (Particles . add2  (x) (y))
+));
 
 # 486 "?"
-let r = 0.15 in
-
-# 487 "?"
-let rad2 = atan2  (((! (Ship . y)) -. y)) (((! (Ship . x)) -. x)) in
-
+(new enemy2  (x)  (y) (((enable && (y < height)) && (not c))))
+ 
 # 488 "?"
-let rad = (if (normalize ((rad -. rad2)) < 0.) then ((rad +. r))else((rad -. r))) in
-
+method draw = 
+# 499 "?"
+ 
 # 489 "?"
-let rad = normalize (rad) in
-
+gcolor (
 # 490 "?"
-let x = (x +. (cos (rad) *. speed)) in
-
+((Random . float (0.1)) +. 0.5) , 
 # 491 "?"
-let y = (y +. (sin (rad) *. speed)) in
+((Random . float (0.1)) +. 0.5) , 
+# 492 "?"
+((Random . float (0.1)) +. 0.9));
+
+# 494 "?"
+let r = 8.0 in
 
 # 495 "?"
+grect  (
+# 496 "?"
+(x -. r) , (y -. r)) (
+# 497 "?"
+(x +. r) , (y +. r))
+ end;; class enemy3 (x:float)(y:float)(enable:bool) = object(this) 
+# 503 "?"
+method x = x 
+# 504 "?"
+method y = y 
+# 505 "?"
+val mutable enable = enable 
+# 506 "?"
+method enable = enable 
+# 507 "?"
+method set_enable = (fun e  -> (enable <- e)) 
+# 508 "?"
+val mutable cnt = (Random . float ((pi *. 2.0))) 
+# 509 "?"
+method set_cnt = (fun z1  -> (cnt <- z1)) 
+# 510 "?"
+method move = 
+# 520 "?"
+ 
+# 512 "?"
+let s = (5.0 +. ((height -. (! (Ship . y))) *. 0.06)) in
+
+# 513 "?"
+let x = ((x -. ((((! (Ship . x)) -. (width /. 2.)) *. 0.005) *. s)) +. (sin (cnt) *. 10.0)) in
+
+# 514 "?"
+let y = (y +. s) in
+
+# 515 "?"
 let c = (Ship . checkColligion  (5.0)  (x) (y)) in
 
-# 496 "?"
+# 516 "?"
 (if c then (   (Particles . add2  (x) (y))
 ));
 
-# 498 "?"
-let e = (new enemy4  (x)  (y) (((enable && (y < height)) && (not c)))) in
+# 517 "?"
+let e = (new enemy3  (x)  (y) (((enable && (y < height)) && (not c)))) in
 
-# 499 "?"
-(e # set_rad (rad));
+# 518 "?"
+(e # set_cnt ((cnt +. 0.1)));
 
-# 500 "?"
+# 519 "?"
 e
  
-# 504 "?"
+# 521 "?"
 method draw = 
-# 515 "?"
+# 532 "?"
  
-# 505 "?"
+# 522 "?"
 gcolor (
-# 506 "?"
+# 523 "?"
+((Random . float (0.1)) +. 0.9) , 
+# 524 "?"
 ((Random . float (0.1)) +. 0.5) , 
-# 507 "?"
-((Random . float (0.1)) +. 0.5) , 
-# 508 "?"
+# 525 "?"
 ((Random . float (0.1)) +. 0.5));
 
-# 510 "?"
+# 527 "?"
 let r = 8.0 in
 
-# 511 "?"
+# 528 "?"
 grect  (
-# 512 "?"
+# 529 "?"
 (x -. r) , (y -. r)) (
-# 513 "?"
+# 530 "?"
+(x +. r) , (y +. r))
+ end;; class enemy4 (x:float)(y:float)(enable:bool) = object(this) 
+# 536 "?"
+method x = x 
+# 537 "?"
+method y = y 
+# 538 "?"
+val mutable enable = enable 
+# 539 "?"
+method enable = enable 
+# 540 "?"
+method set_enable = (fun e  -> (enable <- e)) 
+# 541 "?"
+val mutable rad = 0.0 
+# 542 "?"
+method rad = rad 
+# 543 "?"
+method set_rad = (fun z1  -> (rad <- z1)) 
+# 544 "?"
+method move = 
+# 561 "?"
+ 
+# 545 "?"
+let speed = 6.0 in
+
+# 546 "?"
+let r = 0.15 in
+
+# 547 "?"
+let rad2 = atan2  (((! (Ship . y)) -. y)) (((! (Ship . x)) -. x)) in
+
+# 548 "?"
+let rad = (if (normalize ((rad -. rad2)) < 0.) then ((rad +. r))else((rad -. r))) in
+
+# 549 "?"
+let rad = normalize (rad) in
+
+# 550 "?"
+let x = (x +. (cos (rad) *. speed)) in
+
+# 551 "?"
+let y = (y +. (sin (rad) *. speed)) in
+
+# 555 "?"
+let c = (Ship . checkColligion  (5.0)  (x) (y)) in
+
+# 556 "?"
+(if c then (   (Particles . add2  (x) (y))
+));
+
+# 558 "?"
+let e = (new enemy4  (x)  (y) (((enable && (y < height)) && (not c)))) in
+
+# 559 "?"
+(e # set_rad (rad));
+
+# 560 "?"
+e
+ 
+# 564 "?"
+method draw = 
+# 575 "?"
+ 
+# 565 "?"
+gcolor (
+# 566 "?"
+((Random . float (0.1)) +. 0.5) , 
+# 567 "?"
+((Random . float (0.1)) +. 0.5) , 
+# 568 "?"
+((Random . float (0.1)) +. 0.5));
+
+# 570 "?"
+let r = 8.0 in
+
+# 571 "?"
+grect  (
+# 572 "?"
+(x -. r) , (y -. r)) (
+# 573 "?"
 (x +. r) , (y +. r))
  end;; 
-# 518 "?"
+# 578 "?"
 let (enemies:((enemy) list) ref) = (ref []);; 
-# 520 "?"
+# 580 "?"
 let count = (ref 0);; 
-# 521 "?"
+# 581 "?"
 let add = (fun enm x y  -> 
-# 525 "?"
+# 585 "?"
    
-# 522 "?"
+# 582 "?"
 (if ((! count) < 20) then (
-# 524 "?"
+# 584 "?"
      
-# 523 "?"
+# 583 "?"
 (enemies := (enm  (x)  (y) (true) :: (! enemies)))
 )  )
 );; 
-# 527 "?"
+# 587 "?"
 let move = (fun ()  -> 
-# 556 "?"
+# 616 "?"
    
-# 528 "?"
+# 588 "?"
 (if ((Random . float (1.0)) < 0.15) then (
-# 540 "?"
+# 600 "?"
      
-# 530 "?"
+# 590 "?"
 let es = 
-# 535 "?"
+# 595 "?"
 [
-# 531 "?"
+# 591 "?"
 (new enemy); 
-# 532 "?"
+# 592 "?"
 begin fun t1' t2' t3'  -> match t1',t2',t3' with   | (x),(y),(b) -> (     ((new enemy2  (x)  (y) (b)) :> enemy)
   ) end ; 
-# 533 "?"
+# 593 "?"
 begin fun t1' t2' t3'  -> match t1',t2',t3' with   | (x),(y),(b) -> (     ((new enemy3  (x)  (y) (b)) :> enemy)
   ) end ; 
-# 534 "?"
+# 594 "?"
 begin fun t1' t2' t3'  -> match t1',t2',t3' with   | (x),(y),(b) -> (     ((new enemy4  (x)  (y) (b)) :> enemy)
   ) end ] in
     
-# 537 "?"
+# 597 "?"
 let enm = (List . nth  (es) ((Random . int ((List . length (es)))))) in
     
-# 538 "?"
+# 598 "?"
 add  (enm)  (((Random . float ((width *. 2.0))) -. (width /. 2.))) (-10.0)
 )  );
   
-# 542 "?"
+# 602 "?"
 (count := 0);
   
-# 543 "?"
+# 603 "?"
 (enemies := 
-# 547 "?"
+# 607 "?"
 (List . filter (
-# 555 "?"
+# 615 "?"
 begin fun t1'  -> match t1' with     | (
-# 548 "?"
+# 608 "?"
 e) -> (
-# 549 "?"
+# 609 "?"
        (if (Shots . checkColligion  ((e # x))  ((e # y)) (16.0)) then (
-# 550 "?"
+# 610 "?"
 (e # enable)      )else(
-# 554 "?"
+# 614 "?"
          
-# 552 "?"
+# 612 "?"
 (Particles . add1  ((e # x)) ((e # y)));
         
-# 553 "?"
+# 613 "?"
 false
 ))
     )   end )) (
-# 543 "?"
+# 603 "?"
 (List . map (
-# 547 "?"
+# 607 "?"
 begin fun t1'  -> match t1' with     | (
-# 544 "?"
+# 604 "?"
 e) -> (
-# 545 "?"
+# 605 "?"
        incr (count);
       
-# 546 "?"
+# 606 "?"
 (e # move)
     )   end )) (
-# 543 "?"
+# 603 "?"
 (! enemies))))
 );; 
-# 558 "?"
+# 618 "?"
 let draw = (fun ()  -> 
-# 561 "?"
+# 621 "?"
    
-# 560 "?"
+# 620 "?"
 (List . iter (begin fun t1'  -> match t1' with     | (e) -> (       (e # draw)
     )   end )) ((! enemies))
 ) end;; module Game = struct 
-# 566 "?"
+# 626 "?"
 let draw = (fun ()  -> 
-# 574 "?"
+# 634 "?"
    
-# 567 "?"
+# 627 "?"
 gcolor (0. , 0. , 0.);
   
-# 568 "?"
+# 628 "?"
 grect  (0. , 0.) (width , height);
   
-# 569 "?"
+# 629 "?"
 (BG . draw ());
   
-# 570 "?"
+# 630 "?"
 (Enemies . draw ());
   
-# 571 "?"
+# 631 "?"
 (Particles . draw ());
   
-# 572 "?"
+# 632 "?"
 (Ship . draw ());
   
-# 573 "?"
+# 633 "?"
 (Bullets . draw ())
 );; 
-# 576 "?"
+# 636 "?"
 let loop = (fun ()  -> 
-# 583 "?"
+# 643 "?"
    
-# 578 "?"
+# 638 "?"
 (BG . move ());
   
-# 579 "?"
+# 639 "?"
 (Particles . move ());
   
-# 580 "?"
+# 640 "?"
 (Ship . move ());
   
-# 581 "?"
+# 641 "?"
 (Bullets . move ());
   
-# 582 "?"
+# 642 "?"
 (Enemies . move ())
 );; 
-# 584 "?"
+# 644 "?"
 let init = (fun ()  -> 
-# 588 "?"
+# 648 "?"
    
-# 585 "?"
+# 645 "?"
 (Random . init (int_of_float (((Sys . time ()) *. 10000.0))));
   
-# 586 "?"
+# 646 "?"
 (Key . init ());
   
-# 587 "?"
+# 647 "?"
 (BG . init ())
 ) end;; module GameLib = struct 
-# 593 "?"
+# 655 "?"
 let rec loop = (fun ()  -> 
-# 597 "?"
+# 659 "?"
    
-# 594 "?"
+# 656 "?"
 (Game . loop ());
   
-# 595 "?"
+# 657 "?"
 (Game . draw ());
   
-# 596 "?"
+# 658 "?"
 ignore ((Html . window) ## setTimeout ((Js . wrap_callback (begin fun t1'  -> match t1' with     | (()) -> (       loop ()
     )   end )) , 15.))
 );; 
-# 599 "?"
-let create_canvas = (fun w h  -> 
-# 604 "?"
-   
-# 600 "?"
-let c = canvas in
-  
-# 601 "?"
-(c ## width <- int_of_float (w));
-  
-# 602 "?"
-(c ## height <- int_of_float (h));
-  
-# 603 "?"
-c
-);; 
-# 606 "?"
+# 662 "?"
 let start = (fun _  -> 
-# 617 "?"
+# 667 "?"
    
-# 607 "?"
-let c = create_canvas  (width) (height) in
+# 663 "?"
+(Dom . appendChild  ((Html . window) ## document ## body) (canvas));
   
-# 613 "?"
-(Dom . appendChild  ((Html . window) ## document ## body) (c));
-  
-# 614 "?"
+# 664 "?"
 (Game . init ());
   
-# 615 "?"
+# 665 "?"
 loop ();
   
-# 616 "?"
+# 666 "?"
 (Js . _false)
 );; 
-# 618 "?"
+# 668 "?"
 let _ = 
-# 620 "?"
+# 670 "?"
  
-# 619 "?"
+# 669 "?"
 ((Html . window) ## onload <- (Html . handler (start)))
  end
