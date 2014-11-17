@@ -121,7 +121,7 @@ rule token = parse
 
 and open_ = parse
   | space+ { open_ lexbuf }
-  | ['a'-'z' 'A'-'Z' '_' '.']* { OPEN(Lexing.lexeme lexbuf) }
+  | ['a'-'z' 'A'-'Z' '_' '.' '0'-'9']* { OPEN(Lexing.lexeme lexbuf) }
   | _
     {
       failwith (
