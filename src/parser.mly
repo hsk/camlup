@@ -252,7 +252,7 @@ exp:
   | STR { EStr(p(),$1) }
   | CHR { EChr(p(),$1) }
   | LPAREN RPAREN { EUnit(p()) }
-  | LPAREN exp RPAREN { check_comma $2 }
+  | LPAREN exp1 RPAREN { check_comma $2 }
 
   | LBRACE fns RBRACE { EPFun(p(),$2) }
   | LBRACE exps RBRACE { EBlock(p(),$2) }

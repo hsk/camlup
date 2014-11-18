@@ -6,22 +6,17 @@ let buf = ref ""
 let space = [' ' '\t']
 let digit = ['0'-'9']
 
-
+let lf = ('\r' '\n' | ['\n' '\r'] | "//" [^ '\n' '\r']* ['\n' '\r'])
 rule token = parse
-  | '\r' '\n' space* "else" { incr lineno; ELSE }
-  | '\r' '\n' { incr lineno; SEMI(!lineno) }
-  | ['\n' '\r'] space* "else" { incr lineno; ELSE }
-  | ['\n' '\r'] { incr lineno; SEMI(!lineno) }
-  | ';' { SEMI(!lineno) }
   | space+ { token lexbuf }
   | "open" { open_ lexbuf }
+  | lf space* "else" { incr lineno; ELSE }
+  | lf { incr lineno; SEMI(!lineno) }
+  | ';' { SEMI(!lineno) }
   | "/*" {
-      let no = !lineno in
       comment lexbuf;
-      if no <> !lineno then SEMI(!lineno)
-      else token lexbuf
+      token lexbuf
     }
-  | "//" [^ '\n' '\r']* ['\n' '\r'] { incr lineno; SEMI(!lineno) }
   | '(' { LPAREN }
   | ')' { RPAREN }
   | '{' { LBRACE }
