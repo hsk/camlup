@@ -144,6 +144,7 @@ let parse_error2 str =
 %right LIST
 %nonassoc ELSE
 %right ASSIGN COLONASSIGN REFASSIGN ARROWASSIGN
+%right MATCH
 %left AS
 %left COMMA
 %right CAST

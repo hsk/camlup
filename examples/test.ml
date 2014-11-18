@@ -896,4 +896,20 @@ printf  ("%f\n") (m)
 # 538 "?"
 let rec f1 = (fun x  -> f2 (x))  and 
 # 539 "?"
-f2 = (fun x  -> x  )
+f2 = (fun x  -> x  );; 
+# 542 "?"
+let refmatch = 
+# 549 "?"
+ 
+# 543 "?"
+let a = (ref 1) in
+
+# 544 "?"
+(match (! a) with | (
+# 545 "?"
+0)-> (   printf ("0\n")
+)| (
+# 546 "?"
+_)-> (   printf ("other\n")
+))
+
