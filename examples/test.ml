@@ -912,4 +912,20 @@ let a = (ref 1) in
 # 546 "?"
 _)-> (   printf ("other\n")
 ))
+;; 
+# 551 "?"
+let matchif = 
+# 557 "?"
+ 
+# 552 "?"
+let a = true in
+
+# 553 "?"
+(match 1 with | (
+# 554 "?"
+1)-> (   (if a then (printf ("a\n"))  )
+)| (
+# 555 "?"
+_)-> (   (if a then (printf ("a\n"))  )
+))
 

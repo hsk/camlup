@@ -8,7 +8,9 @@ let digit = ['0'-'9']
 
 
 rule token = parse
+  | '\r' '\n' space* "else" { incr lineno; ELSE }
   | '\r' '\n' { incr lineno; SEMI(!lineno) }
+  | ['\n' '\r'] space* "else" { incr lineno; ELSE }
   | ['\n' '\r'] { incr lineno; SEMI(!lineno) }
   | ';' { SEMI(!lineno) }
   | space+ { token lexbuf }

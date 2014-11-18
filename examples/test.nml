@@ -548,4 +548,12 @@ refmatch = {
 
 }
 
+matchif = {
+  a = true
+  1 match {
+  | 1 => if(a)printf("a\n")
+  | _ => if(a)printf("a\n")
+  }
+}
+
 /* /*nested comment*/ */

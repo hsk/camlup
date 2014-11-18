@@ -335,8 +335,8 @@ exp:
     }
 
   | exp MATCH LBRACE fns RBRACE { EMatch(e_pos($1), $1, $4) }
-  | IF LPAREN exp RPAREN exp1 ELSE exp1 { EIf(e_pos($3),$3, $5, $7) }
-  | IF LPAREN exp RPAREN exp1 %prec LIST { EIf(e_pos($3),$3, $5, EEmpty(p())) }
+  | IF LPAREN exp RPAREN exp ELSE exp { EIf(e_pos($3),$3, $5, $7) }
+  | IF LPAREN exp RPAREN exp %prec LIST { EIf(e_pos($3),$3, $5, EEmpty(p())) }
 
   | FOR LPAREN VAR ARROWASSIGN exp TO exp RPAREN exp
     {
