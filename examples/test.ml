@@ -892,4 +892,8 @@ let m = (n +. 10.5) in
 
 # 531 "?"
 printf  ("%f\n") (m)
-
+;; type a = A|B;; 
+# 538 "?"
+let rec f1 = (fun x  -> f2 (x))  and 
+# 539 "?"
+f2 = (fun x  -> x  )

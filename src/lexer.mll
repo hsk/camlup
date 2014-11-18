@@ -45,7 +45,7 @@ rule token = parse
   | "|>" { FARROW }
   | "if" { IF }
   | "else" { ELSE }
-  | '@' { CASE }
+  | ":::" { CATLIST }
   | "::" { ADDLIST }
   | "case" { CASE }
   | "match" { MATCH }
@@ -101,6 +101,7 @@ rule token = parse
   | "#=" { REFASSIGN }
   | "##" { REFREF }
   | "def" { DEF }
+  | "and" { AND }
   | '=' { ASSIGN }
   | '"' { buf:="\""; STR(str lexbuf) }
   | '\'' ([^ '\''] | "\\" (['"'  '\'' 'n' 'r' 't' 'b' ] | ['0'-'9'] ['0'-'9'] ['0'-'9']) )* '\'' { CHR(Lexing.lexeme lexbuf) }

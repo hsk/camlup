@@ -115,12 +115,13 @@ let parse_error2 str =
 %token <string> OPEN
 %token <string> STR
 %token <string> CHR
+%token AND
 %token CLASS DOT
 %token IF ELSE
 %token IMPLEMENT RIMPLEMENT TRAIT
 %token ARROW MEMBER FARROW
 %token CAST NEW AT DEF CASE MATCH TYPE MODULE
-%token ADDLIST
+%token ADDLIST CATLIST
 %token REF REFREF JSNEW
 
 %token HAT
@@ -139,6 +140,7 @@ let parse_error2 str =
 %token FOR WHILE TO UNTIL DOWNTO
 %token AS
 
+%right AND
 %right LIST
 %nonassoc ELSE
 %right ASSIGN COLONASSIGN REFASSIGN ARROWASSIGN
@@ -146,7 +148,7 @@ let parse_error2 str =
 %left COMMA
 %right CAST
 %left RIMPLEMENT
-%right ADDLIST
+%right ADDLIST CATLIST
 
 %left XOR
 %left LOR
@@ -234,9 +236,13 @@ variant:
   | VAR typ { ($1,$2) }
   | VAR { ($1,TEmpty) }
 
+variant1:
+  | variant { $1 }
+  | variant SEMI { $1 }
+
 variants:
-  | variant { [$1] }
-  | variant OR variants { $1::$3 }
+  | variant1 { [$1] }
+  | variant1 OR variants { $1::$3 }
 
 exp:
   | INT { EInt(p(),$1) }
@@ -283,7 +289,6 @@ exp:
   | exp HAT exp { EBin(e_pos($1), $1, "lxor", $3) }
 
   | exp AMP exp { EBin(e_pos($1), $1, "land", $3) }
-
   | exp EEQ exp { EBin(e_pos($1), $1, "==", $3) }
   | exp ENE exp { EBin(e_pos($1), $1, "!=", $3) }
   | exp EQ exp { EBin(e_pos($1), $1, "=", $3) }
@@ -315,6 +320,7 @@ exp:
   | exp DOT exp { EBin(e_pos($1), $1, ".", $3) }
   | exp COMMA exp { EBin(e_pos($1), $1, ",", $3) }
   | exp ADDLIST exp { EBin(e_pos($1), $1, "::", $3) }
+  | exp CATLIST exp { EBin(e_pos($1), $1, "@", $3) }
   | exp MEMBER exp { EBin(e_pos($1), $1, "#", $3) }
   | exp REFREF exp { EBin(e_pos($1), $1, "##", $3) }
   | exp ARROWASSIGN exp { EBin(e_pos($1), $1, "<-", $3) }
@@ -420,6 +426,8 @@ stmt:
   | OPEN { SOpen($1) }
   | VAR TYPE LBRACE defrecs RBRACE { STypeRec($1, $4) }
   | VAR TYPE OR variants { STypeVariant($1, $4) }
+  | VAR TYPE SEMI OR variants { STypeVariant($1, $5) }
+  | stmt1 AND stmt { SAnd($1, $3) }
 
 stmt1:
   | stmt { $1 }

@@ -531,4 +531,12 @@ floats = {
   printf("%f\n" m)
 }
 
+a type
+  | A
+  | B
+
+def f1(x) = f2(x)
+and f2(x) = x
+
+
 /* /*nested comment*/ */

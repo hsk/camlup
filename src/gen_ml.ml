@@ -100,6 +100,20 @@ let rec print_e sp ppf e =
       "##"
       (print_e sp) e2
 
+  | EBin(_,e1,"and",ELet(_,id, TEmpty, e)) ->
+    fprintf ppf "%a "
+      (print_e sp) e1;
+    fprintf ppf " %sand %a = %a"
+      sp
+      (print_e "") id
+      (print_e (sp^"  ")) e
+
+  | EBin(_,e1,"and",e2) ->
+    fprintf ppf "%a %s %a"
+      (print_e sp) e1
+      ""
+      (print_e sp) e2
+
   | ETuple(_,ls) ->
     fprintf ppf "(%a)"
       (print_ls "" ", " print_e) ls
